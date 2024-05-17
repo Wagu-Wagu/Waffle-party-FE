@@ -5,5 +5,6 @@
   "prettier.requireConfig": true, // Prettier 설정 파일을 필요로 함
   "prettier.tabWidth": 2, // Prettier 탭 넓이를 2로 설정
   "prettier.useTabs": false, // Prettier 탭을 스페이스로 변환
-  "prettier.endOfLine": "lf" // Prettier 줄바꿈을 LF로 설정
+  "prettier.endOfLine": "lf", // Prettier 줄바꿈을 LF로 설정
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
