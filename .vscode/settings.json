@@ -10,7 +10,7 @@
   "files.eol": "\n",
   "files.autoGuessEncoding": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
