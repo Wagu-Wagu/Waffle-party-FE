@@ -79,7 +79,8 @@ export default {
         subtitle: ["1.6rem", "2.4rem"],
         body: ["1.4rem", "2.2rem"],
         button: ["1.6rem", "2rem"],
-        caption: ["1.2rem", "1.6rem"],
+        caption01: ["1.2rem", "1.6rem"],
+        caption02: ["1.1rem", "1.2rem"],
         d1: ["4rem", "4.8rem"],
         d2: ["3.2rem", "4.0rem"],
         d3: ["2.8rem", "3.6rem"],
@@ -89,6 +90,7 @@ export default {
       fontWeight: {
         regular: 400,
         medium: 500,
+        semibold: 600,
         bold: 700,
       },
     },

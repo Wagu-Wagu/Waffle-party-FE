@@ -1,3 +1,3 @@
 export default function MyPostsPage() {
-  return <div></div>;
+  return <>내 게시글 페이지</>;
 }
