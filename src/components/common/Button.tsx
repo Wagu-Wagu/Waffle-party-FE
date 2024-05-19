@@ -11,13 +11,12 @@ const buttonVariants = {
 };
 
 type ButtonProps = {
-  className?: string;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   size?: "xs" | "sm" | "base";
   variant?: string;
   onClick?: () => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 const SIZE = {
