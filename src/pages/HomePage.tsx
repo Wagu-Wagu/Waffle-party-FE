@@ -1,9 +1,15 @@
+import { useState } from "react";
 import Button from "../components/common/Button";
+import CheckBox from "../components/common/CheckBox";
 import BasicLayout from "../layout/BasicLayout";
 
 export default function HomePage() {
   const handleClickBtn = () => {
     window.alert("버튼 클릭됨");
+  };
+  const [check, setCheck] = useState(false);
+  const handleClickCheckBox = () => {
+    setCheck((prev) => !prev);
   };
   return (
     <>
@@ -51,6 +57,9 @@ export default function HomePage() {
         >
           버튼
         </Button>
+        <CheckBox checked={check} onClick={handleClickCheckBox}>
+          체크박스
+        </CheckBox>
       </BasicLayout>
     </>
   );
