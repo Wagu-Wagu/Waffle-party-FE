@@ -16,7 +16,7 @@ body {
  * TODO 디자인 확정되면 수정
  */
 .layout-wrapper {
-  @apply w-full max-w-[500px] min-h-screen bg-gray3 relative mx-auto shadow-lg overflow-hidden;
+  @apply w-full max-w-[500px] min-h-screen bg-gray14 relative mx-auto shadow-lg overflow-hidden;
   width: clamp(360px, 100%, 500px);
 }
 

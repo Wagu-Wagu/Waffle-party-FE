@@ -1,3 +1,3 @@
 export default function TermsPage() {
-  return <div></div>;
+  return <>이용 약관 페이지</>;
 }
