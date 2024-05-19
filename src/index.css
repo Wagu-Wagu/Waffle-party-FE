@@ -42,13 +42,13 @@ body {
  * TODO 디자인 확정되면 수정
  */
 .btn-xs {
-  @apply w-[2rem] h-[2rem];
+  @apply w-[8.2rem] h-[5.2rem];
 }
 
 .btn-sm {
-  @apply w-[5rem] h-[3rem];
+  @apply w-[15.2rem] h-[5.2rem];
 }
 
 .btn-base {
-  @apply w-[8rem] h-[4rem];
+  @apply w-[32rem] h-[5.2rem];
 }
