@@ -8,5 +8,47 @@ html {
 }
 
 body {
-  @apply font-sans text-textCustom;
+  @apply font-sans;
+}
+
+/**
+ * layout
+ * TODO 디자인 확정되면 수정
+ */
+.layout-wrapper {
+  @apply w-full max-w-[500px] min-h-screen bg-gray3 relative mx-auto shadow-lg overflow-hidden;
+  width: clamp(360px, 100%, 500px);
+}
+
+.layout-main {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  @apply overflow-y-scroll h-full;
+}
+
+.layout-main::-webkit-scrollbar {
+  display: none;
+}
+
+@media screen and (hover: none) and (pointer: coarse) {
+  .layout-wrapper {
+    min-height: calc(var(--vh, 1vh) * 100);
+    max-height: 800px;
+  }
+}
+
+/**
+ * button
+ * TODO 디자인 확정되면 수정
+ */
+.btn-xs {
+  @apply w-[2rem] h-[2rem];
+}
+
+.btn-sm {
+  @apply w-[5rem] h-[3rem];
+}
+
+.btn-base {
+  @apply w-[8rem] h-[4rem];
 }
