@@ -1,3 +1,3 @@
 export default function MyPage() {
-  return <div></div>;
+  return <>마이 페이지</>;
 }

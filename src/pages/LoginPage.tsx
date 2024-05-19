@@ -1,3 +1,3 @@
 export default function LoginPage() {
-  return <div></div>;
+  return <>로그인/회원가입 페이지</>;
 }
