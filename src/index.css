@@ -36,3 +36,19 @@ body {
     max-height: 800px;
   }
 }
+
+/**
+ * button
+ * TODO 디자인 확정되면 수정
+ */
+.btn-xs {
+  @apply w-[2rem] h-[2rem];
+}
+
+.btn-sm {
+  @apply w-[5rem] h-[3rem];
+}
+
+.btn-base {
+  @apply w-[8rem] h-[4rem];
+}
