@@ -1,3 +1,39 @@
+import { useNavigate } from "react-router-dom";
+import Header from "../components/Header/Header";
+import HeaderButton from "../components/Header/HeaderButton";
+import CloseIcon from "./../assets/icons/CloseIcon.svg?react";
+import LogoYellow from "./../assets/icons/LogoYellow.svg?react";
+import KakaoTalkIcon from "./../assets/icons/KakaoTalkIcon.svg?react";
+
 export default function LoginPage() {
-  return <>로그인/회원가입 페이지</>;
+  const nav = useNavigate();
+  return (
+    <>
+      <Header
+        leftChild={
+          <HeaderButton onClick={() => nav("/", { replace: true })}>
+            <CloseIcon />
+          </HeaderButton>
+        }
+        title={"로그인/회원가입"}
+      />
+
+      <main className="flex flex-col items-center justify-between h-screen-minus-46">
+        <div className="mt-[12.2rem]">
+          <LogoYellow />
+        </div>
+        <div>
+          <div className="flex items-center gap-4">
+            <div className="bg-gray7 w-[11.1rem] h-[0.1rem]" />
+            <p className="text-gray7">로그인/회원가입</p>
+            <div className="bg-gray7 w-[11.1rem] h-[0.1rem]" />
+          </div>
+          <button className="mt-[2.5rem] mb-[7rem] flex items-center gap-4 bg-[#ffe001] py-[1.45rem] px-[9.5rem] rounded-2xl">
+            <KakaoTalkIcon />
+            <span className="font-bold text-body">카카오로 시작하기</span>
+          </button>
+        </div>
+      </main>
+    </>
+  );
 }
