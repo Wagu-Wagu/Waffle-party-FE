@@ -2,8 +2,8 @@ import React from "react";
 import classNames from "classnames";
 
 const buttonVariants = {
-  yellow: "bg-primary text-white",
-  gray: "bg-cancel text-white",
+  yellow: "bg-primary text-black",
+  gray: "bg-cancel gray13",
   transparentYellow: "bg-transparent border border-primary text-primary",
   transparentGray: "bg-transparent border border-cancel text-cancel",
   borderNoneWhite: "bg-transparent text-white",
@@ -19,6 +19,11 @@ type ButtonProps = {
   children?: React.ReactNode;
 };
 
+/**
+ * xs: 82*52
+ * sm: 152*52
+ * base: 320*52
+ */
 const SIZE = {
   xs: "btn-xs",
   sm: "btn-sm",
@@ -36,7 +41,7 @@ export default function Button(props: ButtonProps) {
   } = props;
 
   const classes = classNames(
-    "box-border p-4 rounded-md flex justify-center items-center font-sans",
+    "box-border p-4 rounded-md flex justify-center items-center font-sans text-[1.6rem]",
     {
       [buttonVariants.yellow]: variant === "yellow" && !disabled,
       [buttonVariants.gray]: variant === "gray" && !disabled,
