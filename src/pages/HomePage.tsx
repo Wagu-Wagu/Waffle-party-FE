@@ -1,3 +1,65 @@
+import Button from "../components/common/Button";
+
 export default function HomePage() {
-  return <>홈페이지</>;
+  const handleClick = () => {
+    window.alert("dd");
+  };
+  return (
+    <>
+      <Button
+        onClick={handleClick}
+        type="button"
+        variant="yellow"
+        disabled={false}
+        size="base"
+      >
+        삭제
+      </Button>
+      <Button
+        onClick={handleClick}
+        type="button"
+        variant="yellow"
+        disabled={true}
+        size="base"
+      >
+        삭제
+      </Button>
+      <Button
+        onClick={handleClick}
+        type="button"
+        variant="borderYellow"
+        disabled={false}
+        size="base"
+      >
+        삭제
+      </Button>
+      <Button
+        onClick={handleClick}
+        type="button"
+        variant="borderYellow"
+        disabled={true}
+        size="base"
+      >
+        삭제
+      </Button>
+      <Button
+        onClick={handleClick}
+        type="button"
+        variant="white"
+        disabled={false}
+        size="base"
+      >
+        삭제
+      </Button>
+      <Button
+        onClick={handleClick}
+        type="button"
+        variant="white"
+        disabled={true}
+        size="base"
+      >
+        삭제
+      </Button>
+    </>
+  );
 }
