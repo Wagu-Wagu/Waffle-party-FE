@@ -9,7 +9,7 @@ interface myPageListCardProps {
 export default function MyPageListCard(props: myPageListCardProps) {
   const { isArrow, activeData, onClick, children } = props;
   return (
-    <section className="text-[1.6rem] w-[32rem] text-white font-light leading-6 flex">
+    <section className="text-[1.6rem] h-[2.4rem] w-full text-white font-light leading-6 flex">
       <p className="flex items-center"> {children}</p>
       <div className="flex ml-auto gap-[1rem] items-center ">
         {activeData && <p>{activeData}</p>}
