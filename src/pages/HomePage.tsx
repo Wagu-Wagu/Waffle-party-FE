@@ -17,6 +17,7 @@ export default function HomePage() {
           </h1>
         }
         rightChild={<HeaderLoginButton />}
+        noBorder
       />
       홈페이지
     </>
