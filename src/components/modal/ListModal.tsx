@@ -5,16 +5,13 @@ import Check from "../../assets/icons/Check.svg?react";
 
 interface modalProps {
   isShow: boolean;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<Element, MouseEvent>) => void;
+  onSelect: (option: string) => void;
 }
 
 export default function ListModal(props: modalProps) {
-  const { isShow, onClick } = props;
+  const { isShow, onClick, onSelect } = props;
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
-
-  const handleOptionClick = (index: number) => {
-    setSelectedOption(index);
-  };
   const ottOptions = [
     "넷플릭스",
     "왓챠",
@@ -26,6 +23,11 @@ export default function ListModal(props: modalProps) {
     "네이버시리즈",
     "기타",
   ];
+
+  const handleOptionClick = (index: number) => {
+    setSelectedOption(index);
+    onSelect(ottOptions[index]);
+  };
 
   return (
     <BottomSheet isShow={isShow} onClick={onClick}>
