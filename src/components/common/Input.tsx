@@ -5,10 +5,13 @@ import InputError from "../../assets/icons/InputError.svg?react";
 
 interface InputProps {
   disabled?: boolean;
+  label: string;
+  placeholder: string;
   onClick?: () => void;
 }
 
-export default function Input({ disabled = false, onClick }: InputProps) {
+export default function Input(props: InputProps) {
+  const { disabled, label, placeholder, onClick } = props;
   const [inputValue, setInputValue] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -69,29 +72,20 @@ export default function Input({ disabled = false, onClick }: InputProps) {
     return "text-gray8";
   };
 
-  /**
-   * placeholder class 정의
-   * @returns
-   */
-  const getPlaceholderClass = () => {
-    if (disabled) return "placeholder-gray8";
-    return "placeholder-white";
-  };
-
   return (
     <div
-      className={`gap-[0.2rem] box-border flex flex-col w-[32rem] h-[5.6rem] ${getTextClass()}`}
+      className={`gap-[0.2rem] box-border flex flex-col w-[32rem] ${getTextClass()}`}
     >
       <div
         className={`box-border rounded-[0.4rem] flex flex-col items-start justify-start px-[1.2rem] py-[0.8rem] w-[32rem] h-[5.6rem] border ${getBorderClass()}`}
       >
         <div className="w-full">
-          <p className={`w-full text-caption ${getTextClass()}`}>라벨</p>
+          <p className={`w-full text-caption ${getTextClass()}`}>{label}</p>
           <div className="items-center flex gap-[1.2rem] w-full">
             <div className="text-subtitle w-[24rem]">
               <input
-                className={`w-full bg-transparent outline-none ${getPlaceholderClass()}`}
-                placeholder="입력"
+                className="w-full bg-transparent outline-none placeholder-gray8"
+                placeholder={placeholder}
                 value={inputValue}
                 onChange={handleInputChange}
                 disabled={disabled}
