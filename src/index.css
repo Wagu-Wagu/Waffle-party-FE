@@ -52,3 +52,14 @@ body {
 .btn-base {
   @apply w-[32rem] h-[5.2rem];
 }
+
+.slick-slider,
+.slick-track,
+.slick-slide,
+.slick-list {
+  @apply h-full;
+}
+
+.slick-list > div {
+  @apply h-full;
+}

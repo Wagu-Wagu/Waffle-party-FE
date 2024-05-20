@@ -117,9 +117,9 @@ export default function PostForm({
 
   return (
     <>
-      <main className="px-[2rem] w-full h-screen-minus-46 ">
+      <main className="w-full h-screen-minus-46">
         <section
-          className="flex py-[1.8rem] cursor-pointer"
+          className="flex px-[2rem] py-[1.8rem] cursor-pointer"
           onClick={handleClickOTT}
         >
           <p
@@ -132,10 +132,10 @@ export default function PostForm({
           </div>
         </section>
         <div className="w-full bg-gray13 h-[0.2rem]"></div>
-        <section className=" mt-[1.4rem] flex flex-col gap-[1.6rem]">
+        <section className="mt-[1.4rem] flex flex-col gap-[1.6rem]">
           {/* 제목 */}
           <input
-            className="bg-gray14 outline-none font-semibold text-[2rem] font-pretendard leading-[2.8rem] text-gray8"
+            className="px-[2rem] bg-gray14 outline-none font-semibold text-[2rem] font-pretendard leading-[2.8rem] text-gray8"
             placeholder="제목을 입력해주세요."
             onChange={(e) => setTitle(e.target.value)}
             value={title}
@@ -143,16 +143,13 @@ export default function PostForm({
 
           {/* 사진이 들어갈 영역 */}
           {imgSrc && (
-            <div
-              className="flex m-auto max-w-[32rem] py-[1.6rem]"
-              onClick={() => setShowFullImage(true)}
-            >
+            <div className="flex" onClick={() => setShowFullImage(true)}>
               {imgSrc.map((src, index) => (
                 <div
-                  className="h-[18.8rem]"
+                  className="h-[17rem]"
                   key={index}
                   style={{
-                    width: `${index === 0 ? 19.5 : 12.5}rem`,
+                    width: `${index === 0 ? 60.94 : 39.06}%`,
                     position: "relative",
                   }}
                 >
@@ -174,7 +171,7 @@ export default function PostForm({
                         left: 0,
                         width: "100%",
                         height: "100%",
-                        backgroundColor: "rgba(0, 0, 0, 0.5)", // 반투명한 검은색
+                        backgroundColor: "rgba(0, 0, 0, 0.3)",
                       }}
                     />
                   )}
@@ -185,7 +182,7 @@ export default function PostForm({
 
           {/* 본문 */}
           <textarea
-            className="bg-gray14 outline-none font-pretendard text-[1.4rem] font-medium leading-[2.2rem] text-gray8 resize-none overflow-hidden"
+            className="px-[2rem] bg-gray14 outline-none font-pretendard text-[1.4rem] font-medium leading-[2.2rem] text-gray8 resize-none overflow-hidden"
             placeholder="본문을 입력해주세요."
             value={text}
             onChange={(e) => setText(e.target.value)}

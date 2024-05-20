@@ -19,11 +19,11 @@ function ImageSlider({ images, onClose }: sliderProps) {
   // const [len, setLen] = useState(1);
 
   return (
-    <div className="w-[50rem] h-[18.8rem] bg-cover bg-no-repeat bg-center">
-      <Slider {...settings}>
+    <div className="w-[50rem] h-[30rem] bg-cover bg-no-repeat bg-center">
+      <Slider className="w-full h-full" {...settings}>
         {images?.map((url: string, index: number) => (
           <img
-            className="w-full h-full"
+            className="object-cover w-full h-[30rem]"
             src={url}
             key={index}
             alt="슬라이드 이미지"
