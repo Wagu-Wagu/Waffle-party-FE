@@ -61,7 +61,7 @@ export default function BottomSheet(props: modalProps) {
     <>
       {isVisible && (
         <section
-          className={`fixed top-0 left-0 z-50 w-full h-full bg-black bg-opacity-30 flex justify-center items-end`}
+          className={`fixed top-0 left-0 z-50 w-full h-full bg-black bg-opacity-70 flex justify-center items-end`}
           onClick={onClick}
         >
           <div className="max-w-[50rem] w-full px-[0.8rem]">
