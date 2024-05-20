@@ -11,6 +11,7 @@ import ProfileEditPage from "./pages/ProfileEditPage";
 import TermsPage from "./pages/TermsPage";
 import MyCommentsPage from "./pages/MyCommentsPage";
 import MyPostsPage from "./pages/MyPostsPage";
+import NicknamePage from "./pages/NicknamePage";
 
 export default function Router() {
   return (
@@ -22,7 +23,7 @@ export default function Router() {
           {/* 이용 약관 페이지 */}
           <Route path="/terms" element={<TermsPage />} />
           {/* 닉네임 설정 페이지 */}
-          <Route path="/nickname" element={<TermsPage />} />
+          <Route path="/nickname" element={<NicknamePage />} />
 
           {/* 홈 */}
           <Route path="/" element={<HomePage />} />
