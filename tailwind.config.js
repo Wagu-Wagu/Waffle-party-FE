@@ -93,6 +93,9 @@ export default {
         semibold: 600,
         bold: 700,
       },
+      height: {
+        "screen-minus-46": "calc(100vh - 4.6rem )",
+      },
     },
   },
   plugins: [],
