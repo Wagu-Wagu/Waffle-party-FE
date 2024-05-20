@@ -4,10 +4,9 @@ import Camera from "../../assets/icons/Camera.svg?react";
 
 interface profileImageProps {
   imageSrc: string | undefined;
-  changeProfile: boolean;
 }
 export default function ProfileImageUploader(props: profileImageProps) {
-  const { imageSrc, changeProfile } = props;
+  const { imageSrc } = props;
 
   const [proImg, setProImg] = useState(imageSrc ?? profile);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -64,24 +63,23 @@ export default function ProfileImageUploader(props: profileImageProps) {
         src={proImg}
         alt="프로필 이미지"
       />
-      {changeProfile && (
-        <div className="absolute bottom-0 right-0">
-          <input
-            type="file"
-            id="profUpload"
-            style={{ display: "none" }}
-            onChange={getProImg}
-            accept="image/*"
-            ref={inputRef}
-          />
-          <div
-            className="bg-gray12 w-[3rem] h-[3rem] rounded-full flex items-center justify-center"
-            onClick={handleClick}
-          >
-            <Camera />
-          </div>
+
+      <div className="absolute bottom-0 right-0">
+        <input
+          type="file"
+          id="profUpload"
+          style={{ display: "none" }}
+          onChange={getProImg}
+          accept="image/*"
+          ref={inputRef}
+        />
+        <div
+          className="bg-gray12 w-[3rem] h-[3rem] rounded-full flex items-center justify-center"
+          onClick={handleClick}
+        >
+          <Camera />
         </div>
-      )}
+      </div>
     </div>
   );
 }

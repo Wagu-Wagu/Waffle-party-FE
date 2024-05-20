@@ -3,10 +3,11 @@ import UserCard from "../components/card/UserCard";
 import { userInfos } from "../mock/userInfo";
 import MyPageListCard from "../components/card/MyPageListCard";
 import MyPageSection from "../components/MyPage/MyPageSection";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navigation from "../components/Navigation/Navigation";
 
 export default function MyPage() {
+  const navigate = useNavigate();
   // interface HeaderProps {
   //   leftChild?: React.ReactNode;
   //   title?: string;
@@ -16,11 +17,18 @@ export default function MyPage() {
   const handleClickLogout = () => {
     // TODO logout api 연동
   };
+  const handleClickEdit = () => {
+    navigate("/profile/edit");
+  };
   return (
     <>
       <Header leftChild="" title="마이" rightChild="" noBorder={true} />
       <main className="h-screen-minus-46 flex flex-col items-center justify-center mt-[1rem]">
-        <UserCard isMyPage={true} data={userInfos[1]} />
+        <UserCard
+          isMyPage={true}
+          data={userInfos[1]}
+          onClick={handleClickEdit}
+        />
         <div className="px-[2rem] w-full h-full">
           <div className="mt-[1rem] h-[0.2rem] w-full border-b border-gray13"></div>
           <section className="flex flex-col gap-[4rem] w-full mt-[2rem]">

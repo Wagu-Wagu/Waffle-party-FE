@@ -5,7 +5,7 @@ import PencilUnderLine from "../../assets/icons/PencilUnderLine.svg?react";
 
 // props에는 받아온 데이터와, 마이페이지인지 여부가 들어가야 합니다.
 export default function UserCard(props: any) {
-  const { data, isMyPage } = props;
+  const { data, isMyPage, onClick } = props;
   const [proImg, setProImg] = useState(data.profilePicture ?? profile);
   console.log(proImg);
 
@@ -40,7 +40,8 @@ export default function UserCard(props: any) {
               </p>
             </div>
             <div
-              className={`ml-aut w-[2.4rem] h-[2.4rem] flex justify-end  ${isMyPage && "self-center"}`}
+              className={`ml-aut w-[2.4rem] h-[2.4rem] flex justify-end  ${isMyPage && "self-center"} cursor-pointer`}
+              onClick={onClick}
             >
               {isMyPage ? <PencilUnderLine /> : <MoreIcon />}
             </div>
