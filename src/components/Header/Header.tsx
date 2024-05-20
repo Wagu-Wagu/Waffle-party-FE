@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 interface HeaderProps {
   leftChild?: React.ReactNode;
@@ -13,9 +14,12 @@ export default function Header({
   rightChild,
   noBorder,
 }: HeaderProps) {
+  const location = useLocation();
+  const isHome = location.pathname === "/";
+
   return (
     <header
-      className={`text-white h-[4.6rem] flex items-center justify-between px-8 py-[1.5rem] font-regular text-subtitle ${noBorder ? "" : "border-b border-gray13"}`}
+      className={`fixed top-0 w-full max-w-[50rem] min-w-[36rem] text-white h-[4.6rem] flex items-center justify-between px-8 py-[1.5rem] font-regular text-subtitle ${noBorder ? "" : "border-b border-gray13"} ${isHome ? "bg-gray15" : "bg-gray13"}`}
     >
       <div className="flex items-center min-w-[1.6rem] min-h-[1.6rem]">
         {leftChild}
