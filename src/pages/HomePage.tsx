@@ -1,5 +1,6 @@
 import Header from "../components/Header/Header";
 import HeaderLoginButton from "../components/Header/HeaderLoginButton";
+import Navigation from "../components/Navigation/Navigation";
 import LogoYellow from "./../assets/icons/LogoYellow.svg?react";
 
 export default function HomePage() {
@@ -20,6 +21,7 @@ export default function HomePage() {
         noBorder
       />
       홈페이지
+      <Navigation />
     </>
   );
 }
