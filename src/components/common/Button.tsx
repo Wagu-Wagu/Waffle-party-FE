@@ -2,19 +2,27 @@ import React from "react";
 import classNames from "classnames";
 
 const buttonVariants = {
-  yellow: "bg-primary text-black",
-  gray: "bg-cancel gray13",
-  transparentYellow: "bg-transparent border border-primary text-primary",
-  transparentGray: "bg-transparent border border-cancel text-cancel",
-  borderNoneWhite: "bg-transparent text-white",
-  borderNoneGray: "bg-transparent text-cancel",
-};
+  yellow: {
+    default: "bg-primary text-black",
+    disabled: "bg-cancel gray13 text-black",
+  },
+  borderYellow: {
+    default: "bg-transparent border border-primary text-primary",
+    disabled: "bg-transparent border border-cancel text-cancel",
+  },
+  white: {
+    default: "bg-transparent text-white",
+    disabled: "bg-transparent text-cancel",
+  },
+} as const;
+
+type ButtonVariant = keyof typeof buttonVariants;
 
 type ButtonProps = {
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   size?: "xs" | "sm" | "base";
-  variant?: string;
+  variant: ButtonVariant;
   onClick?: () => void;
   children?: React.ReactNode;
 };
@@ -36,19 +44,15 @@ export default function Button(props: ButtonProps) {
     disabled = false,
     size = "base",
     onClick,
-    variant,
+    variant = "yellow",
     children,
   } = props;
 
   const classes = classNames(
-    "box-border p-4 rounded-md flex justify-center items-center font-sans text-[1.6rem]",
+    "box-border p-4 rounded-md flex justify-center items-center font-sans text-[1.6rem] font-semibold",
     {
-      [buttonVariants.yellow]: variant === "yellow" && !disabled,
-      [buttonVariants.gray]: variant === "gray" && !disabled,
-      [buttonVariants.transparentYellow]: variant === "transparentYellow",
-      [buttonVariants.transparentGray]: variant === "transparentGray",
-      [buttonVariants.borderNoneWhite]: variant === "transparentWhite",
-      [buttonVariants.borderNoneGray]: variant === "transparentGray",
+      [buttonVariants[variant].default]: !disabled,
+      [buttonVariants[variant].disabled]: disabled,
     },
   );
 
