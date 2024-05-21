@@ -4,8 +4,9 @@ import { useLocation } from "react-router-dom";
 interface HeaderProps {
   leftChild?: React.ReactNode;
   title?: string;
-  rightChild?: React.ReactNode;
+  rightChild?: React.ReactNode | string;
   noBorder?: boolean;
+  onClick?: () => void;
 }
 
 export default function Header({
@@ -13,6 +14,7 @@ export default function Header({
   title,
   rightChild,
   noBorder,
+  onClick,
 }: HeaderProps) {
   const location = useLocation();
   const isHome = location.pathname === "/";
@@ -29,7 +31,10 @@ export default function Header({
           {title}
         </h2>
       )}
-      <div className="flex items-center min-w-[1.6rem] min-h-[1.6rem]">
+      <div
+        className="flex items-center min-w-[1.6rem] min-h-[1.6rem] cursor-pointer"
+        onClick={onClick}
+      >
         {rightChild}
       </div>
     </header>
