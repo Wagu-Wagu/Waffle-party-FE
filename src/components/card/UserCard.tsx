@@ -7,25 +7,24 @@ import PencilUnderLine from "../../assets/icons/PencilUnderLine.svg?react";
 export default function UserCard(props: any) {
   const { data, isMyPage, onClick } = props;
   const [proImg, setProImg] = useState(data.profilePicture ?? profile);
-  console.log(proImg);
 
   return (
     <section
-      className={`flex w-full flex-col gap-[0.5rem] ${data.content && "border-b border-gray13 pb-[1.2rem]"} ${isMyPage && "py-[1.3rem] px-[2rem]"}`}
+      className={`flex w-full flex-col gap-[0.5rem] ${data.content && " pb-[1.2rem]"} ${isMyPage && "py-[1.3rem] px-[2rem]"}`}
     >
       <div
         className={`flex items-center ${isMyPage ? "gap-[1.5rem]" : "gap-[1rem]"}`}
       >
         <section
-          className={`box-border ${isMyPage ? "w-[6rem] h-[6rem]" : "w-[3.8rem] h-[3.8rem] "}`}
+          className={`bg-white box-border rounded-full ${isMyPage ? "w-[6rem] min-w-[6rem] h-[6rem]" : "w-[3.8rem] min-w-[3.8rem] h-[3.8rem]"}`}
         >
           <img
-            className="box-border w-full h-full aspect-square"
+            className={`box-border rounded-full w-full h-full  object-cover ${isMyPage ? "w-[6rem] h-[6rem]" : "w-[3.8rem] h-[3.8rem]"}`}
             src={proImg}
             alt="프로필 이미지"
           />
         </section>
-        <section className="flex flex-col h-full gap-[0.5rem] w-full">
+        <section className="flex flex-col h-full gap-[0.5rem] w-full justify-center">
           <section className="flex w-full">
             <div
               className={`mr-auto border-red ${isMyPage && "flex flex-col gap-[0.6rem]"}`}
@@ -40,21 +39,21 @@ export default function UserCard(props: any) {
               </p>
             </div>
             <div
-              className={`ml-aut w-[2.4rem] h-[2.4rem] flex justify-end  ${isMyPage && "self-center"} cursor-pointer`}
+              className={`w-[2.4rem] h-[2.4rem] flex justify-end  ${isMyPage && "self-center"} cursor-pointer`}
               onClick={onClick}
             >
               {isMyPage ? <PencilUnderLine /> : <MoreIcon />}
             </div>
           </section>
-          {data.content && (
-            <>
-              <section className="font-normal leading-5 text-[1.4rem] text-white">
-                {data.content}
-              </section>
-            </>
-          )}
         </section>
       </div>
+      {data.content && (
+        <div className="flex gap-[1rem]">
+          <section className="w-full pl-[4.8rem] font-normal leading-[2.2rem] text-[1.4rem] text-white break-words">
+            {data.content}
+          </section>
+        </div>
+      )}
     </section>
   );
 }
