@@ -2,9 +2,11 @@ import Header from "../components/Header/Header";
 import PostForm from "../components/PostForm";
 import Close from "../assets/icons/CloseIcon.svg?react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function PostEditPage() {
   const navigate = useNavigate();
+  const [showFullImage, setShowFullImage] = useState<boolean>(false);
 
   const handleHeaderClick = () => {
     navigate("/");
@@ -24,17 +26,21 @@ export default function PostEditPage() {
   const postFormProps = {
     data: data,
     onHeaderClick: handleHeaderClick,
+    setShowFullImage,
+    showFullImage,
   };
 
   return (
     <>
-      <Header
-        leftChild={<Close />}
-        title="글 수정"
-        rightChild="수정"
-        noBorder={false}
-        onClick={handleHeaderClick}
-      />
+      {!showFullImage && (
+        <Header
+          leftChild={<Close />}
+          title="글 수정"
+          rightChild="수정"
+          noBorder={false}
+          onClick={handleHeaderClick}
+        />
+      )}
       <PostForm {...postFormProps} />
     </>
   );

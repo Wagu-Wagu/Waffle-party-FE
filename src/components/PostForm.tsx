@@ -8,10 +8,14 @@ import { postDetailState } from "../recoil/atoms";
 
 export default function PostForm({
   data,
+  showFullImage,
   onHeaderClick,
+  setShowFullImage,
 }: {
   data: any;
+  showFullImage: boolean;
   onHeaderClick: () => void;
+  setShowFullImage: (show: boolean) => void;
 }) {
   const [isShow, setIsShow] = useState<boolean>(false);
   const [title, setTitle] = useState<string>(data?.title ?? "");
@@ -22,7 +26,7 @@ export default function PostForm({
   const [selectedOption, setSelectedOption] = useState<string | null>(
     data.ott ?? null,
   );
-  const [showFullImage, setShowFullImage] = useState<boolean>(false);
+  // const [showFullImage, setShowFullImage] = useState<boolean>(false);
   const [scrollDown, setScrollDown] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -171,7 +175,7 @@ export default function PostForm({
                         left: 0,
                         width: "100%",
                         height: "100%",
-                        backgroundColor: "rgba(0, 0, 0, 0.3)",
+                        backgroundColor: "rgba(0, 0, 0, 0.8)",
                       }}
                     />
                   )}
