@@ -16,20 +16,22 @@ export default function ProfileEditPage() {
   return (
     <>
       <Header leftChild={<CloseBtn />} title="프로필 변경" />
-      <div className="h-screen-minus-46">
-        <div className="mt-[3.8rem] bg-white flex justify-center">
-          <ProfileImageUploader imageSrc={undefined} />
+      <div className="flex flex-col justify-between h-screen-minus-12.8">
+        <div>
+          <div className="mt-[3.8rem] flex justify-center">
+            <ProfileImageUploader imageSrc={undefined} />
+          </div>
+          <div className="mt-[4.8rem] flex justify-center">
+            <Input
+              disabled={false}
+              onClick={handleClick}
+              label="닉네임"
+              placeholder="기존 닉네임"
+            />
+          </div>
         </div>
-        <div className="mt-[4.8rem] flex justify-center">
-          <Input
-            disabled={false}
-            onClick={handleClick}
-            label="닉네임"
-            placeholder="기존 닉네임"
-          />
-        </div>
-        <div className="mt-[31.4rem] flex justify-center">
-          <Button type="button" disabled={false} variant="gray" size="base">
+        <div className="flex justify-center mb-[3rem]">
+          <Button type="button" disabled={true} variant="yellow" size="base">
             등록하기
           </Button>
         </div>
