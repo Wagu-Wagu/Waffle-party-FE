@@ -27,6 +27,7 @@ export default function ProfileEditPage() {
               onClick={handleClick}
               label="닉네임"
               placeholder="기존 닉네임"
+              maxLen={50}
             />
           </div>
         </div>
