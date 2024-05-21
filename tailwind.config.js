@@ -72,6 +72,7 @@ export default {
         blue12: "#014274",
         additional1: "#FFE001",
         additional2: "#401D21",
+        additional3: "#BDBDBD",
       },
       fontFamily: {
         sans: ["Pretendard", "ui-sans-serif", "system-ui"],
@@ -97,6 +98,7 @@ export default {
       },
       height: {
         "screen-minus-46": "calc(100vh - 4.6rem )",
+        "screen-minus-12.8": "calc(100vh - 12.8rem )",
       },
     },
   },
