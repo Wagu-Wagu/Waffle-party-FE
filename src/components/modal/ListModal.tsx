@@ -1,72 +1,62 @@
+import { useState } from "react";
 import BottomSheet from "./BottomSheet";
 import BottomSheetHeader from "./BottomSheetHeader";
+import Check from "../../assets/icons/Check.svg?react";
 
 interface modalProps {
-  // post, comment
   isShow: boolean;
-  type: string;
-  onClick?: () => void;
-  children?: React.ReactNode;
+  onClick: (e: React.MouseEvent<Element, MouseEvent>) => void;
+  onSelect: (option: string) => void;
 }
 
 export default function ListModal(props: modalProps) {
-  const { isShow, type, onClick } = props;
-
-  // 게시글 더보기 모달에 대한 옵션
-  const postOptions = [
-    {
-      label: "게시글 수정",
-      action: () => {
-        window.alert("수정할거?");
-      },
-    },
-    { label: "끌어올리기", action: () => {} },
-    { label: "숨기기", action: () => {} },
-    { label: "삭제", action: () => {} },
-    // { label: "취소", action: onClick },
+  const { isShow, onClick, onSelect } = props;
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const ottOptions = [
+    "넷플릭스",
+    "왓챠",
+    "디즈니+",
+    "웨이브",
+    "티빙",
+    "쿠팡플레이",
+    "리프텔",
+    "네이버시리즈",
+    "기타",
   ];
 
-  // 댓글 더보기 모달에 대한 옵션
-  const commentOptions = [
-    { label: "댓글더보기", action: () => {} },
-    { label: "답댓글", action: () => {} },
-    { label: "복사", action: () => {} },
-    { label: "수정", action: () => {} },
-    { label: "삭제", action: () => {} },
-    { label: "작성자 정보", action: () => {} },
-    // { label: "취소", action: onClick },
-  ];
-
-  // 현재 모달에 따라서 옵션을 선택
-  const options = type === "post" ? postOptions : commentOptions;
+  const handleOptionClick = (index: number) => {
+    setSelectedOption(index);
+    onSelect(ottOptions[index]);
+  };
 
   return (
     <BottomSheet isShow={isShow} onClick={onClick}>
       <BottomSheetHeader />
-      <div className="flex flex-col gap-[0.8rem] ">
-        <ul className=" bg-gray14">
-          {options.map((option, index) => (
+      <div
+        className="text-white font-pretendard bg-gray14 py-[3rem] px-[2rem]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <ul className="flex flex-col items-start text-lg font-normal leading-6 gap-9">
+          <li className="text-[2.8rem] h-[2.8rem] font-semibold leading-7">
+            OTT를 선택해주세요.
+          </li>
+          {ottOptions.map((option, index) => (
             <li
-              className={`flex items-center justify-center w-full h-[5.6rem] py-[1.4rem] text-[1.6rem] cursor-pointer text-center font-pretendard font-normal leading-6 ${
-                index !== options.length - 1 ? "border-b border-gray13" : ""
-              } ${option.label === "삭제" ? "text-danger" : "text-white"}`}
-              key={index}
-              onClick={option.action}
+              key={option}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOptionClick(index);
+              }}
+              className="flex text-[1.6rem] items-center h-[2.4rem] w-full gap-2 cursor-pointer"
             >
-              {option.label}
+              {option}
+              {selectedOption === index && (
+                <div className="ml-auto">
+                  <Check />
+                </div>
+              )}
             </li>
           ))}
-        </ul>
-        <ul className=" bg-gray14">
-          <li
-            className="flex items-center justify-center h-[5.6rem] py-[1.4rem] text-[1.6rem] cursor-pointer text-white"
-            text-center
-            font-pretendard
-            font-normal
-            leading-6
-          >
-            취소
-          </li>
         </ul>
       </div>
     </BottomSheet>
