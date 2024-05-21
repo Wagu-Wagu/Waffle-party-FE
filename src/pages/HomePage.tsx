@@ -5,6 +5,7 @@ import FilterList from "../components/Home/FilterList";
 import PostListCard from "../components/Home/PostListCard";
 import Navigation from "../components/Navigation/Navigation";
 import LogoYellow from "./../assets/icons/LogoYellow.svg?react";
+import Banner from "../components/Home/Banner";
 
 export const PostList = [
   {
@@ -147,12 +148,8 @@ export default function HomePage() {
         noBorder
       />
       <main className="h-screen-minus-12.8">
-        {/* 배너 */}
-
-        {/* 필터 목록 */}
+        <Banner />
         <FilterList onOttSelect={handleOttSelect} selectedOtts={selectedOtts} />
-
-        {/* 게시글 목록 */}
         {filteredPostList.map((post) => (
           <PostListCard key={post.id} post={post} />
         ))}
