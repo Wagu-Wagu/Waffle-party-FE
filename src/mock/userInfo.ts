@@ -265,7 +265,7 @@ export const userInfos = [
     name: "User Two",
     nickname: "usertwo",
     kakaoId: "usertwo_kakao",
-    profilePicture: "https://example.com/replyusertwelve.jpg",
+    profilePicture: null,
     posts: [
       {
         id: 4,

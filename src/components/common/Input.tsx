@@ -2,57 +2,78 @@ import React, { useState, useEffect } from "react";
 import InputCheck from "../../assets/icons/InputCheck.svg?react";
 import InputDelete from "../../assets/icons/InputDelete.svg?react";
 import InputError from "../../assets/icons/InputError.svg?react";
+import checkValidation from "../../hooks/checkValidation";
+import { validationResultType } from "../../types/validationResultType";
 
 interface InputProps {
   disabled?: boolean;
   label: string;
   placeholder: string;
+  maxLen: number;
   onClick?: () => void;
+  onChange: (value: string, res: validationResultType) => void;
 }
 
 export default function Input(props: InputProps) {
-  const { disabled, label, placeholder, onClick } = props;
-  const [inputValue, setInputValue] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const maxTextLen = 50;
+  const { disabled, label, placeholder, maxLen, onClick, onChange } = props;
+  const [inputValue, setInputValue] = useState<string>("");
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
 
   /**
-   * 글자수 감지
+   * input이 변경될때마다 실행
    */
   useEffect(() => {
-    if (inputValue.length > 50) {
-      setIsError(true);
-      setIsSuccess(false);
-    } else if (inputValue.length > 0) {
-      setIsError(false);
+    // 유효성 검사
+    const res = checkValidation(inputValue);
+
+    if (res.success) {
+      setMessage(res.message);
       setIsSuccess(true);
-    } else {
       setIsError(false);
-      setIsSuccess(false);
+    } else {
+      if (inputValue.length === 0) {
+        setIsSuccess(false);
+        setIsError(false);
+        setMessage("");
+      } else {
+        setMessage(res.message);
+        setIsError(true);
+        setIsSuccess(false);
+      }
     }
-  }, [inputValue]);
+    // 부모 컴포넌트에 value 전달
+    onChange(inputValue, res);
+  }, [inputValue, isSuccess, isError, setIsSuccess, setIsError]);
 
   /**
-   * input change
+   * input이 변경될때
    * @param event
    */
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    setInputValue(value);
+    if (value.length <= maxLen) {
+      setInputValue(value);
+    }
   };
 
   /**
-   * input delete
+   * 삭제 아이콘 클릭
+   * @param event
    */
-  const handleDeleteClick = () => {
-    setInputValue("");
-    setIsError(false);
-    setIsSuccess(false);
+  const handleDeleteClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+    setTimeout(() => {
+      setInputValue("");
+      setIsError(false);
+      setIsSuccess(false);
+    }, 0);
   };
 
   /**
-   * border class 정의
+   * 분기에 맞는 border 색상
    * @returns
    */
   const getBorderClass = () => {
@@ -63,7 +84,7 @@ export default function Input(props: InputProps) {
   };
 
   /**
-   * text class 정의
+   * 분기에 맞는 text 색상
    * @returns
    */
   const getTextClass = () => {
@@ -71,6 +92,76 @@ export default function Input(props: InputProps) {
     if (isError) return "text-error";
     return "text-gray8";
   };
+
+  /**
+   * 성공일때
+   * @param param0
+   * @returns
+   */
+  const RenderSuccessIcons = ({ onClick }: { onClick?: () => void }) => (
+    <div className="flex gap-[1.2rem]">
+      <div
+        className="flex justify-center items-center w-[1.6rem] h-[1.6rem]"
+        onClick={onClick}
+      >
+        <InputCheck />
+      </div>
+      <div
+        className="flex ml-auto justify-center items-center w-[1.6rem] h-[1.6rem] cursor-pointer"
+        onClick={handleDeleteClick}
+      >
+        <InputDelete />
+      </div>
+    </div>
+  );
+
+  /**
+   * 성공, 에러 여부
+   * @param param0
+   * @returns
+   */
+  const RenderDefaultIcons = ({ onClick }: { onClick?: () => void }) => (
+    <>
+      {isSuccess && (
+        <div
+          className="flex ml-auto justify-center items-center w-[1.6rem] h-[1.6rem]"
+          onClick={onClick}
+        >
+          <InputCheck />
+        </div>
+      )}
+      {isError && (
+        <div
+          className="flex ml-auto justify-center items-center w-[1.6rem] h-[1.6rem]"
+          onClick={onClick}
+        >
+          <InputError />
+        </div>
+      )}
+    </>
+  );
+
+  /**
+   * 에러일때
+   * @param param0
+   * @returns
+   */
+  const RenderErrorIcons = ({ onClick }: { onClick?: () => void }) => (
+    <div className="flex gap-[1.2rem]">
+      <div
+        className="flex justify-center items-center w-[1.6rem] h-[1.6rem]"
+        onClick={onClick}
+      >
+        <InputError />
+      </div>
+      <div
+        className="flex justify-center items-center w-[1.6rem] h-[1.6rem] cursor-pointer"
+        onClick={handleDeleteClick}
+      >
+        <InputDelete />
+      </div>
+    </div>
+  );
 
   return (
     <div
@@ -84,33 +175,23 @@ export default function Input(props: InputProps) {
           <div className="items-center flex gap-[1.2rem] w-full">
             <div className="text-subtitle w-[24rem]">
               <input
-                className="w-full bg-transparent outline-none placeholder-gray8"
-                placeholder={placeholder}
+                className="w-full text-white bg-transparent outline-none placeholder-gray8"
+                placeholder={isFocused ? "" : placeholder}
                 value={inputValue}
                 onChange={handleInputChange}
                 disabled={disabled}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setTimeout(() => setIsFocused(false), 0)}
               />
             </div>
-            {isSuccess && (
-              <div
-                className="flex justify-center items-center w-[1.6rem] h-[1.6rem]"
-                onClick={onClick}
-              >
-                <InputCheck />
-              </div>
-            )}
-            {(isSuccess || isError) && inputValue && (
-              <div
-                className="flex justify-center items-center w-[1.6rem] h-[1.6rem]"
-                onClick={handleDeleteClick}
-              >
-                <InputDelete />
-              </div>
-            )}
-            {isError && (
-              <div className="flex justify-center items-center w-[1.6rem] h-[1.6rem]">
-                <InputError />
-              </div>
+            {isFocused ? (
+              isSuccess ? (
+                <RenderSuccessIcons onClick={onClick} />
+              ) : isError ? (
+                <RenderErrorIcons onClick={onClick} />
+              ) : null
+            ) : (
+              <RenderDefaultIcons onClick={onClick} />
             )}
           </div>
         </div>
@@ -118,9 +199,9 @@ export default function Input(props: InputProps) {
       <div
         className={`text-[1.1rem] px-[1.2rem] flex h-[1.2rem] items-center ${getTextClass()}`}
       >
-        <p>도움말 메시지</p>
+        <p>{message}</p>
         <p className="ml-auto">
-          {inputValue.length}/{maxTextLen}
+          {inputValue.length}/{maxLen}
         </p>
       </div>
     </div>
