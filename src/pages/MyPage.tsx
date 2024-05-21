@@ -34,12 +34,16 @@ export default function MyPage() {
           <section className="flex flex-col gap-[4rem] w-full mt-[2rem]">
             <div>
               <MyPageSection title="내활동">
-                <MyPageListCard activeData={4} isArrow={true}>
-                  작성한글
-                </MyPageListCard>
-                <MyPageListCard activeData={3} isArrow={true}>
-                  작성한댓글
-                </MyPageListCard>
+                <Link to="/mypage/post">
+                  <MyPageListCard activeData={4} isArrow={true}>
+                    작성한 글
+                  </MyPageListCard>
+                </Link>
+                <Link to="/mypage/comment">
+                  <MyPageListCard activeData={3} isArrow={true}>
+                    작성한 댓글
+                  </MyPageListCard>
+                </Link>
                 {/* 다른 내활동 관련 항목들도 여기에 추가 */}
               </MyPageSection>
             </div>
