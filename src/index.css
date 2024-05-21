@@ -41,6 +41,11 @@ body {
  * button
  * TODO 디자인 확정되면 수정
  */
+.btn-xxs {
+  @apply w-[4.4rem] h-[3.2rem] px-[1.6rem] py-[1.6rem];
+  @apply text-[1.2rem] text-gray13 whitespace-nowrap;
+}
+
 .btn-xs {
   @apply w-[8.2rem] h-[5.2rem];
 }
