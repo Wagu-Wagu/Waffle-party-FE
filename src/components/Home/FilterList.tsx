@@ -34,9 +34,19 @@ export default function FilterList({
     edgeFriction: 0.15,
   };
 
+  const sortedOttList = [...ottList].sort((a, b) => {
+    if (selectedOtts.includes(a) && !selectedOtts.includes(b)) {
+      return -1;
+    }
+    if (!selectedOtts.includes(a) && selectedOtts.includes(b)) {
+      return 1;
+    }
+    return 0;
+  });
+
   return (
     <Slider {...settings} className="px-8 py-6 bg-gray15">
-      {ottList.map((ott) => (
+      {sortedOttList.map((ott) => (
         <div className="mr-[0.8rem]">
           <Chip
             key={ott}
