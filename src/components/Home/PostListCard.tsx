@@ -12,16 +12,8 @@ interface PostType {
   comments: number;
 }
 
-export default function PostListCard({
-  id,
-  ott,
-  title,
-  content,
-  thumbnail,
-  writer,
-  date,
-  comments,
-}: PostType) {
+export default function PostListCard({ post }: { post: PostType }) {
+  const { id, ott, title, content, thumbnail, writer, date, comments } = post;
   return (
     <Link
       to={`/post-detail/${id}`}
