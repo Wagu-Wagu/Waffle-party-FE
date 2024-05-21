@@ -1,4 +1,4 @@
-import Button from "../components/common/Button";
+import MyReactCard from "../components/card/MyReactCard";
 
 export default function HomePage() {
   console.log("home");
