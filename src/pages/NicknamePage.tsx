@@ -20,7 +20,7 @@ export default function NicknamePage() {
       <main className="flex flex-col items-center h-screen-minus-46">
         <form className="flex flex-col justify-between h-full mb-[6.9rem]">
           <div>
-            <h3 className="mb-8 mt-[2.4rem] font-semibold text-white text-title">
+            <h3 className="mb-8 mt-[9.6rem] font-semibold text-white text-title">
               닉네임을 적어주세요
             </h3>
             <Input label="닉네임" placeholder="닉네임을 적어주세요." />
