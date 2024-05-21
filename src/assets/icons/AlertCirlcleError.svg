@@ -1,0 +1,14 @@
+<svg width="56" height="55" viewBox="0 0 56 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="alert-cirlcle-error 1" clip-path="url(#clip0_293_8992)">
+<g id="Group">
+<path id="Vector" d="M28 17.5V27.5" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M28 37.5488V37.5" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_3" d="M28 52.5C41.8071 52.5 53 41.3071 53 27.5C53 13.6929 41.8071 2.5 28 2.5C14.1929 2.5 3 13.6929 3 27.5C3 41.3071 14.1929 52.5 28 52.5Z" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_293_8992">
+<rect width="56" height="55" fill="white"/>
+</clipPath>
+</defs>
+</svg>
