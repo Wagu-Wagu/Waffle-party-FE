@@ -24,7 +24,7 @@ function ImageSlider({ images, onClose }: sliderProps) {
 
   return (
     <div className="w-[50rem] h-[30rem] bg-cover bg-no-repeat bg-center">
-      <div className="whitespace-nowrap text-[1.6rem] w-[3.1rem] font-medium leading-[2.4rem] absolute top-[1.1rem] z-10 p-2 text-white transform -translate-x-1/2 left-1/2">
+      <div className="text-[1.6rem] font-medium leading-[2.4rem] absolute top-[1.1rem] z-10 p-2 text-white transform -translate-x-1/2 left-1/2">
         <span className="text-white">{currentSlide + 1}</span>
         <span>&nbsp;/&nbsp;</span>
         <span className="text-gray9">{maxLen}</span>
