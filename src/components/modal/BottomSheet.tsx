@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 interface modalProps {
   // post, comment
   isShow: boolean;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<Element, MouseEvent>) => void;
   children?: React.ReactNode;
 }
 
