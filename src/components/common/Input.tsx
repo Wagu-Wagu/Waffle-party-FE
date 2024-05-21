@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import InputCheck from "../../assets/icons/InputCheck.svg?react";
 import InputDelete from "../../assets/icons/InputDelete.svg?react";
 import InputError from "../../assets/icons/InputError.svg?react";
+import checkValidation from "../../hooks/checkValidation";
+import { validationResultType } from "../../types/validationResultType";
 
 interface InputProps {
   disabled?: boolean;
@@ -9,38 +11,41 @@ interface InputProps {
   placeholder: string;
   maxLen: number;
   onClick?: () => void;
+  onChange: (value: string, res: validationResultType) => void;
 }
 
 export default function Input(props: InputProps) {
-  const { disabled, label, placeholder, maxLen, onClick } = props;
-  const [inputValue, setInputValue] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
+  const { disabled, label, placeholder, maxLen, onClick, onChange } = props;
+  const [inputValue, setInputValue] = useState<string>("");
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
   /**
    * input이 변경될때마다 실행
    */
   useEffect(() => {
-    if (inputValue.length > maxLen) {
-      setIsError(true);
-      setIsSuccess(false);
-    } else if (inputValue.length > 0) {
-      setIsError(false);
-      setIsSuccess(true);
-    } else {
-      setIsError(false);
-      setIsSuccess(false);
-    }
+    // 유효성 검사
+    const res = checkValidation(inputValue);
 
-    if (isSuccess) {
-      setMessage("성공");
-    } else if (isError) {
-      setMessage("실패");
+    if (res.success) {
+      setMessage(res.message);
+      setIsSuccess(true);
+      setIsError(false);
     } else {
-      setMessage("");
+      if (inputValue.length === 0) {
+        setIsSuccess(false);
+        setIsError(false);
+        setMessage("");
+      } else {
+        setMessage(res.message);
+        setIsError(true);
+        setIsSuccess(false);
+      }
     }
+    // 부모 컴포넌트에 value 전달
+    onChange(inputValue, res);
   }, [inputValue, isSuccess, isError, setIsSuccess, setIsError]);
 
   /**
