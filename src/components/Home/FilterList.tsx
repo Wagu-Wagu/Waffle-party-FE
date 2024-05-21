@@ -44,16 +44,19 @@ export default function FilterList({
     return 0;
   });
 
+  const handleChipClick = (ott: string) => {
+    onOttSelect(ott);
+  };
+
   return (
     <Slider {...settings} className="px-8 py-6 bg-gray15">
       {sortedOttList.map((ott) => (
-        <div className="mr-[0.8rem]">
+        <div className="mr-[0.8rem]" key={ott}>
           <Chip
-            key={ott}
             ott={ott}
             isButton
             isCheck={selectedOtts.includes(ott)}
-            onClick={() => onOttSelect(ott)}
+            onClick={() => handleChipClick(ott)}
           />
         </div>
       ))}
