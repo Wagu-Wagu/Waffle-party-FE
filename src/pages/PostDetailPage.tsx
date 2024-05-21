@@ -5,6 +5,8 @@ import Button from "../components/common/Button";
 import { useEffect, useState } from "react";
 import UnLock from "../assets/icons/UnLock.svg?react";
 import Lock from "../assets/icons/Lock.svg?react";
+import { postData } from "./HomePage";
+import ImageSlider from "../components/ImageSlider";
 
 export default function PostDetailPage() {
   const [isFocused, setIsFocused] = useState(false);
@@ -12,6 +14,7 @@ export default function PostDetailPage() {
   const [inputValue, setInputValue] = useState("");
   const [isLocked, setIsLocked] = useState(false);
   const [uptoSubmit, setUptoSubmit] = useState(false);
+  const [showFullImage, setShowFullImage] = useState<boolean>(false);
 
   useEffect(() => {
     if (inputValue.length === 0) {
@@ -42,6 +45,21 @@ export default function PostDetailPage() {
     return "text-white";
   };
 
+  const postData = {
+    id: 1,
+    ott: "티빙",
+    title: "여고추리반3 보실 분",
+    content:
+      "무서운 저주가 떠도는 학교로 전학 간 추리반 학생들이 학교에 숨겨진 진실에 다가갈수록 더욱더 거대한 사건을 마주하면서 벌어지는 미스터리 어드벤처 여고추리반3 같이 봐요!",
+    thumbnail: [
+      "https://search.pstatic.net/common/?src=https%3A%2F%2Fditto-phinf.pstatic.net%2F20240405_208%2F1712296500539nVxqY_JPEG%2F660f9233b8c2545456c85fd6.jpg&type=o&size=472x472&ttype=input",
+      "https://search.pstatic.net/common/?src=https%3A%2F%2Fditto-phinf.pstatic.net%2F20240405_208%2F1712296500539nVxqY_JPEG%2F660f9233b8c2545456c85fd6.jpg&type=o&size=472x472&ttype=input",
+    ],
+    writer: "와플중독자",
+    date: "2024.5.18",
+    comments: 26,
+  };
+
   // const { data, isMyPage, onClick } = props;
   const data = {
     nickname: "dd",
@@ -64,7 +82,7 @@ export default function PostDetailPage() {
         <div className="px-[2rem] py-[1.5rem]">
           <div className="px-[1.4rem] py-[0.8rem]  bg-gray13 rounded-[5rem] justify-center items-center inline-flex">
             <div className="text-white text-[1.2rem] font-normal font-['Pretendard'] leading-[1.6rem]">
-              OTT01
+              {postData.ott}
             </div>
           </div>
         </div>
@@ -77,14 +95,50 @@ export default function PostDetailPage() {
               </div>
               <div className="w-full flex-col justify-start items-start gap-[1rem] flex">
                 <div className="w-full h-[2.8rem] text-white text-[2rem] font-bold font-['Pretendard'] leading-[2.8rem]">
-                  Lorem ipsum dolor sit amet conse{" "}
+                  {postData.title}
                 </div>
+                {postData.thumbnail && (
+                  <div
+                    className="flex w-full"
+                    onClick={() => setShowFullImage(true)}
+                  >
+                    {postData.thumbnail.map((src, index) => (
+                      <div
+                        className="h-[17rem]"
+                        key={index}
+                        style={{
+                          width: `${index === 0 ? 60.94 : 39.06}%`,
+                          position: "relative",
+                        }}
+                      >
+                        <img
+                          className="h-full"
+                          src={src}
+                          alt={`업로드 사진 ${index + 1}`}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                        {index === 1 && (
+                          <div
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                              width: "100%",
+                              height: "100%",
+                              backgroundColor: "rgba(0, 0, 0, 0.8)",
+                            }}
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
                 <div className="w-full text-gray1 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem]">
-                  Lorem ipsum dolor sit amet consectetur. Feugiat vitae
-                  parturient vitae faucibus viverra praesent mauris auctor. Ut
-                  quis nunc auctor cum nunc at augue proin est. Tellus risus
-                  tellus aliquet at. Volutpat porttitor felis tellus amet sit
-                  elit feugiat eleifend.
+                  {postData.content}
                 </div>
               </div>
             </div>
@@ -93,7 +147,7 @@ export default function PostDetailPage() {
           <div className="inline-flex flex-col items-center justify-start w-full px-[2rem] pt-[2.4rem]">
             <div className="pb-[2rem] inline-flex items-start justify-start w-full gap-5 lex-col">
               <div className="text-white text-[1.2rem] font-medium font-['Pretendard'] leading-[1.6rem]">
-                댓글 {contents}
+                댓글 {postData.comments}
               </div>
             </div>
             <div className="flex flex-col w-full gap-[1rem]">
@@ -145,6 +199,20 @@ export default function PostDetailPage() {
         </div>
         <div className="w-full h-[3.8rem] relative bg-neutral-800" />
       </div>
+      {showFullImage && (
+        <div
+          className="fixed top-0 left-0 flex items-center justify-center w-full h-full bg-black bg-opacity-50"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowFullImage(false);
+          }}
+        >
+          <ImageSlider
+            images={postData.thumbnail}
+            onClose={() => setShowFullImage(false)}
+          />
+        </div>
+      )}
     </>
   );
 }
