@@ -3,15 +3,14 @@ import Chip from "../common/Chip";
 
 const ottList = [
   "넷플릭스",
-  "웨이브",
-  "티빙",
   "왓챠",
   "디즈니+",
-  "OTT6",
-  "OTT7",
-  "OTT8",
-  "OTT9",
-  "OTT10",
+  "웨이브",
+  "티빙",
+  "쿠팡플레이",
+  "라프텔",
+  "네이버시리즈",
+  "기타",
 ];
 
 interface FilterListProps {
