@@ -1,5 +1,7 @@
+import { useState } from "react";
 import Header from "../components/Header/Header";
 import HeaderLoginButton from "../components/Header/HeaderLoginButton";
+import FilterList from "../components/Home/FilterList";
 import PostListCard from "../components/Home/PostListCard";
 import Navigation from "../components/Navigation/Navigation";
 import LogoYellow from "./../assets/icons/LogoYellow.svg?react";
@@ -113,6 +115,21 @@ export const PostList = [
 ];
 
 export default function HomePage() {
+  const [selectedOtts, setSelectedOtts] = useState<string[]>([]);
+
+  const handleOttSelect = (ott: string) => {
+    setSelectedOtts((prevSelectedOtts) =>
+      prevSelectedOtts.includes(ott)
+        ? prevSelectedOtts.filter((item) => item !== ott)
+        : [...prevSelectedOtts, ott],
+    );
+  };
+
+  const filteredPostList =
+    selectedOtts.length > 0
+      ? PostList.filter((post) => selectedOtts.includes(post.ott))
+      : PostList;
+
   return (
     <>
       <Header
@@ -130,7 +147,13 @@ export default function HomePage() {
         noBorder
       />
       <main className="h-screen-minus-12.8">
-        {PostList.map((post) => (
+        {/* 배너 */}
+
+        {/* 필터 목록 */}
+        <FilterList onOttSelect={handleOttSelect} selectedOtts={selectedOtts} />
+
+        {/* 게시글 목록 */}
+        {filteredPostList.map((post) => (
           <PostListCard key={post.id} post={post} />
         ))}
       </main>
