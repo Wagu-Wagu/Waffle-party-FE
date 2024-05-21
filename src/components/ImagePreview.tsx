@@ -5,7 +5,7 @@ interface previewProps {
 export default function ImagePreview(props: previewProps) {
   const { images, onClick } = props;
   return (
-    <div className="flex" onClick={onClick}>
+    <div className="flex w-full" onClick={onClick}>
       {images.map((src, index) => (
         <div
           className="h-[17rem]"

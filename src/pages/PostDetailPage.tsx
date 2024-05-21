@@ -8,6 +8,7 @@ import Lock from "../assets/icons/Lock.svg?react";
 import ImageSlider from "../components/ImageSlider";
 import React from "react";
 import formatDate from "../hooks/formatDate";
+import ImagePreview from "../components/ImagePreview";
 
 export default function PostDetailPage() {
   const [isFocused, setIsFocused] = useState(false);
@@ -54,7 +55,8 @@ export default function PostDetailPage() {
     };
 
     setComments((prevComments) => [...prevComments, newComment]);
-    setInputValue(""); // 댓글 추가 후 입력창 비우기
+    setInputValue("");
+    setIsLocked(false);
   };
 
   /**
@@ -158,7 +160,7 @@ export default function PostDetailPage() {
           </div>
         </section>
 
-        <section className="w-full mt-[1.5rem]">
+        <section className="w-full">
           <section className="inline-flex px-[2rem] flex-col items-center justify-start w-full gap-[2.4rem] border-b-8 border-neutral-900">
             <div className="w-full flex flex-col items-start justify-start gap-[1.6rem]">
               <div className="w-full justify-start items-end gap-2.5 inline-flex">
@@ -168,46 +170,10 @@ export default function PostDetailPage() {
                 <div className="w-full h-[2.8rem] text-white text-[2rem] font-bold font-['Pretendard'] leading-[2.8rem]">
                   {postData.title}
                 </div>
-                {postData.thumbnail && (
-                  <div
-                    className="flex w-full"
-                    onClick={() => setShowFullImage(true)}
-                  >
-                    {postData.thumbnail.map((src, index) => (
-                      <div
-                        className="h-[17rem]"
-                        key={index}
-                        style={{
-                          width: `${index === 0 ? 60.94 : 39.06}%`,
-                          position: "relative",
-                        }}
-                      >
-                        <img
-                          className="h-full"
-                          src={src}
-                          alt={`업로드 사진 ${index + 1}`}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                          }}
-                        />
-                        {index === 1 && (
-                          <div
-                            style={{
-                              position: "absolute",
-                              top: 0,
-                              left: 0,
-                              width: "100%",
-                              height: "100%",
-                              backgroundColor: "rgba(0, 0, 0, 0.8)",
-                            }}
-                          />
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <ImagePreview
+                  images={postData.thumbnail}
+                  onClick={() => setShowFullImage(true)}
+                />
                 <div className="w-full text-gray1 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem]">
                   {postData.content}
                 </div>
