@@ -2,7 +2,7 @@ export default function checkValidation(nickname: string): {
   success: boolean;
   message: string;
 } {
-  const regex = /^[a-zA-Z0-9가-힣]*$/;
+  const regex = /^[a-zA-Z0-9가-힣ㄱ-ㅎ]*$/;
   if (!regex.test(nickname)) {
     return {
       success: false,
