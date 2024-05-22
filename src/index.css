@@ -58,7 +58,7 @@ body {
   @apply w-[32rem] h-[5.2rem];
 }
 
-.slick-slider,
+/* .slick-slider,
 .slick-track,
 .slick-slide,
 .slick-list {
@@ -67,4 +67,13 @@ body {
 
 .slick-list > div {
   @apply h-full;
+} */
+
+.main-header-nav {
+  padding-top: 4.6rem;
+  padding-bottom: 8.2rem;
+}
+
+.main-header {
+  padding-top: 4.6rem;
 }
