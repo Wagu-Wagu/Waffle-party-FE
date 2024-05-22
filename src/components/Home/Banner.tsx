@@ -15,9 +15,10 @@ export default function Banner() {
     autoplay: true,
     autoplaySpeed: 5000,
     dots: true,
-    swipe: false,
-    touchMove: false,
+    swipe: true,
+    touchMove: true,
     arrows: false,
+    draggable: true,
   };
 
   return (
