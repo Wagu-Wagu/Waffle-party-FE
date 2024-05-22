@@ -147,7 +147,7 @@ export default function HomePage() {
         rightChild={<HeaderLoginButton />}
         noBorder
       />
-      <main className="h-screen-minus-12.8">
+      <main className="main">
         <Banner />
         <FilterList onOttSelect={handleOttSelect} selectedOtts={selectedOtts} />
         {filteredPostList.map((post) => (

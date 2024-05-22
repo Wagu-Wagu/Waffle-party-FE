@@ -17,6 +17,7 @@ export default function Banner() {
     dots: true,
     swipe: false,
     touchMove: false,
+    arrows: false,
   };
 
   return (
