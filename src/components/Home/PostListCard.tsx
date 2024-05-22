@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import MiniChip from "../common/MiniChip";
-import { Post, UserList } from "../../__mocks__/mockData";
+import { Post, UserList } from "../../mock/mockData";
 
 const getNickName = (userId: number): string => {
   const user = UserList.find((user) => user.userId === userId);

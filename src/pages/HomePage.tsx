@@ -6,11 +6,12 @@ import PostListCard from "../components/Home/PostListCard";
 import Navigation from "../components/Navigation/Navigation";
 import LogoYellow from "./../assets/icons/LogoYellow.svg?react";
 import Banner from "../components/Home/Banner";
-import { PostList } from "../__mocks__/mockData";
+import { useRecoilValue } from "recoil";
+import { sortedPostListState } from "../recoil/postListState";
 
 export default function HomePage() {
   const [selectedOtts, setSelectedOtts] = useState<string[]>([]);
-  const [postList, setPostList] = useState(PostList);
+  const postList = useRecoilValue(sortedPostListState);
 
   const handleOttSelect = (ott: string) => {
     setSelectedOtts((prevSelectedOtts) =>

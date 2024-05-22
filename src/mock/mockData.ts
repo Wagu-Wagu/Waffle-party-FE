@@ -79,8 +79,8 @@ export const PostList: Post[] = [
     thumbNail: "",
     commentCount: 5,
     isActive: true,
-    createdAt: new Date("2024-05-21T00:00:00"),
-    modifiedAt: new Date("2024-05-21T00:00:00"),
+    createdAt: new Date("2024-05-11T00:00:00"),
+    modifiedAt: new Date("2024-05-11T00:00:00"),
   },
   {
     postId: 5,
@@ -92,8 +92,8 @@ export const PostList: Post[] = [
     thumbNail: "",
     commentCount: 5,
     isActive: true,
-    createdAt: new Date("2024-05-21T00:00:00"),
-    modifiedAt: new Date("2024-05-21T00:00:00"),
+    createdAt: new Date("2024-05-12T00:00:00"),
+    modifiedAt: new Date("2024-05-12T00:00:00"),
   },
   {
     postId: 6,
@@ -105,8 +105,8 @@ export const PostList: Post[] = [
     thumbNail: "",
     commentCount: 5,
     isActive: true,
-    createdAt: new Date("2024-05-21T00:00:00"),
-    modifiedAt: new Date("2024-05-21T00:00:00"),
+    createdAt: new Date("2024-05-13T00:00:00"),
+    modifiedAt: new Date("2024-05-13T00:00:00"),
   },
   {
     postId: 7,
@@ -118,8 +118,8 @@ export const PostList: Post[] = [
     thumbNail: "",
     commentCount: 5,
     isActive: true,
-    createdAt: new Date("2024-05-21T00:00:00"),
-    modifiedAt: new Date("2024-05-21T00:00:00"),
+    createdAt: new Date("2024-05-14T00:00:00"),
+    modifiedAt: new Date("2024-05-14T00:00:00"),
   },
   {
     postId: 8,
@@ -131,8 +131,8 @@ export const PostList: Post[] = [
     thumbNail: "",
     commentCount: 5,
     isActive: true,
-    createdAt: new Date("2024-05-21T00:00:00"),
-    modifiedAt: new Date("2024-05-21T00:00:00"),
+    createdAt: new Date("2024-05-15T00:00:00"),
+    modifiedAt: new Date("2024-05-15T00:00:00"),
   },
   {
     postId: 9,
@@ -144,8 +144,8 @@ export const PostList: Post[] = [
     thumbNail: "",
     commentCount: 5,
     isActive: true,
-    createdAt: new Date("2024-05-21T00:00:00"),
-    modifiedAt: new Date("2024-05-21T00:00:00"),
+    createdAt: new Date("2024-05-16T00:00:00"),
+    modifiedAt: new Date("2024-05-16T00:00:00"),
   },
   {
     postId: 10,
@@ -157,8 +157,8 @@ export const PostList: Post[] = [
     thumbNail: "",
     commentCount: 5,
     isActive: true,
-    createdAt: new Date("2024-05-21T00:00:00"),
-    modifiedAt: new Date("2024-05-21T00:00:00"),
+    createdAt: new Date("2024-05-17T00:00:00"),
+    modifiedAt: new Date("2024-05-17T00:00:00"),
   },
 ];
 

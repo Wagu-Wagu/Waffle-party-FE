@@ -5,14 +5,16 @@ import PostListCard from "../components/Home/PostListCard";
 import LeftArrowIcon from "./../assets/icons/LeftArrowIcon.svg?react";
 import AlertCircleError from "./../assets/icons/AlertCirlcleError.svg?react";
 import EmptyList from "../components/common/EmptyList";
-import { PostList } from "../__mocks__/mockData";
+import { useRecoilValue } from "recoil";
+import { sortedPostListState } from "../recoil/postListState";
+
+// 현재 로그인 한 사용자의 id 임시 지정
+const currentUserId = 3;
 
 export default function MyPostsPage() {
-  // 현재 로그인 한 사용자의 id 임시 지정
-  const currentUserId = 3;
-
+  const postList = useRecoilValue(sortedPostListState);
   // 현재 로그인 한 사용자의 id를 비교해서 필터링
-  const filteredPostList = PostList.filter(
+  const filteredPostList = postList.filter(
     (post) => post.userId === currentUserId,
   );
   const nav = useNavigate();
