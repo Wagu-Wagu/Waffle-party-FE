@@ -15,6 +15,8 @@ import { data } from "../mock/detail";
 import { dummyContentType, dummyMoreContentType } from "../types/comment";
 import HeaderButton from "../components/Header/HeaderButton";
 import { useNavigate, useParams } from "react-router-dom";
+import Chat from "../assets/icons/Chat.svg?react";
+import EmptyList from "../components/common/EmptyList";
 
 export default function PostDetailPage() {
   const [isFocused, setIsFocused] = useState(false);
@@ -71,6 +73,7 @@ export default function PostDetailPage() {
     modalData: any,
   ) => {
     if (event.key === "Enter") {
+      event.preventDefault();
       handleAddComment(modalData);
     }
   };
@@ -85,6 +88,7 @@ export default function PostDetailPage() {
     const currentDate: Date = new Date();
     const formattedDate: string = formatDate(currentDate);
 
+    // TODO 추후에 바뀔 부분
     const newComment = {
       mycomment: true,
       nickname: "새로운 답변자",
@@ -92,30 +96,41 @@ export default function PostDetailPage() {
       content: inputValue,
       profilePicture:
         "https://gam-image-test.s3.ap-northeast-2.amazonaws.com/work/b7d98ae9-c597-48cf-a625-dc6c8bac0001%E1%84%86%E1%85%A2%E1%84%80%E1%85%A5%E1%84%8C%E1%85%B5%E1%86%AB%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3.jpeg",
-      morecomment: null,
+      morecomment: [],
       lock: isLocked,
       isUser: true,
     };
 
+    if (comments.length === 0) {
+      setComments((prev) => [...prev, newComment]);
+      setInputValue("");
+      setIsLocked(false);
+      return;
+    }
+
+    console.log(comments, modalData);
+
     // 댓글 수정
     if (isEdit) {
       // 답댓글이면
-      if (modalData.parent) {
+      if (modalData.child) {
         setComments((prevComments) => {
           return prevComments.map((comment) => {
             if (comment.nickname === modalData.parent?.nickname) {
               return {
                 ...comment,
-                morecomment: comment.morecomment.map((moreComment) => {
-                  if (moreComment.nickname === modalData.child?.nickname) {
-                    return {
-                      ...moreComment,
-                      content: inputValue,
-                      lock: isLocked,
-                    };
-                  }
-                  return moreComment;
-                }),
+                morecomment: comment.morecomment.map(
+                  (moreComment: dummyMoreContentType) => {
+                    if (moreComment.nickname === modalData.child?.nickname) {
+                      return {
+                        ...moreComment,
+                        content: inputValue,
+                        lock: isLocked,
+                      };
+                    }
+                    return moreComment;
+                  },
+                ),
               };
             }
             return comment;
@@ -124,7 +139,7 @@ export default function PostDetailPage() {
       } else {
         setComments((prevComments) => {
           return prevComments.map((comment) => {
-            if (comment.nickname === modalData.child.nickname) {
+            if (comment.nickname === modalData.parent.nickname) {
               // 선택한 댓글의 content만 변경
               return {
                 ...comment,
@@ -137,23 +152,29 @@ export default function PostDetailPage() {
         });
       }
     } else {
-      // 답댓글 등록
-      setComments((prevComments: any) => {
-        if (modalData.child.nickname) {
-          return prevComments.map((comment: dummyContentType) => {
-            if (comment.nickname === modalData.parent.nickname) {
-              return {
-                ...comment,
-                morecomment: [...(comment.morecomment || []), newComment],
-              };
-            }
-            return comment;
-          });
-        }
-        return [...prevComments, newComment];
-      });
+      // 댓글 등록
+      console.log(modalData);
+      if (!modalData.parent) {
+        console.log(modalData);
+        setComments((prevComments) => [...prevComments, newComment]);
+      } else {
+        // 대댓글 등록
+        console.log(comments);
+        setComments((prevComments) =>
+          prevComments.map((comment) =>
+            comment.nickname === modalData.parent.nickname
+              ? {
+                  ...comment,
+                  morecomment: [...(comment.morecomment || []), newComment],
+                }
+              : comment,
+          ),
+        );
+      }
+      console.log(comments);
     }
     setInputValue("");
+    setModalData({ parent: null, child: null });
     setIsLocked(false);
   };
 
@@ -165,14 +186,15 @@ export default function PostDetailPage() {
   const closeConfirm = (isDeleteAction: boolean, modalData?: any) => {
     // 게시물 삭제인 경우
     if (isPost) {
+      setIsPost(false);
+      setBasicModalActive(false);
       // api 함수 호출
       return;
     }
-    setBasicModalActive(false);
 
     // 삭제
     if (isDeleteAction) {
-      if (modalData.parent) {
+      if (modalData.child) {
         setComments((prevComments) => {
           return prevComments.map((comment) => {
             // 선택한 댓글에 달린 답댓글들만 삭제
@@ -180,7 +202,8 @@ export default function PostDetailPage() {
             if (comment.nickname === modalData.parent.nickname) {
               // 답댓글들을 필터링하여 삭제된 답댓글을 제외한 새로운 답댓글 배열 생성
               const updatedReplies = comment.morecomment.filter(
-                (reply) => reply.nickname !== modalData.child.nickname,
+                (reply: dummyMoreContentType) =>
+                  reply.nickname !== modalData.child.nickname,
               );
               // 기존 댓글의 답댓글을 업데이트하여 새로운 답댓글 배열로 설정
               return {
@@ -196,7 +219,7 @@ export default function PostDetailPage() {
         setComments((prevComments) => {
           // 삭제된 댓글을 제외한 새로운 댓글 배열 생성
           const updatedComments = prevComments.filter(
-            (comment) => comment.nickname !== modalData.child.nickname,
+            (comment) => comment.nickname !== modalData.parent.nickname,
           );
           return updatedComments;
         });
@@ -204,6 +227,7 @@ export default function PostDetailPage() {
       // 예시 API 호출
       // deleteCommentAPI().then(response => { ... });
     }
+    setBasicModalActive(false);
   };
 
   /**
@@ -229,20 +253,20 @@ export default function PostDetailPage() {
   };
 
   // TODO any type 변경
-  const handleModal = (value: any, parent?: any) => {
+  const handleModal = (parent: any, child?: any) => {
     setModalActive((prev) => !prev);
-    if (value === "post") {
+    if (parent === "post") {
       setIsPost(true);
     } else {
       setIsPost(false);
-      if (parent) {
+      if (child) {
         // 부모요소 있으면 대댓글
         // parent에 상위 댓글 데이터, child에 대댓글 데이터
-        setModalData({ parent: parent, child: value });
+        setModalData({ parent: parent, child: child });
       } else {
         // 부모요소 없으면 댓글
         // parent는 없고, child에 댓글 데이터
-        setModalData({ parent: null, child: value });
+        setModalData({ parent: parent, child: null });
       }
     }
   };
@@ -258,17 +282,21 @@ export default function PostDetailPage() {
     setModalActive(false);
     setBasicModalActive(true);
   };
-  // 내가 쓴 댓글에 답댓글 달기
+  // 답댓글 달기
   const onCommentReply = () => {
     setModalActive(false);
     setIsFocused(true);
-    // toggleCommentReplies(modalData.nickname);
+    console.log(modalData);
   };
   // 댓글 수정
   const onCommentEdit = () => {
     setModalActive(false);
     setIsFocused(true);
-    setInputValue(modalData.child?.content as string);
+    if (modalData.child) {
+      setInputValue(modalData.child?.content as string);
+    } else {
+      setInputValue(modalData.parent?.content as string);
+    }
     setIsEdit(true);
   };
   // 댓글 삭제
@@ -328,11 +356,11 @@ export default function PostDetailPage() {
             <div className="w-full h-0.5 relative" />
           </section>
           <section className="inline-flex flex-col items-center justify-start w-full px-[2rem] pt-[2.4rem]">
-            {data.comments ? (
+            {comments.length > 0 ? (
               <>
                 <div className="pb-[2rem] inline-flex items-start justify-start w-full gap-5 lex-col">
                   <div className="text-white text-[1.2rem] font-medium font-['Pretendard'] leading-[1.6rem]">
-                    댓글 {data.comments.length}
+                    댓글 {comments.length}
                   </div>
                 </div>
                 <div className="flex flex-col w-full gap-[1rem]">
@@ -346,23 +374,41 @@ export default function PostDetailPage() {
                       />
                       <div className="h-[0.1rem] bg-gray13"></div>
                       {/* 대댓글 */}
-                      {comment.morecomment?.map((moreComment, moreIndex) => (
-                        <div className="pl-[4.8rem]" key={moreIndex}>
-                          <UserCard
-                            data={moreComment}
-                            isMyPage={false}
-                            showMoreIcon={true}
-                            onClick={() => handleModal(moreComment, comment)}
-                          />
-                          <div className="h-[0.1rem] bg-gray13"></div>
-                        </div>
-                      ))}
+                      {comment.morecomment?.map(
+                        (
+                          moreComment: dummyMoreContentType,
+                          moreIndex: number,
+                        ) => (
+                          <div className="pl-[4.8rem]" key={moreIndex}>
+                            <UserCard
+                              data={moreComment}
+                              isMyPage={false}
+                              showMoreIcon={true}
+                              onClick={() => handleModal(comment, moreComment)}
+                            />
+                            <div className="h-[0.1rem] bg-gray13"></div>
+                          </div>
+                        ),
+                      )}
                     </React.Fragment>
                   ))}
                 </div>
               </>
             ) : (
-              <></>
+              <>
+                <div className="pb-[4.25rem] h-full inline-flex items-start justify-start w-full gap-5 flex-col">
+                  <div className="text-white text-[1.2rem] font-medium font-['Pretendard'] leading-[1.6rem]">
+                    댓글 0
+                  </div>
+                </div>
+                <div className="flex flex-col w-full">
+                  <EmptyList
+                    icon={<Chat />}
+                    mainText="아직 댓글이 없어요."
+                    subText="가장 먼저 댓글을 남겨보세요."
+                  />
+                </div>
+              </>
             )}
           </section>
         </section>
