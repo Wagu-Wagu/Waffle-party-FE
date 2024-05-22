@@ -2,13 +2,16 @@ import Header from "../components/Header/Header";
 import LeftArrow from "../assets/icons/LeftArrowIcon.svg?react";
 import UserCard from "../components/card/UserCard";
 import Button from "../components/common/Button";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import UnLock from "../assets/icons/UnLock.svg?react";
 import Lock from "../assets/icons/Lock.svg?react";
 import ImageSlider from "../components/ImageSlider";
 import React from "react";
 import formatDate from "../hooks/formatDate";
 import ImagePreview from "../components/ImagePreview";
+import ActionSheet from "../components/modal/ActionSheet";
+import BasicModal from "../components/modal/BasicModal";
+import { data } from "../mock/detail";
 
 export default function PostDetailPage() {
   const [isFocused, setIsFocused] = useState(false);
@@ -16,6 +19,12 @@ export default function PostDetailPage() {
   const [isLocked, setIsLocked] = useState(false);
   const [uptoSubmit, setUptoSubmit] = useState(false);
   const [showFullImage, setShowFullImage] = useState<boolean>(false);
+  const [modalActive, setModalActive] = useState(false);
+  const [basicModalActive, setBasicModalActive] = useState(false);
+  const modalRef = useRef<HTMLElement>(null);
+  const [modalData, setModalData] = useState(null);
+  // 받아온 데이터중 댓글데이터 넣기
+  const [comments, setComments] = useState(data.comments);
 
   useEffect(() => {
     if (inputValue.length === 0) {
@@ -23,12 +32,11 @@ export default function PostDetailPage() {
       setUptoSubmit(false);
     } else {
       setUptoSubmit(true);
-      console.log(inputValue, uptoSubmit);
     }
   }, [inputValue, setInputValue]);
 
   /**
-   * 댓글 등록
+   * 댓글 입력
    * @param event
    */
   const handleChangeContent = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,19 +50,28 @@ export default function PostDetailPage() {
    */
   const handleAddComment = () => {
     if (inputValue.trim() === "") return;
+    console.log(inputValue);
 
     const currentDate: Date = new Date();
     const formattedDate: string = formatDate(currentDate);
 
     const newComment = {
+      mycomment: true,
       nickname: "새로운 답변자",
-      profilePicture:
-        "https://search.pstatic.net/common/?src=https%3A%2F%2Fditto-phinf.pstatic.net%2F20240405_208%2F1712296500539nVxqY_JPEG%2F660f9233b8c2545456c85fd6.jpg&type=o&size=472x472&ttype=input",
-      content: inputValue,
       timestamp: formattedDate,
+      content: inputValue,
+      profilePicture:
+        "https://gam-image-test.s3.ap-northeast-2.amazonaws.com/work/b7d98ae9-c597-48cf-a625-dc6c8bac0001%E1%84%86%E1%85%A2%E1%84%80%E1%85%A5%E1%84%8C%E1%85%B5%E1%86%AB%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3.jpeg",
+      morecomment: null,
+      lock: isLocked,
     };
 
-    setComments((prevComments) => [...prevComments, newComment]);
+    console.log(newComment);
+
+    setComments((prevComments) => {
+      const updatedComments = [...prevComments, newComment];
+      return updatedComments;
+    });
     setInputValue("");
     setIsLocked(false);
   };
@@ -91,61 +108,42 @@ export default function PostDetailPage() {
     return "text-white";
   };
 
-  /**
-   * dummy data
-   * TODO api연동후 지울예정
-   */
-  const postData = {
-    id: 1,
-    ott: "티빙",
-    title: "여고추리반3 보실 분",
-    content:
-      "무서운 저주가 떠도는 학교로 전학 간 추리반 학생들이 학교에 숨겨진 진실에 다가갈수록 더욱더 거대한 사건을 마주하면서 벌어지는 미스터리 어드벤처 여고추리반3 같이 봐요!",
-    thumbnail: [
-      "https://search.pstatic.net/common/?src=https%3A%2F%2Fditto-phinf.pstatic.net%2F20240405_208%2F1712296500539nVxqY_JPEG%2F660f9233b8c2545456c85fd6.jpg&type=o&size=472x472&ttype=input",
-      "https://search.pstatic.net/common/?src=https%3A%2F%2Fditto-phinf.pstatic.net%2F20240405_208%2F1712296500539nVxqY_JPEG%2F660f9233b8c2545456c85fd6.jpg&type=o&size=472x472&ttype=input",
-    ],
-    writer: "와플중독자",
-    date: "2024.5.18",
-    comments: 26,
+  // TODO any type 변경
+  const handleModal = (value: any) => {
+    setModalActive((prev) => !prev);
+    setModalData(value);
   };
 
-  const [comments, setComments] = useState([
-    {
-      nickname: "유저1",
-      timestamp: "2024.5.18",
-      content:
-        "이것은답글입니다이것은답글입니다이것은답글입니다이것은답글입니다이것은답글입니다이것은답글입니다이것은답글입니다이것은답글입니다이것은답글입니다",
-      profilePicture:
-        "https://gam-image-test.s3.ap-northeast-2.amazonaws.com/work/b7d98ae9-c597-48cf-a625-dc6c8bac0001%E1%84%86%E1%85%A2%E1%84%80%E1%85%A5%E1%84%8C%E1%85%B5%E1%86%AB%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3.jpeg",
-    },
-    {
-      nickname: "유저2",
-      timestamp: "2024.5.18",
-      content: "저요",
-      profilePicture:
-        "https://gam-image-test.s3.ap-northeast-2.amazonaws.com/work/b7d98ae9-c597-48cf-a625-dc6c8bac0001%E1%84%86%E1%85%A2%E1%84%80%E1%85%A5%E1%84%8C%E1%85%B5%E1%86%AB%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3.jpeg",
-    },
-    {
-      nickname: "유저3",
-      timestamp: "2024.5.18",
-      content: "저도요",
-      profilePicture:
-        "https://gam-image-test.s3.ap-northeast-2.amazonaws.com/work/b7d98ae9-c597-48cf-a625-dc6c8bac0001%E1%84%86%E1%85%A2%E1%84%80%E1%85%A5%E1%84%8C%E1%85%B5%E1%86%AB%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3.jpeg",
-    },
-    {
-      nickname: "유저4",
-      timestamp: "2024.5.18",
-      content: "이거재밌음??",
-      profilePicture:
-        "https://gam-image-test.s3.ap-northeast-2.amazonaws.com/work/b7d98ae9-c597-48cf-a625-dc6c8bac0001%E1%84%86%E1%85%A2%E1%84%80%E1%85%A5%E1%84%8C%E1%85%B5%E1%86%AB%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3.jpeg",
-    },
-  ]);
+  const closeConfirm = (isDeleteAction: boolean) => {
+    setBasicModalActive(false);
+    if (isDeleteAction) {
+      // 예시 API 호출
+      // deleteCommentAPI().then(response => { ... });
+    }
+  };
 
-  const data = {
-    nickname: "작성자",
-    timestamp: "xx.xx",
-    profilePicture: null,
+  const onPostEdit = () => {
+    setModalActive(false);
+  };
+  const onPostDelete = () => {
+    setModalActive(false);
+    setBasicModalActive(true);
+  };
+  const onCommentReply = () => {
+    setModalActive(false);
+  };
+  const onCommentEdit = () => {
+    setModalActive(false);
+  };
+  const onCommentDelete = () => {
+    setModalActive(false);
+    setBasicModalActive(true);
+  };
+  const onMoreComment = () => {
+    setModalActive(false);
+  };
+  const onReport = () => {
+    setModalActive(false);
   };
 
   return (
@@ -155,7 +153,7 @@ export default function PostDetailPage() {
         <section className="px-[2rem] py-[1.5rem]">
           <div className="px-[1.4rem] py-[0.8rem]  bg-gray13 rounded-[5rem] justify-center items-center inline-flex">
             <div className="text-white text-[1.2rem] font-normal font-['Pretendard'] leading-[1.6rem]">
-              {postData.ott}
+              {data.ott}
             </div>
           </div>
         </section>
@@ -164,37 +162,53 @@ export default function PostDetailPage() {
           <section className="inline-flex px-[2rem] flex-col items-center justify-start w-full gap-[2.4rem] border-b-8 border-neutral-900">
             <div className="w-full flex flex-col items-start justify-start gap-[1.6rem]">
               <div className="w-full justify-start items-end gap-2.5 inline-flex">
-                <UserCard data={data} isMyPage={false} />
+                <UserCard
+                  data={data}
+                  isMyPage={false}
+                  onClick={() => handleModal("post")}
+                  showMoreIcon={data.mypost}
+                />
               </div>
               <div className="w-full flex-col justify-start items-start gap-[1rem] flex">
                 <div className="w-full h-[2.8rem] text-white text-[2rem] font-bold font-['Pretendard'] leading-[2.8rem]">
-                  {postData.title}
+                  {data.title}
                 </div>
                 <ImagePreview
-                  images={postData.thumbnail}
+                  images={data.thumbnail}
                   onClick={() => setShowFullImage(true)}
                 />
                 <div className="w-full text-gray1 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem]">
-                  {postData.content}
+                  {data.text}
                 </div>
               </div>
             </div>
             <div className="w-full h-0.5 relative" />
           </section>
           <section className="inline-flex flex-col items-center justify-start w-full px-[2rem] pt-[2.4rem]">
-            <div className="pb-[2rem] inline-flex items-start justify-start w-full gap-5 lex-col">
-              <div className="text-white text-[1.2rem] font-medium font-['Pretendard'] leading-[1.6rem]">
-                댓글 {postData.comments}
-              </div>
-            </div>
-            <div className="flex flex-col w-full gap-[1rem]">
-              {comments.map((comment, index) => (
-                <React.Fragment key={index}>
-                  <UserCard data={comment} isMyPage={false} />
-                  <div className="h-[0.1rem] bg-gray13"></div>
-                </React.Fragment>
-              ))}
-            </div>
+            {data.comments ? (
+              <>
+                <div className="pb-[2rem] inline-flex items-start justify-start w-full gap-5 lex-col">
+                  <div className="text-white text-[1.2rem] font-medium font-['Pretendard'] leading-[1.6rem]">
+                    댓글 {data.comments.length}
+                  </div>
+                </div>
+                <div className="flex flex-col w-full gap-[1rem]">
+                  {comments.map((comment, index) => (
+                    <React.Fragment key={index}>
+                      <UserCard
+                        data={comment}
+                        isMyPage={false}
+                        showMoreIcon={true}
+                        onClick={() => handleModal(comment)}
+                      />
+                      <div className="h-[0.1rem] bg-gray13"></div>
+                    </React.Fragment>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
           </section>
         </section>
       </main>
@@ -242,10 +256,31 @@ export default function PostDetailPage() {
           }}
         >
           <ImageSlider
-            images={postData.thumbnail}
+            images={data.thumbnail}
             onClose={() => setShowFullImage(false)}
           />
         </div>
+      )}
+      {modalActive && (
+        <ActionSheet
+          isShow={modalActive}
+          modalData={modalData}
+          onPostEdit={onPostEdit}
+          onPostDelete={onPostDelete}
+          onCommentReply={onCommentReply}
+          onCommentEdit={onCommentEdit}
+          onCommentDelete={onCommentDelete}
+          onMoreComment={onMoreComment}
+          onReport={onReport}
+          ref={modalRef}
+        />
+      )}
+      {basicModalActive && (
+        <BasicModal
+          ref={modalRef}
+          isShow={basicModalActive}
+          onConfirm={closeConfirm}
+        />
       )}
     </>
   );

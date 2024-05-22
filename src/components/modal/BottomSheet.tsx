@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, forwardRef, Ref } from "react";
 
 interface modalProps {
   // post, comment
-  isShow: boolean;
-  onClick?: (e: React.MouseEvent<Element, MouseEvent>) => void;
+  isShow?: boolean;
+  // onClick?: (e: React.MouseEvent<Element, MouseEvent>) => void;
   children?: React.ReactNode;
 }
 
-export default function BottomSheet(props: modalProps) {
-  const { isShow, onClick, children } = props;
+const BottomSheet = forwardRef((props: modalProps, ref: Ref<HTMLElement>) => {
+  const { isShow, children } = props;
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -29,21 +29,30 @@ export default function BottomSheet(props: modalProps) {
 
   const modalClassName = isVisible ? "animate-fade-in" : "animate-fade-out";
 
+  const handleCloseModal = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (e.target === e.currentTarget) {
+      setIsVisible(false);
+    }
+  };
+
   return (
     <>
       {isVisible && (
         <section
           className={`fixed top-0 left-0 z-50 w-full h-full bg-black bg-opacity-70 flex justify-center items-end`}
-          onClick={onClick}
+          ref={ref}
+          onClick={handleCloseModal}
         >
           <div className="max-w-[50rem] w-full px-[0.8rem]">
-            <button className={`w-full ${modalClassName}`}>
+            <div className={`w-full ${modalClassName}`}>
               {/* 모달 내용 */}
               {isShow && children}
-            </button>
+            </div>
           </div>
         </section>
       )}
     </>
   );
-}
+});
+
+export default BottomSheet;

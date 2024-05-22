@@ -19,17 +19,9 @@ export default function PostCreatePage() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const modalRef = useRef(null);
 
   const setPostDetail = useSetRecoilState(postDetailState);
-
-  /**
-   * OTT 선택 모달 띄우기
-   * @param e
-   */
-  const handleClickOTT = (e: React.MouseEvent<Element, MouseEvent>) => {
-    e.stopPropagation();
-    setIsShow((prev) => !prev);
-  };
 
   /**
    * OTT 선택
@@ -108,6 +100,10 @@ export default function PostCreatePage() {
     // Save data logic here
   };
 
+  useEffect(() => {
+    console.log(isShow);
+  }, [setIsShow, isShow]);
+
   return (
     <>
       <Header
@@ -120,7 +116,10 @@ export default function PostCreatePage() {
       <main className="px-[2rem] w-full h-screen-minus-46 ">
         <section
           className="flex py-[1.8rem] cursor-pointer"
-          onClick={handleClickOTT}
+          onClick={(e) => {
+            e.stopPropagation;
+            setIsShow((prev) => !prev);
+          }}
         >
           <p
             className={`font-pretendard text-[1.6rem] font-normal leading-[2.4rem] ${selectedOption ? "text-white" : "text-gray8"}`}
@@ -189,15 +188,14 @@ export default function PostCreatePage() {
               />
             </div>
           )}
-
-          {isShow && (
-            <ListModal
-              isShow={isShow}
-              onClick={handleClickOTT}
-              onSelect={handleSelectOTT}
-            />
-          )}
         </div>
+        {isShow && (
+          <ListModal
+            isShow={isShow}
+            onSelect={handleSelectOTT}
+            ref={modalRef}
+          />
+        )}
       </div>
     </>
   );
