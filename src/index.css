@@ -64,7 +64,11 @@ body {
   @apply h-full;
 } */
 
-.main {
+.main-header-nav {
   padding-top: 4.6rem;
   padding-bottom: 8.2rem;
+}
+
+.main-header {
+  padding-top: 4.6rem;
 }
