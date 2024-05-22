@@ -23,9 +23,14 @@ export default function NicknamePage() {
             <h3 className="mb-8 mt-[9.6rem] font-semibold text-white text-title">
               닉네임을 적어주세요
             </h3>
-            <Input label="닉네임" placeholder="닉네임을 적어주세요." />
+            <Input
+              label="닉네임"
+              placeholder="닉네임을 적어주세요."
+              maxLen={8}
+              onChange={() => {}}
+            />
           </div>
-          <Button type="submit" variant="yellow" disabled>
+          <Button type="submit" variant="yellow">
             등록하기
           </Button>
         </form>
