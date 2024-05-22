@@ -70,8 +70,6 @@ export default function FilterList({
           left: `${layoutRect.left}px`,
           width: `${layoutRect.width}px`,
           zIndex: 1000,
-          paddingLeft: "2rem",
-          paddingRight: "2rem",
         });
       } else {
         setFixedStyle({});
@@ -91,7 +89,7 @@ export default function FilterList({
       style={fixedStyle}
       className="bg-gray15 py-[1.5rem] px-[2rem]"
     >
-      <Slider {...settings} className="z-10">
+      <Slider {...settings}>
         {sortedOttList.map((ott) => (
           <div className="mr-[0.8rem]" key={ott}>
             <Chip
