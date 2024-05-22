@@ -321,7 +321,7 @@ export default function PostDetailPage() {
    */
   const setTextClass = () => {
     if (isLocked && isFocused) {
-      return "text-yellow3";
+      return "text-yellow2";
     }
     return "text-white";
   };
