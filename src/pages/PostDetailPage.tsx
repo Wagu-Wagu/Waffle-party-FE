@@ -29,7 +29,10 @@ export default function PostDetailPage() {
   const [modalActive, setModalActive] = useState(false);
   const [basicModalActive, setBasicModalActive] = useState(false);
   const modalRef = useRef<HTMLElement>(null);
-  const [modalData, setModalData] = useState<dummyContentType | null>(null);
+  const [modalData, setModalData] = useState<{
+    parent: dummyContentType | null;
+    child: dummyMoreContentType | null;
+  }>({ parent: null, child: null });
   // 받아온 데이터중 댓글데이터 넣기
   const [comments, setComments] = useState(data.comments);
   const [commentsState, setCommentsState] = useState<{ [key: string]: any }>(
@@ -69,9 +72,9 @@ export default function PostDetailPage() {
    *
    * @returns 댓글 등록
    */
-  const handleAddComment = (parentNickName: string) => {
+  const handleAddComment = (modalData: any) => {
     if (inputValue.trim() === "") return;
-    console.log(inputValue);
+    console.log(modalData);
 
     const currentDate: Date = new Date();
     const formattedDate: string = formatDate(currentDate);
@@ -90,26 +93,52 @@ export default function PostDetailPage() {
 
     // 댓글 수정
     if (isEdit) {
-      setComments((prevComments) => {
-        return prevComments.map((comment) => {
-          if (comment.nickname === parentNickName) {
-            // 선택한 댓글의 content만 변경
-            return {
-              ...comment,
-              content: inputValue,
-            };
-          }
-          // 선택하지 않은 댓글은 그대로 반환
-          return comment;
+      // 답댓글이면
+      if (modalData.parent) {
+        console.log(modalData);
+        setComments((prevComments) => {
+          return prevComments.map((comment) => {
+            if (comment.nickname === modalData.parent?.nickname) {
+              return {
+                ...comment,
+                morecomment: comment.morecomment.map((moreComment) => {
+                  if (moreComment.nickname === modalData.child?.nickname) {
+                    return {
+                      ...moreComment,
+                      content: inputValue,
+                      lock: isLocked,
+                    };
+                  }
+                  return moreComment;
+                }),
+              };
+            }
+            return comment;
+          });
         });
-      });
+        console.log(comments);
+      } else {
+        setComments((prevComments) => {
+          return prevComments.map((comment) => {
+            if (comment.nickname === modalData.child.nickname) {
+              // 선택한 댓글의 content만 변경
+              return {
+                ...comment,
+                content: inputValue,
+              };
+            }
+            // 선택하지 않은 댓글은 그대로 반환
+            return comment;
+          });
+        });
+      }
     } else {
-      // 답댓글
+      // 답댓글 등록
       setComments((prevComments: any) => {
         console.log(prevComments);
-        if (parentNickName) {
+        if (modalData.child.nickname) {
           return prevComments.map((comment: dummyContentType) => {
-            if (comment.nickname === parentNickName) {
+            if (comment.nickname === modalData.parent.nickname) {
               return {
                 ...comment,
                 morecomment: [...(comment.morecomment || []), newComment],
@@ -124,23 +153,23 @@ export default function PostDetailPage() {
     }
     setInputValue("");
     setIsLocked(false);
-    if (!isEdit) {
-      toggleCommentReplies(parentNickName);
-    } else {
-      setIsEdit(false);
-    }
+    // if (!isEdit || modalData.parent) {
+    //   toggleCommentReplies(modalData.parent.nickname);
+    // } else {
+    //   setIsEdit(false);
+    // }
   };
 
   /**
-   * 엔터키 눌렀을때
+   * 입력 후 엔터키 눌렀을때
    * @param event
    */
   const handleKeyPress = (
     event: React.KeyboardEvent<HTMLInputElement>,
-    nickname: string,
+    modalData: any,
   ) => {
     if (event.key === "Enter") {
-      handleAddComment(nickname);
+      handleAddComment(modalData);
     }
   };
 
@@ -167,11 +196,25 @@ export default function PostDetailPage() {
   };
 
   // TODO any type 변경
-  const handleModal = (value: any) => {
+  const handleModal = (value: any, parent?: dummyContentType) => {
     setModalActive((prev) => !prev);
-    setModalData(value);
+    if (parent) {
+      // 부모요소 있으면 대댓글
+      // parent에 상위 댓글 데이터, child에 대댓글 데이터
+      setModalData({ parent: parent, child: value });
+    } else {
+      // 부모요소 없으면 댓글
+      // parent는 없고, child에 댓글 데이터
+      setModalData({ parent: null, child: value });
+    }
   };
 
+  /**
+   * 댓글, 대댓글 삭제
+   * @param isDeleteAction
+   * @param parentNickName
+   * @param modalData
+   */
   const closeConfirm = (
     isDeleteAction: boolean,
     parentNickName: string,
@@ -217,17 +260,17 @@ export default function PostDetailPage() {
     }
   };
 
-  const toggleCommentReplies = (nickname: string) => {
-    console.log(nickname);
-    setCommentsState((prev) => ({
-      ...prev,
-      [nickname]: {
-        ...prev[nickname],
-        showReplies: !prev[nickname]?.showReplies,
-      },
-    }));
-    setIsFocused(true);
-  };
+  // const toggleCommentReplies = (nickname: string) => {
+  //   console.log(nickname);
+  //   setCommentsState((prev) => ({
+  //     ...prev,
+  //     [nickname]: {
+  //       ...prev[nickname],
+  //       showReplies: !prev[nickname]?.showReplies,
+  //     },
+  //   }));
+  //   setIsFocused(true);
+  // };
 
   // 게시물 수정
   const onPostEdit = () => {
@@ -248,7 +291,7 @@ export default function PostDetailPage() {
   const onCommentEdit = () => {
     setModalActive(false);
     setIsFocused(true);
-    setInputValue(modalData?.content as string);
+    setInputValue(modalData.child?.content as string);
     setIsEdit(true);
   };
   // 댓글 삭제
@@ -336,7 +379,7 @@ export default function PostDetailPage() {
                             data={moreComment}
                             isMyPage={false}
                             showMoreIcon={true}
-                            onClick={() => handleModal(moreComment)}
+                            onClick={() => handleModal(moreComment, comment)}
                           />
                           <div className="h-[0.1rem] bg-gray13"></div>
                         </div>
@@ -370,9 +413,7 @@ export default function PostDetailPage() {
                 onFocus={() => setIsFocused(true)}
                 value={inputValue}
                 onChange={handleChangeContent}
-                onKeyDown={(e) =>
-                  handleKeyPress(e, modalData?.nickname as string)
-                }
+                onKeyDown={(e) => handleKeyPress(e, modalData)}
                 ref={inputRef}
               />
             </div>
@@ -381,7 +422,7 @@ export default function PostDetailPage() {
               disabled={uptoSubmit ? false : true}
               size="xxs"
               variant="yellow"
-              onClick={() => handleAddComment(modalData?.nickname as string)}
+              onClick={() => handleAddComment(modalData)}
             >
               등록
             </Button>
@@ -421,9 +462,7 @@ export default function PostDetailPage() {
         <BasicModal
           ref={modalRef}
           isShow={basicModalActive}
-          onConfirm={(isConfirm) =>
-            closeConfirm(isConfirm, modalData?.nickname as string, modalData)
-          }
+          onConfirm={(isConfirm) => closeConfirm(isConfirm, modalData)}
         />
       )}
     </>

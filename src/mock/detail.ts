@@ -49,13 +49,12 @@ export const data = {
             "https://gam-image-test.s3.ap-northeast-2.amazonaws.com/work/b7d98ae9-c597-48cf-a625-dc6c8bac0001%E1%84%86%E1%85%A2%E1%84%80%E1%85%A5%E1%84%8C%E1%85%B5%E1%86%AB%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3.jpeg",
         },
         {
-          lock: true,
+          lock: false,
           isUser: false,
-          mymorecomment: false,
+          mymorecomment: true,
           nickname: "유저4",
           timestamp: "2024.5.18",
-          content:
-            "이것은답글입니다이것은답글입니다이것은답글입니다이것은답글입니다이것은답글입니다이것은답글입니다이것은답글입니다이것은답글입니다이것은답글입니다",
+          content: "dd",
           profilePicture:
             "https://gam-image-test.s3.ap-northeast-2.amazonaws.com/work/b7d98ae9-c597-48cf-a625-dc6c8bac0001%E1%84%86%E1%85%A2%E1%84%80%E1%85%A5%E1%84%8C%E1%85%B5%E1%86%AB%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3.jpeg",
         },

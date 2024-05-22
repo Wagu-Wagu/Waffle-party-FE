@@ -29,12 +29,6 @@ const ActionSheet = forwardRef<HTMLElement, modalProps>(
       onReport,
     } = props;
 
-    console.log(
-      modalData,
-      modalData.hasOwnProperty("morecomment"),
-      modalData.mycomment,
-    );
-
     // 게시물수정
     const postOptions = [
       { label: "수정", action: onPostEdit },
@@ -63,13 +57,15 @@ const ActionSheet = forwardRef<HTMLElement, modalProps>(
     // 다른사람이 쓴 답댓글일때
     const otherMoreCommentOptions = [{ label: "신고", action: onReport }];
 
-    const options = modalData.hasOwnProperty("morecomment")
-      ? modalData.mycomment
-        ? myCommentOptions
-        : otherCommentOptions
-      : modalData.mymorecomment
+    // 부모요소가 있는지 검사
+    // 있으면 대댓글, 없으면 댓글
+    const options = modalData.parent
+      ? modalData.child.isUser
         ? myMoreCommentOptions
-        : otherMoreCommentOptions;
+        : otherMoreCommentOptions
+      : modalData.child.isUser
+        ? myCommentOptions
+        : otherCommentOptions;
 
     return (
       <BottomSheet isShow={isShow} ref={ref}>
