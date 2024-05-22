@@ -2,7 +2,7 @@ import Header from "../components/Header/Header";
 import LeftArrow from "../assets/icons/LeftArrowIcon.svg?react";
 import UserCard from "../components/card/UserCard";
 import Button from "../components/common/Button";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import UnLock from "../assets/icons/UnLock.svg?react";
 import Lock from "../assets/icons/Lock.svg?react";
 import ImageSlider from "../components/ImageSlider";
@@ -40,6 +40,7 @@ export default function PostDetailPage() {
   const { userId } = useParams();
 
   const nav = useNavigate();
+
   useEffect(() => {
     if (inputValue.length === 0) {
       setIsFocused(false);
@@ -50,11 +51,31 @@ export default function PostDetailPage() {
   }, [inputValue, setInputValue]);
 
   // 모달 옵션 클릭 후 포커스 상태(답댓글, 수정)
-  useEffect(() => {
+  useLayoutEffect(() => {
+    console.log(inputRef.current);
     if (isFocused && inputRef.current) {
       inputRef.current.focus();
     }
   }, [isFocused]);
+
+  // TODO any type 변경
+  const handleModal = (parent: any, child?: any) => {
+    setModalActive((prev) => !prev);
+    if (parent === "post") {
+      setIsPost(true);
+    } else {
+      setIsPost(false);
+      if (child) {
+        // 부모요소 있으면 대댓글
+        // parent에 상위 댓글 데이터, child에 대댓글 데이터
+        setModalData({ parent: parent, child: child });
+      } else {
+        // 부모요소 없으면 댓글
+        // parent는 없고, child에 댓글 데이터
+        setModalData({ parent: parent, child: null });
+      }
+    }
+  };
 
   /**
    * 댓글 입력
@@ -63,6 +84,7 @@ export default function PostDetailPage() {
   const handleChangeContent = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setInputValue(value);
+    setIsFocused(true);
   };
 
   /**
@@ -109,8 +131,6 @@ export default function PostDetailPage() {
       return;
     }
 
-    console.log(comments, modalData);
-
     // 댓글 수정
     if (isEdit) {
       // 답댓글이면
@@ -152,15 +172,15 @@ export default function PostDetailPage() {
           });
         });
       }
+      setIsEdit(false);
     } else {
       // 댓글 등록
-      console.log(modalData);
+
       if (!modalData.parent) {
-        console.log(modalData);
         setComments((prevComments) => [...prevComments, newComment]);
       } else {
         // 대댓글 등록
-        console.log(comments);
+
         setComments((prevComments) =>
           prevComments.map((comment) =>
             comment.nickname === modalData.parent.nickname
@@ -172,7 +192,6 @@ export default function PostDetailPage() {
           ),
         );
       }
-      console.log(comments);
     }
     setInputValue("");
     setModalData({ parent: null, child: null });
@@ -231,6 +250,60 @@ export default function PostDetailPage() {
     setBasicModalActive(false);
   };
 
+  // 게시물 수정
+  const onPostEdit = () => {
+    setModalActive(false);
+    setIsPost(false);
+    nav(`/post-edit/${userId}`);
+  };
+  // 게시물 삭제
+  const onPostDelete = () => {
+    setModalActive(false);
+    setBasicModalActive(true);
+  };
+  // 답댓글 달기
+  const onCommentReply = () => {
+    setIsFocused(true);
+    setInputValue("");
+    setIsLocked(false);
+    setModalActive(false);
+    setIsEdit(false);
+    console.log(isFocused);
+  };
+  // 댓글 수정
+  const onCommentEdit = () => {
+    setModalActive(false);
+    setIsFocused(true);
+    console.log(modalData);
+    if (modalData.child) {
+      console.log("dd");
+      setInputValue(modalData.child?.content as string);
+      if (modalData.child?.lock) {
+        setIsLocked(true);
+      } else {
+        setIsLocked(false);
+      }
+    } else {
+      setInputValue(modalData.parent?.content as string);
+      if (modalData.parent?.lock) {
+        setIsLocked(true);
+      } else {
+        setIsLocked(false);
+      }
+    }
+    setIsEdit(true);
+  };
+  // 댓글 삭제
+  const onCommentDelete = () => {
+    setModalActive(false);
+    setBasicModalActive(true);
+  };
+
+  // 상대 댓글 신고하기
+  const onReport = () => {
+    setModalActive(false);
+  };
+
   /**
    *
    * @returns placeholder 글자색
@@ -251,64 +324,6 @@ export default function PostDetailPage() {
       return "text-yellow3";
     }
     return "text-white";
-  };
-
-  // TODO any type 변경
-  const handleModal = (parent: any, child?: any) => {
-    setModalActive((prev) => !prev);
-    if (parent === "post") {
-      setIsPost(true);
-    } else {
-      setIsPost(false);
-      if (child) {
-        // 부모요소 있으면 대댓글
-        // parent에 상위 댓글 데이터, child에 대댓글 데이터
-        setModalData({ parent: parent, child: child });
-      } else {
-        // 부모요소 없으면 댓글
-        // parent는 없고, child에 댓글 데이터
-        setModalData({ parent: parent, child: null });
-      }
-    }
-  };
-
-  // 게시물 수정
-  const onPostEdit = () => {
-    setModalActive(false);
-    setIsPost(false);
-    nav(`/post-edit/${userId}`);
-  };
-  // 게시물 삭제
-  const onPostDelete = () => {
-    setModalActive(false);
-    setBasicModalActive(true);
-  };
-  // 답댓글 달기
-  const onCommentReply = () => {
-    setModalActive(false);
-    setIsFocused(true);
-    console.log(modalData);
-  };
-  // 댓글 수정
-  const onCommentEdit = () => {
-    setModalActive(false);
-    setIsFocused(true);
-    if (modalData.child) {
-      setInputValue(modalData.child?.content as string);
-    } else {
-      setInputValue(modalData.parent?.content as string);
-    }
-    setIsEdit(true);
-  };
-  // 댓글 삭제
-  const onCommentDelete = () => {
-    setModalActive(false);
-    setBasicModalActive(true);
-  };
-
-  // 상대 댓글 신고하기
-  const onReport = () => {
-    setModalActive(false);
   };
 
   return (
@@ -475,6 +490,7 @@ export default function PostDetailPage() {
           onCommentEdit={onCommentEdit}
           onCommentDelete={onCommentDelete}
           onReport={onReport}
+          onClose={() => setModalActive(false)}
           ref={modalRef}
         />
       )}

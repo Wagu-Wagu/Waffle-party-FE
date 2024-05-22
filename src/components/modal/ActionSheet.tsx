@@ -12,6 +12,7 @@ interface modalProps {
   onCommentEdit: () => void;
   onCommentDelete: () => void;
   onReport: () => void;
+  onClose: () => void;
   children?: React.ReactNode;
 }
 
@@ -27,6 +28,7 @@ const ActionSheet = forwardRef<HTMLElement, modalProps>(
       onCommentEdit,
       onCommentDelete,
       onReport,
+      onClose,
     } = props;
 
     console.log(modalData);
@@ -88,7 +90,7 @@ const ActionSheet = forwardRef<HTMLElement, modalProps>(
               </li>
             ))}
           </ul>
-          <ul className="bg-gray14">
+          <ul className="bg-gray14" onClick={onClose}>
             <li className="flex items-center justify-center h-[5.6rem] py-[1.4rem] text-[1.6rem] cursor-pointer text-white text-center font-pretendard font-normal leading-6">
               취소
             </li>
