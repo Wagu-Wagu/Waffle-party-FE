@@ -12,6 +12,13 @@ import ImagePreview from "../components/ImagePreview";
 import ActionSheet from "../components/modal/ActionSheet";
 import BasicModal from "../components/modal/BasicModal";
 import { data } from "../mock/detail";
+import {
+  dummyContentType,
+  dummyDetail,
+  dummyMoreContentType,
+} from "../types/comment";
+import HeaderButton from "../components/Header/HeaderButton";
+import { useNavigate } from "react-router-dom";
 
 export default function PostDetailPage() {
   const [isFocused, setIsFocused] = useState(false);
@@ -22,10 +29,16 @@ export default function PostDetailPage() {
   const [modalActive, setModalActive] = useState(false);
   const [basicModalActive, setBasicModalActive] = useState(false);
   const modalRef = useRef<HTMLElement>(null);
-  const [modalData, setModalData] = useState(null);
+  const [modalData, setModalData] = useState<dummyContentType | null>(null);
   // 받아온 데이터중 댓글데이터 넣기
   const [comments, setComments] = useState(data.comments);
+  const [commentsState, setCommentsState] = useState<{ [key: string]: any }>(
+    {},
+  );
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isEdit, setIsEdit] = useState(false);
 
+  const nav = useNavigate();
   useEffect(() => {
     if (inputValue.length === 0) {
       setIsFocused(false);
@@ -34,6 +47,14 @@ export default function PostDetailPage() {
       setUptoSubmit(true);
     }
   }, [inputValue, setInputValue]);
+
+  // 모달 옵션 클릭 후 포커스 상태(답댓글, 수정)
+  useEffect(() => {
+    if (isFocused && inputRef.current) {
+      inputRef.current.focus();
+      console.log(modalData);
+    }
+  }, [isFocused]);
 
   /**
    * 댓글 입력
@@ -48,7 +69,7 @@ export default function PostDetailPage() {
    *
    * @returns 댓글 등록
    */
-  const handleAddComment = () => {
+  const handleAddComment = (parentNickName: string) => {
     if (inputValue.trim() === "") return;
     console.log(inputValue);
 
@@ -64,25 +85,62 @@ export default function PostDetailPage() {
         "https://gam-image-test.s3.ap-northeast-2.amazonaws.com/work/b7d98ae9-c597-48cf-a625-dc6c8bac0001%E1%84%86%E1%85%A2%E1%84%80%E1%85%A5%E1%84%8C%E1%85%B5%E1%86%AB%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3.jpeg",
       morecomment: null,
       lock: isLocked,
+      isUser: true,
     };
 
-    console.log(newComment);
-
-    setComments((prevComments) => {
-      const updatedComments = [...prevComments, newComment];
-      return updatedComments;
-    });
+    // 댓글 수정
+    if (isEdit) {
+      setComments((prevComments) => {
+        return prevComments.map((comment) => {
+          if (comment.nickname === parentNickName) {
+            // 선택한 댓글의 content만 변경
+            return {
+              ...comment,
+              content: inputValue,
+            };
+          }
+          // 선택하지 않은 댓글은 그대로 반환
+          return comment;
+        });
+      });
+    } else {
+      // 답댓글
+      setComments((prevComments: any) => {
+        console.log(prevComments);
+        if (parentNickName) {
+          return prevComments.map((comment: dummyContentType) => {
+            if (comment.nickname === parentNickName) {
+              return {
+                ...comment,
+                morecomment: [...(comment.morecomment || []), newComment],
+              };
+            }
+            console.log(comment);
+            return comment;
+          });
+        }
+        return [...prevComments, newComment];
+      });
+    }
     setInputValue("");
     setIsLocked(false);
+    if (!isEdit) {
+      toggleCommentReplies(parentNickName);
+    } else {
+      setIsEdit(false);
+    }
   };
 
   /**
    * 엔터키 눌렀을때
    * @param event
    */
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+    nickname: string,
+  ) => {
     if (event.key === "Enter") {
-      handleAddComment();
+      handleAddComment(nickname);
     }
   };
 
@@ -114,41 +172,110 @@ export default function PostDetailPage() {
     setModalData(value);
   };
 
-  const closeConfirm = (isDeleteAction: boolean) => {
+  const closeConfirm = (
+    isDeleteAction: boolean,
+    parentNickName: string,
+    modalData: dummyContentType,
+  ) => {
+    console.log(modalData);
     setBasicModalActive(false);
     if (isDeleteAction) {
+      if (modalData.morecomment) {
+        setComments((prevComments) => {
+          // 삭제된 댓글을 제외한 새로운 댓글 배열 생성
+          const updatedComments = prevComments.filter(
+            (comment) => comment.nickname !== parentNickName,
+          );
+          return updatedComments;
+        });
+      } else {
+        console.log("dd", parentNickName);
+        setComments((prevComments) => {
+          return prevComments.map((comment) => {
+            // 선택한 댓글에 달린 답댓글들만 삭제
+
+            if (comment.nickname === parentNickName) {
+              // 답댓글들을 필터링하여 삭제된 답댓글을 제외한 새로운 답댓글 배열 생성
+              const updatedReplies = comment.morecomment.filter(
+                (reply) => reply.nickname !== parentNickName,
+              );
+              // 기존 댓글의 답댓글을 업데이트하여 새로운 답댓글 배열로 설정
+              return {
+                ...comment,
+                morecomment: updatedReplies,
+              };
+            }
+            // 선택하지 않은 댓글은 그대로 반환
+            return comment;
+          });
+        });
+      }
+
+      console.log(comments);
       // 예시 API 호출
       // deleteCommentAPI().then(response => { ... });
     }
   };
 
+  const toggleCommentReplies = (nickname: string) => {
+    console.log(nickname);
+    setCommentsState((prev) => ({
+      ...prev,
+      [nickname]: {
+        ...prev[nickname],
+        showReplies: !prev[nickname]?.showReplies,
+      },
+    }));
+    setIsFocused(true);
+  };
+
+  // 게시물 수정
   const onPostEdit = () => {
     setModalActive(false);
   };
+  // 게시물 삭제
   const onPostDelete = () => {
     setModalActive(false);
     setBasicModalActive(true);
   };
+  // 내가 쓴 댓글에 답댓글 달기
   const onCommentReply = () => {
     setModalActive(false);
+    setIsFocused(true);
+    // toggleCommentReplies(modalData.nickname);
   };
+  // 댓글 수정
   const onCommentEdit = () => {
     setModalActive(false);
+    setIsFocused(true);
+    setInputValue(modalData?.content as string);
+    setIsEdit(true);
   };
+  // 댓글 삭제
   const onCommentDelete = () => {
     setModalActive(false);
     setBasicModalActive(true);
   };
+  // 상대 댓글에 답댓글 달기
   const onMoreComment = () => {
     setModalActive(false);
+    setIsFocused(true);
   };
+  // 상대 댓글 신고하기
   const onReport = () => {
     setModalActive(false);
   };
 
   return (
     <>
-      <Header leftChild={<LeftArrow />} noBorder={true} />
+      <Header
+        leftChild={
+          <HeaderButton onClick={() => nav("/", { replace: true })}>
+            <LeftArrow />
+          </HeaderButton>
+        }
+        noBorder={true}
+      />
       <main className="w-full h-screen-minus-12.8 bg-neutral-800">
         <section className="px-[2rem] py-[1.5rem]">
           <div className="px-[1.4rem] py-[0.8rem]  bg-gray13 rounded-[5rem] justify-center items-center inline-flex">
@@ -202,6 +329,18 @@ export default function PostDetailPage() {
                         onClick={() => handleModal(comment)}
                       />
                       <div className="h-[0.1rem] bg-gray13"></div>
+                      {/* 대댓글 */}
+                      {comment.morecomment?.map((moreComment, moreIndex) => (
+                        <div className="pl-[4.8rem]" key={moreIndex}>
+                          <UserCard
+                            data={moreComment}
+                            isMyPage={false}
+                            showMoreIcon={true}
+                            onClick={() => handleModal(moreComment)}
+                          />
+                          <div className="h-[0.1rem] bg-gray13"></div>
+                        </div>
+                      ))}
                     </React.Fragment>
                   ))}
                 </div>
@@ -231,7 +370,10 @@ export default function PostDetailPage() {
                 onFocus={() => setIsFocused(true)}
                 value={inputValue}
                 onChange={handleChangeContent}
-                onKeyDown={handleKeyPress}
+                onKeyDown={(e) =>
+                  handleKeyPress(e, modalData?.nickname as string)
+                }
+                ref={inputRef}
               />
             </div>
             <Button
@@ -239,7 +381,7 @@ export default function PostDetailPage() {
               disabled={uptoSubmit ? false : true}
               size="xxs"
               variant="yellow"
-              onClick={handleAddComment}
+              onClick={() => handleAddComment(modalData?.nickname as string)}
             >
               등록
             </Button>
@@ -279,7 +421,9 @@ export default function PostDetailPage() {
         <BasicModal
           ref={modalRef}
           isShow={basicModalActive}
-          onConfirm={closeConfirm}
+          onConfirm={(isConfirm) =>
+            closeConfirm(isConfirm, modalData?.nickname as string, modalData)
+          }
         />
       )}
     </>
