@@ -29,6 +29,8 @@ const ActionSheet = forwardRef<HTMLElement, modalProps>(
       onReport,
     } = props;
 
+    console.log(modalData);
+
     // 게시물수정
     const postOptions = [
       { label: "수정", action: onPostEdit },
@@ -61,11 +63,11 @@ const ActionSheet = forwardRef<HTMLElement, modalProps>(
     // 있으면 대댓글, 없으면 댓글
     const options = isPost
       ? postOptions
-      : modalData.parent
+      : modalData.child
         ? modalData.child.isUser
           ? myMoreCommentOptions
           : otherMoreCommentOptions
-        : modalData.child.isUser
+        : modalData.parent.isUser
           ? myCommentOptions
           : otherCommentOptions;
 

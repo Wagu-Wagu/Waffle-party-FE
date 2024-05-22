@@ -1,7 +1,18 @@
 /**
  * 더미데이터
  */
-export const data = {
+export const data: {
+  id: number;
+  mypost: boolean;
+  ott: string;
+  title: string;
+  text: string;
+  thumbnail: string[];
+  nickname: string;
+  timestamp: string;
+  profilePicture: string;
+  comments: any[]; // comments의 타입을 any[]로 지정
+} = {
   id: 1,
   mypost: true,
   ott: "티빙",
@@ -30,7 +41,6 @@ export const data = {
     },
     {
       mycomment: false,
-
       nickname: "유저2",
       timestamp: "2024.5.18",
       content: "저요",
