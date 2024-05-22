@@ -1,5 +1,4 @@
 import profile from "../../assets/icons/profile.svg";
-import { useState } from "react";
 import MoreIcon from "../../assets/icons/MoreIcon.svg?react";
 import PencilUnderLine from "../../assets/icons/PencilUnderLine.svg?react";
 import Lock from "../../assets/icons/UnLock.svg?react";
@@ -7,7 +6,7 @@ import Lock from "../../assets/icons/UnLock.svg?react";
 // props에는 받아온 데이터와, 마이페이지인지 여부가 들어가야 합니다.
 export default function UserCard(props: any) {
   const { data, isMyPage, onClick, showMoreIcon } = props;
-  const [proImg, setProImg] = useState(data.profilePicture ?? profile);
+  const proImg = data.profilePicture ?? profile;
 
   return (
     <section

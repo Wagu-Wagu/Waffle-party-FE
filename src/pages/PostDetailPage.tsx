@@ -12,11 +12,7 @@ import ImagePreview from "../components/ImagePreview";
 import ActionSheet from "../components/modal/ActionSheet";
 import BasicModal from "../components/modal/BasicModal";
 import { data } from "../mock/detail";
-import {
-  dummyContentType,
-  dummyDetail,
-  dummyMoreContentType,
-} from "../types/comment";
+import { dummyContentType, dummyMoreContentType } from "../types/comment";
 import HeaderButton from "../components/Header/HeaderButton";
 import { useNavigate } from "react-router-dom";
 
@@ -35,9 +31,6 @@ export default function PostDetailPage() {
   }>({ parent: null, child: null });
   // 받아온 데이터중 댓글데이터 넣기
   const [comments, setComments] = useState(data.comments);
-  const [commentsState, setCommentsState] = useState<{ [key: string]: any }>(
-    {},
-  );
   const inputRef = useRef<HTMLInputElement>(null);
   const [isEdit, setIsEdit] = useState(false);
 
@@ -55,7 +48,6 @@ export default function PostDetailPage() {
   useEffect(() => {
     if (isFocused && inputRef.current) {
       inputRef.current.focus();
-      console.log(modalData);
     }
   }, [isFocused]);
 
@@ -69,12 +61,24 @@ export default function PostDetailPage() {
   };
 
   /**
+   * 입력 후 엔터키 눌렀을때
+   * @param event
+   */
+  const handleKeyPress = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+    modalData: any,
+  ) => {
+    if (event.key === "Enter") {
+      handleAddComment(modalData);
+    }
+  };
+
+  /**
    *
    * @returns 댓글 등록
    */
   const handleAddComment = (modalData: any) => {
     if (inputValue.trim() === "") return;
-    console.log(modalData);
 
     const currentDate: Date = new Date();
     const formattedDate: string = formatDate(currentDate);
@@ -95,7 +99,6 @@ export default function PostDetailPage() {
     if (isEdit) {
       // 답댓글이면
       if (modalData.parent) {
-        console.log(modalData);
         setComments((prevComments) => {
           return prevComments.map((comment) => {
             if (comment.nickname === modalData.parent?.nickname) {
@@ -116,7 +119,6 @@ export default function PostDetailPage() {
             return comment;
           });
         });
-        console.log(comments);
       } else {
         setComments((prevComments) => {
           return prevComments.map((comment) => {
@@ -135,7 +137,6 @@ export default function PostDetailPage() {
     } else {
       // 답댓글 등록
       setComments((prevComments: any) => {
-        console.log(prevComments);
         if (modalData.child.nickname) {
           return prevComments.map((comment: dummyContentType) => {
             if (comment.nickname === modalData.parent.nickname) {
@@ -144,7 +145,6 @@ export default function PostDetailPage() {
                 morecomment: [...(comment.morecomment || []), newComment],
               };
             }
-            console.log(comment);
             return comment;
           });
         }
@@ -161,15 +161,51 @@ export default function PostDetailPage() {
   };
 
   /**
-   * 입력 후 엔터키 눌렀을때
-   * @param event
+   * 댓글, 대댓글 삭제 또는 취소
+   * @param isDeleteAction
+   * @param modalData
    */
-  const handleKeyPress = (
-    event: React.KeyboardEvent<HTMLInputElement>,
+  const closeConfirm = (
+    isDeleteAction: boolean,
+
     modalData: any,
   ) => {
-    if (event.key === "Enter") {
-      handleAddComment(modalData);
+    console.log(modalData);
+    setBasicModalActive(false);
+
+    // 삭제
+    if (isDeleteAction) {
+      if (modalData.parent) {
+        setComments((prevComments) => {
+          return prevComments.map((comment) => {
+            // 선택한 댓글에 달린 답댓글들만 삭제
+
+            if (comment.nickname === modalData.parent.nickname) {
+              // 답댓글들을 필터링하여 삭제된 답댓글을 제외한 새로운 답댓글 배열 생성
+              const updatedReplies = comment.morecomment.filter(
+                (reply) => reply.nickname !== modalData.child.nickname,
+              );
+              // 기존 댓글의 답댓글을 업데이트하여 새로운 답댓글 배열로 설정
+              return {
+                ...comment,
+                morecomment: updatedReplies,
+              };
+            }
+            // 선택하지 않은 댓글은 그대로 반환
+            return comment;
+          });
+        });
+      } else {
+        setComments((prevComments) => {
+          // 삭제된 댓글을 제외한 새로운 댓글 배열 생성
+          const updatedComments = prevComments.filter(
+            (comment) => comment.nickname !== modalData.child.nickname,
+          );
+          return updatedComments;
+        });
+      }
+      // 예시 API 호출
+      // deleteCommentAPI().then(response => { ... });
     }
   };
 
@@ -196,7 +232,7 @@ export default function PostDetailPage() {
   };
 
   // TODO any type 변경
-  const handleModal = (value: any, parent?: dummyContentType) => {
+  const handleModal = (value: any, parent?: any) => {
     setModalActive((prev) => !prev);
     if (parent) {
       // 부모요소 있으면 대댓글
@@ -208,69 +244,6 @@ export default function PostDetailPage() {
       setModalData({ parent: null, child: value });
     }
   };
-
-  /**
-   * 댓글, 대댓글 삭제
-   * @param isDeleteAction
-   * @param parentNickName
-   * @param modalData
-   */
-  const closeConfirm = (
-    isDeleteAction: boolean,
-    parentNickName: string,
-    modalData: dummyContentType,
-  ) => {
-    console.log(modalData);
-    setBasicModalActive(false);
-    if (isDeleteAction) {
-      if (modalData.morecomment) {
-        setComments((prevComments) => {
-          // 삭제된 댓글을 제외한 새로운 댓글 배열 생성
-          const updatedComments = prevComments.filter(
-            (comment) => comment.nickname !== parentNickName,
-          );
-          return updatedComments;
-        });
-      } else {
-        console.log("dd", parentNickName);
-        setComments((prevComments) => {
-          return prevComments.map((comment) => {
-            // 선택한 댓글에 달린 답댓글들만 삭제
-
-            if (comment.nickname === parentNickName) {
-              // 답댓글들을 필터링하여 삭제된 답댓글을 제외한 새로운 답댓글 배열 생성
-              const updatedReplies = comment.morecomment.filter(
-                (reply) => reply.nickname !== parentNickName,
-              );
-              // 기존 댓글의 답댓글을 업데이트하여 새로운 답댓글 배열로 설정
-              return {
-                ...comment,
-                morecomment: updatedReplies,
-              };
-            }
-            // 선택하지 않은 댓글은 그대로 반환
-            return comment;
-          });
-        });
-      }
-
-      console.log(comments);
-      // 예시 API 호출
-      // deleteCommentAPI().then(response => { ... });
-    }
-  };
-
-  // const toggleCommentReplies = (nickname: string) => {
-  //   console.log(nickname);
-  //   setCommentsState((prev) => ({
-  //     ...prev,
-  //     [nickname]: {
-  //       ...prev[nickname],
-  //       showReplies: !prev[nickname]?.showReplies,
-  //     },
-  //   }));
-  //   setIsFocused(true);
-  // };
 
   // 게시물 수정
   const onPostEdit = () => {
@@ -299,11 +272,7 @@ export default function PostDetailPage() {
     setModalActive(false);
     setBasicModalActive(true);
   };
-  // 상대 댓글에 답댓글 달기
-  const onMoreComment = () => {
-    setModalActive(false);
-    setIsFocused(true);
-  };
+
   // 상대 댓글 신고하기
   const onReport = () => {
     setModalActive(false);
@@ -453,7 +422,6 @@ export default function PostDetailPage() {
           onCommentReply={onCommentReply}
           onCommentEdit={onCommentEdit}
           onCommentDelete={onCommentDelete}
-          onMoreComment={onMoreComment}
           onReport={onReport}
           ref={modalRef}
         />

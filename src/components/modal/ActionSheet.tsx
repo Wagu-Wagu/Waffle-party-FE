@@ -10,7 +10,6 @@ interface modalProps {
   onCommentReply: () => void;
   onCommentEdit: () => void;
   onCommentDelete: () => void;
-  onMoreComment: () => void;
   onReport: () => void;
   children?: React.ReactNode;
 }
@@ -25,7 +24,6 @@ const ActionSheet = forwardRef<HTMLElement, modalProps>(
       onCommentReply,
       onCommentEdit,
       onCommentDelete,
-      onMoreComment,
       onReport,
     } = props;
 
