@@ -4,7 +4,8 @@ import BottomSheetHeader from "./BottomSheetHeader";
 
 interface modalProps {
   isShow: boolean;
-  modalData: any;
+  isPost?: boolean;
+  modalData?: any;
   onPostEdit: () => void;
   onPostDelete: () => void;
   onCommentReply: () => void;
@@ -18,6 +19,7 @@ const ActionSheet = forwardRef<HTMLElement, modalProps>(
   (props: modalProps, ref) => {
     const {
       isShow,
+      isPost,
       modalData,
       onPostEdit,
       onPostDelete,
@@ -57,13 +59,15 @@ const ActionSheet = forwardRef<HTMLElement, modalProps>(
 
     // 부모요소가 있는지 검사
     // 있으면 대댓글, 없으면 댓글
-    const options = modalData.parent
-      ? modalData.child.isUser
-        ? myMoreCommentOptions
-        : otherMoreCommentOptions
-      : modalData.child.isUser
-        ? myCommentOptions
-        : otherCommentOptions;
+    const options = isPost
+      ? postOptions
+      : modalData.parent
+        ? modalData.child.isUser
+          ? myMoreCommentOptions
+          : otherMoreCommentOptions
+        : modalData.child.isUser
+          ? myCommentOptions
+          : otherCommentOptions;
 
     return (
       <BottomSheet isShow={isShow} ref={ref}>

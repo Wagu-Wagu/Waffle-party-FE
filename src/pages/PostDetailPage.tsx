@@ -14,7 +14,7 @@ import BasicModal from "../components/modal/BasicModal";
 import { data } from "../mock/detail";
 import { dummyContentType, dummyMoreContentType } from "../types/comment";
 import HeaderButton from "../components/Header/HeaderButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function PostDetailPage() {
   const [isFocused, setIsFocused] = useState(false);
@@ -33,6 +33,8 @@ export default function PostDetailPage() {
   const [comments, setComments] = useState(data.comments);
   const inputRef = useRef<HTMLInputElement>(null);
   const [isEdit, setIsEdit] = useState(false);
+  const [isPost, setIsPost] = useState(false);
+  const { userId } = useParams();
 
   const nav = useNavigate();
   useEffect(() => {
@@ -153,11 +155,6 @@ export default function PostDetailPage() {
     }
     setInputValue("");
     setIsLocked(false);
-    // if (!isEdit || modalData.parent) {
-    //   toggleCommentReplies(modalData.parent.nickname);
-    // } else {
-    //   setIsEdit(false);
-    // }
   };
 
   /**
@@ -165,12 +162,12 @@ export default function PostDetailPage() {
    * @param isDeleteAction
    * @param modalData
    */
-  const closeConfirm = (
-    isDeleteAction: boolean,
-
-    modalData: any,
-  ) => {
-    console.log(modalData);
+  const closeConfirm = (isDeleteAction: boolean, modalData?: any) => {
+    // 게시물 삭제인 경우
+    if (isPost) {
+      // api 함수 호출
+      return;
+    }
     setBasicModalActive(false);
 
     // 삭제
@@ -234,20 +231,27 @@ export default function PostDetailPage() {
   // TODO any type 변경
   const handleModal = (value: any, parent?: any) => {
     setModalActive((prev) => !prev);
-    if (parent) {
-      // 부모요소 있으면 대댓글
-      // parent에 상위 댓글 데이터, child에 대댓글 데이터
-      setModalData({ parent: parent, child: value });
+    if (value === "post") {
+      setIsPost(true);
     } else {
-      // 부모요소 없으면 댓글
-      // parent는 없고, child에 댓글 데이터
-      setModalData({ parent: null, child: value });
+      setIsPost(false);
+      if (parent) {
+        // 부모요소 있으면 대댓글
+        // parent에 상위 댓글 데이터, child에 대댓글 데이터
+        setModalData({ parent: parent, child: value });
+      } else {
+        // 부모요소 없으면 댓글
+        // parent는 없고, child에 댓글 데이터
+        setModalData({ parent: null, child: value });
+      }
     }
   };
 
   // 게시물 수정
   const onPostEdit = () => {
     setModalActive(false);
+    setIsPost(false);
+    nav(`/post-edit/${userId}`);
   };
   // 게시물 삭제
   const onPostDelete = () => {
@@ -416,6 +420,7 @@ export default function PostDetailPage() {
       {modalActive && (
         <ActionSheet
           isShow={modalActive}
+          isPost={isPost}
           modalData={modalData}
           onPostEdit={onPostEdit}
           onPostDelete={onPostDelete}
@@ -430,6 +435,8 @@ export default function PostDetailPage() {
         <BasicModal
           ref={modalRef}
           isShow={basicModalActive}
+          isLogout={false}
+          target={isPost ? "게시글" : modalData.parent ? "답댓글" : "댓글"}
           onConfirm={(isConfirm) => closeConfirm(isConfirm, modalData)}
         />
       )}
