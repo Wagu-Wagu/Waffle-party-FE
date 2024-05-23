@@ -8,6 +8,8 @@ import ImageSlider from "../components/ImageSlider";
 import { useSetRecoilState } from "recoil";
 import { postDetailState } from "../recoil/atoms";
 import ImagePreview from "../components/ImagePreview";
+import HeaderButton from "../components/Header/HeaderButton";
+import { useNavigate } from "react-router-dom";
 
 export default function PostCreatePage() {
   const [isShow, setIsShow] = useState<boolean>(false);
@@ -21,6 +23,8 @@ export default function PostCreatePage() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const setPostDetail = useSetRecoilState(postDetailState);
+
+  const nav = useNavigate();
 
   /**
    * OTT 선택
@@ -106,9 +110,17 @@ export default function PostCreatePage() {
   return (
     <>
       <Header
-        leftChild={<Close />}
+        leftChild={
+          <HeaderButton onClick={() => nav(-1)}>
+            <Close />
+          </HeaderButton>
+        }
         title="글 작성"
-        rightChild="등록"
+        rightChild={
+          <HeaderButton onClick={() => {}} className="text-gray10">
+            등록
+          </HeaderButton>
+        }
         noBorder={false}
         onClick={handleRegister}
       />
