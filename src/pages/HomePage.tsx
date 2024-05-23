@@ -42,6 +42,7 @@ export default function HomePage() {
         rightChild={<HeaderLoginButton />}
         noBorder
       />
+      <Navigation />
       <main className="main-header-nav">
         <Banner />
         <FilterList onOttSelect={handleOttSelect} selectedOtts={selectedOtts} />
@@ -49,7 +50,6 @@ export default function HomePage() {
           <PostListCard key={post.postId} post={post} />
         ))}
       </main>
-      <Navigation />
     </>
   );
 }

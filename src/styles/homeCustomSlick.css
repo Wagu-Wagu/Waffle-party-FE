@@ -4,9 +4,9 @@
 }
 
 .custom-slick .slick-dots li button:before {
-  color: #fff;
+  color: #8b8b8b;
 }
 
 .custom-slick .slick-dots li.slick-active button:before {
-  color: #ffc71e;
+  color: #000;
 }
