@@ -26,11 +26,13 @@ export default function MyCommentsPage() {
         <div className="h-screen-minus-46">
           {myComment.length > 0 ? (
             myComment.map((item, index) => (
-              <MyCommentsCard
-                data={item}
-                key={index}
-                onClick={(commentEl: any) => handleClickComment(commentEl)}
-              />
+              <div className="cursor-pointer">
+                <MyCommentsCard
+                  data={item}
+                  key={index}
+                  onClick={(commentEl: any) => handleClickComment(commentEl)}
+                />
+              </div>
             ))
           ) : (
             <EmptyList
