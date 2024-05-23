@@ -4,6 +4,7 @@ import BottomSheetHeader from "./BottomSheetHeader";
 import Check from "../../assets/icons/Check.svg?react";
 interface modalProps {
   isShow: boolean;
+  onClick?: () => void;
   onSelect: (option: string) => void;
 }
 
@@ -22,11 +23,6 @@ const ListModal = forwardRef<HTMLElement, modalProps>((props, ref) => {
     "기타",
   ];
 
-  const handleOptionClick = (index: number) => {
-    setSelectedOption(index);
-    onSelect(ottOptions[index]);
-  };
-
   return (
     <BottomSheet isShow={isShow} ref={ref}>
       <BottomSheetHeader />
@@ -41,9 +37,9 @@ const ListModal = forwardRef<HTMLElement, modalProps>((props, ref) => {
           {ottOptions.map((option, index) => (
             <li
               key={option}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleOptionClick(index);
+              onClick={() => {
+                setSelectedOption(index);
+                onSelect(ottOptions[index]);
               }}
               className="flex text-[1.6rem] items-center h-[2.4rem] w-full gap-2 cursor-pointer"
             >

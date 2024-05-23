@@ -23,15 +23,6 @@ export default function PostCreatePage() {
   const setPostDetail = useSetRecoilState(postDetailState);
 
   /**
-   * OTT 선택 모달 띄우기
-   * @param e
-   */
-  const handleClickOTT = (e: React.MouseEvent<Element, MouseEvent>) => {
-    e.stopPropagation();
-    setIsShow((prev) => !prev);
-  };
-
-  /**
    * OTT 선택
    * @param option
    */
@@ -66,7 +57,7 @@ export default function PostCreatePage() {
    * 이미지 받아오기
    * @returns
    */
-  const getImage = () => {
+  const handleImageChange = () => {
     const inputEl = inputRef.current;
     if (!inputEl) return;
     const files = inputEl.files;
@@ -88,7 +79,7 @@ export default function PostCreatePage() {
   /**
    * 이미지 첨부 클릭
    */
-  const putImage = () => {
+  const openFileUploader = () => {
     inputRef.current?.click();
   };
 
@@ -120,10 +111,10 @@ export default function PostCreatePage() {
         />
       )}
 
-      <main className="px-[2rem] w-full h-screen-minus-46 ">
+      <main className="px-[2rem] w-full h-screen-minus-46 mt-[4.6rem] ">
         <section
           className="flex py-[1.8rem] cursor-pointer"
-          onClick={handleClickOTT}
+          onClick={() => setIsShow((prev) => !prev)}
         >
           <p
             className={`font-pretendard text-[1.6rem] font-normal leading-[2.4rem] ${selectedOption ? "text-white" : "text-gray8"}`}
@@ -164,13 +155,13 @@ export default function PostCreatePage() {
       <div className="py-[1.6rem] px-[2rem] box-border fixed bottom-0 w-full max-w-[50rem] min-w-[36rem] h-[8rem] bg-gray14 border-2 border-gray13">
         <div
           className="flex gap-[0.5rem] items-center cursor-pointer"
-          onClick={putImage}
+          onClick={openFileUploader}
         >
           <Image />
           <input
             type="file"
             style={{ display: "none" }}
-            onChange={getImage}
+            onChange={handleImageChange}
             accept="image/*"
             ref={inputRef}
           />
@@ -194,8 +185,7 @@ export default function PostCreatePage() {
           {isShow && (
             <ListModal
               isShow={isShow}
-              onClick={handleClickOTT}
-              onSelect={handleSelectOTT}
+              onSelect={(option) => handleSelectOTT(option)}
             />
           )}
         </div>

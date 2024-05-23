@@ -31,6 +31,7 @@ const BottomSheet = forwardRef((props: modalProps, ref: Ref<HTMLElement>) => {
 
   const handleCloseModal = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (e.target === e.currentTarget) {
+      e.stopPropagation();
       setIsVisible(false);
     }
   };
