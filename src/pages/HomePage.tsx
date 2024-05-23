@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header/Header";
 import HeaderLoginButton from "../components/Header/HeaderLoginButton";
 import FilterList from "../components/Home/FilterList";
@@ -6,12 +6,27 @@ import PostListCard from "../components/Home/PostListCard";
 import Navigation from "../components/Navigation/Navigation";
 import LogoYellow from "./../assets/icons/LogoYellow.svg?react";
 import Banner from "../components/Home/Banner";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { sortedPostListState } from "../recoil/postListState";
+import { userState } from "../recoil/userState";
+import { useNavigate } from "react-router-dom";
+import { getAccessToken } from "../lib/token";
+import HeaderButton from "../components/Header/HeaderButton";
+import ProfileIcon from "./../assets/icons/ProfileIcon.svg?react";
+import { classNames } from "classnames";
 
 export default function HomePage() {
   const [selectedOtts, setSelectedOtts] = useState<string[]>([]);
+  const [user, setUser] = useRecoilState(userState);
   const postList = useRecoilValue(sortedPostListState);
+  const nav = useNavigate();
+
+  useEffect(() => {
+    const token = getAccessToken("accessToken");
+    if (token) {
+      setUser({ isLoggedIn: true, accessToken: token });
+    }
+  }, [setUser]);
 
   const handleOttSelect = (ott: string) => {
     setSelectedOtts((prevSelectedOtts) =>
@@ -39,7 +54,15 @@ export default function HomePage() {
             </div>
           </h1>
         }
-        rightChild={<HeaderLoginButton />}
+        rightChild={
+          user.isLoggedIn ? (
+            <HeaderButton className="text-gray9" onClick={() => nav("/mypage")}>
+              <ProfileIcon />
+            </HeaderButton>
+          ) : (
+            <HeaderLoginButton />
+          )
+        }
         noBorder
       />
       <Navigation />
