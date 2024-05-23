@@ -1,16 +1,15 @@
-import { useState } from "react";
+import React, { forwardRef, useState } from "react";
 import BottomSheet from "./BottomSheet";
 import BottomSheetHeader from "./BottomSheetHeader";
 import Check from "../../assets/icons/Check.svg?react";
-
 interface modalProps {
   isShow: boolean;
-  onClick: (e: React.MouseEvent<Element, MouseEvent>) => void;
+  onClick?: () => void;
   onSelect: (option: string) => void;
 }
 
-export default function ListModal(props: modalProps) {
-  const { isShow, onClick, onSelect } = props;
+const ListModal = forwardRef<HTMLElement, modalProps>((props, ref) => {
+  const { isShow, onSelect } = props;
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const ottOptions = [
     "넷플릭스",
@@ -24,13 +23,8 @@ export default function ListModal(props: modalProps) {
     "기타",
   ];
 
-  const handleOptionClick = (index: number) => {
-    setSelectedOption(index);
-    onSelect(ottOptions[index]);
-  };
-
   return (
-    <BottomSheet isShow={isShow} onClick={onClick}>
+    <BottomSheet isShow={isShow} ref={ref}>
       <BottomSheetHeader />
       <div
         className="text-white font-pretendard bg-gray14 py-[3rem] px-[2rem]"
@@ -43,9 +37,9 @@ export default function ListModal(props: modalProps) {
           {ottOptions.map((option, index) => (
             <li
               key={option}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleOptionClick(index);
+              onClick={() => {
+                setSelectedOption(index);
+                onSelect(ottOptions[index]);
               }}
               className="flex text-[1.6rem] items-center h-[2.4rem] w-full gap-2 cursor-pointer"
             >
@@ -61,4 +55,6 @@ export default function ListModal(props: modalProps) {
       </div>
     </BottomSheet>
   );
-}
+});
+
+export default ListModal;

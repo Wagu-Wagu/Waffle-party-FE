@@ -21,18 +21,20 @@ type ButtonVariant = keyof typeof buttonVariants;
 type ButtonProps = {
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
-  size?: "xs" | "sm" | "base";
+  size?: "xxs" | "xs" | "sm" | "base";
   variant: ButtonVariant;
   onClick?: () => void;
   children?: React.ReactNode;
 };
 
 /**
+ * xxs: 44*32
  * xs: 82*52
  * sm: 152*52
  * base: 320*52
  */
 const SIZE = {
+  xxs: "btn-xxs",
   xs: "btn-xs",
   sm: "btn-sm",
   base: "btn-base",
