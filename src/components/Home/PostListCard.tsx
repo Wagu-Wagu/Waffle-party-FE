@@ -1,19 +1,11 @@
 import { Link } from "react-router-dom";
 import MiniChip from "../common/MiniChip";
 import { Post, UserList } from "../../mock/mockData";
+import { useFormattedDate } from "../../hooks/useFormattedDate";
 
 const getNickName = (userId: number): string => {
   const user = UserList.find((user) => user.userId === userId);
   return user ? user.nickName : "Unkown";
-};
-
-const formatDate = (date: Date): string => {
-  const options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  };
-  return date.toLocaleDateString(undefined, options);
 };
 
 export default function PostListCard({ post }: { post: Post }) {
@@ -28,6 +20,7 @@ export default function PostListCard({ post }: { post: Post }) {
     commentCount,
   } = post;
   const nickName = getNickName(userId);
+  const formattedDate = useFormattedDate(new Date(createdAt));
 
   return (
     <Link
@@ -46,7 +39,7 @@ export default function PostListCard({ post }: { post: Post }) {
             {content}
           </p>
           <div className="font-regular text-caption01 text-gray9">
-            <span>{nickName}</span> · <span>{formatDate(createdAt)}</span> ·{" "}
+            <span>{nickName}</span> · <span>{formattedDate}</span> ·{" "}
             <span>댓글 {commentCount}개</span>
           </div>
         </div>
