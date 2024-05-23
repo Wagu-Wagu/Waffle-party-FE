@@ -6,7 +6,7 @@ import NavButton from "./NavButton";
 
 export default function Navigation() {
   return (
-    <nav className="fixed bottom-0 w-full max-w-[50rem] min-w-[36rem] bg-gray15">
+    <nav className="z-10 fixed bottom-0 w-full max-w-[50rem] min-w-[36rem] bg-gray15">
       <ul className="flex justify-between border border-gray13 text-gray9 pb-[3.3rem] px-[0.8rem]">
         <li>
           <NavButton path={"/"}>

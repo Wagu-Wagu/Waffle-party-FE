@@ -3,7 +3,7 @@ import Header from "../components/Header/Header";
 import HeaderButton from "../components/Header/HeaderButton";
 import CloseIcon from "./../assets/icons/CloseIcon.svg?react";
 import LogoYellow from "./../assets/icons/LogoYellow.svg?react";
-import KakaoTalkIcon from "./../assets/icons/KakaoTalkIcon.svg?react";
+import KakaoLogin from "../components/Login/KakaoLogin";
 
 export default function LoginPage() {
   const nav = useNavigate();
@@ -28,10 +28,7 @@ export default function LoginPage() {
             <p className="text-gray7">로그인/회원가입</p>
             <div className="bg-gray7 w-[11.1rem] h-[0.1rem]" />
           </div>
-          <button className="mt-[2.5rem] mb-[7rem] flex items-center gap-4 bg-[#ffe001] py-[1.45rem] px-[9.5rem] rounded-2xl">
-            <KakaoTalkIcon />
-            <span className="font-bold text-body">카카오로 시작하기</span>
-          </button>
+          <KakaoLogin />
         </div>
       </main>
     </>

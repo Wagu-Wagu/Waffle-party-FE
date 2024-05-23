@@ -12,6 +12,7 @@ import TermsPage from "./pages/TermsPage";
 import MyCommentsPage from "./pages/MyCommentsPage";
 import MyPostsPage from "./pages/MyPostsPage";
 import NicknamePage from "./pages/NicknamePage";
+import KakaoCallback from "./pages/KakaoCallback";
 
 export default function Router() {
   return (
@@ -24,6 +25,8 @@ export default function Router() {
           <Route path="/terms" element={<TermsPage />} />
           {/* 닉네임 설정 페이지 */}
           <Route path="/nickname" element={<NicknamePage />} />
+          {/* 카카오 로그인 콜백 */}
+          <Route path="/login/kakao/callback" element={<KakaoCallback />} />
 
           {/* 홈 */}
           <Route path="/" element={<HomePage />} />
