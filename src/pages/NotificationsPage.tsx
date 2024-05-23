@@ -1,3 +1,32 @@
+import Header from "../components/Header/Header";
+import NotiCard from "../components/card/NotiCard";
+import EmptyList from "../components/common/EmptyList";
+import { notiData } from "../mock/notification";
+import AlertCircleError from "../assets/icons/AlertCirlcleError.svg?react";
+import Navigation from "../components/Navigation/Navigation";
 export default function NotificationsPage() {
-  return <div></div>;
+  console.log(notiData.data);
+  return (
+    <>
+      <Header title="내소식" />
+      <main className="h-screen-minus-12.8 relative">
+        {notiData.data.length > 0 ? (
+          <div className="flex flex-col gap-[1.6rem] mt-[4.6rem]">
+            {notiData.data.map((notiData, index) => (
+              <NotiCard data={notiData} key={index} />
+            ))}
+          </div>
+        ) : (
+          <div className="absolute transform -translate-x-1/2 top-1/2 left-1/2 -trnaslate-y-1/2">
+            <EmptyList
+              icon={<AlertCircleError />}
+              mainText="아직 내 소식이 없어요."
+              subText={`하단의 글 작성을 통해\n파티원들과 소통을 시작해보세요!`}
+            />
+          </div>
+        )}
+      </main>
+      <Navigation />
+    </>
+  );
 }
