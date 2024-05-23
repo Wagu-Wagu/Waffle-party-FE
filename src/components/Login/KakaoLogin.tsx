@@ -1,15 +1,13 @@
 import KakaoTalkIcon from "./../../assets/icons/KakaoTalkIcon.svg?react";
 
-const kakao = (window as any).Kakao;
-
 export default function KakaoLogin() {
+  const KEY = import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY;
+  const REDIRECT_URL = import.meta.env.VITE_REDIRECT_URL;
+  const url = `https://kauth.kakao.com/oauth/authorize?client_id=${KEY}&redirect_uri=${REDIRECT_URL}&response_type=code`;
+
   return (
     <button
-      onClick={() =>
-        kakao.Auth.authorize({
-          redirectUri: "http://localhost:5173/login/kakao/callback",
-        })
-      }
+      onClick={() => (window.location.href = url)}
       className="mt-[2.5rem] mb-[7rem] flex items-center gap-4 bg-additional1 py-[1.45rem] px-[9.5rem] rounded-2xl"
     >
       <KakaoTalkIcon />

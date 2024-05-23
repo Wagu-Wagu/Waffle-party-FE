@@ -12,7 +12,7 @@ import TermsPage from "./pages/TermsPage";
 import MyCommentsPage from "./pages/MyCommentsPage";
 import MyPostsPage from "./pages/MyPostsPage";
 import NicknamePage from "./pages/NicknamePage";
-import KakaoCallback from "./pages/KakaoCallback";
+import { KakaoCallback } from "./pages/KakaoCallback";
 
 export default function Router() {
   return (
