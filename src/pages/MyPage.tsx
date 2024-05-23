@@ -22,15 +22,15 @@ export default function MyPage() {
   };
   return (
     <>
-      <Header leftChild="" title="마이" rightChild="" noBorder={true} />
-      <main className="h-screen-minus-12.8 flex flex-col items-center justify-center mt-[4.8rem]">
+      <Header title="마이" />
+      <main className="flex flex-col items-center justify-center main-header-nav pt-[1rem]">
         <UserCard
           isMyPage={true}
           data={userInfos[1]}
           onClick={handleClickEdit}
         />
         <div className="px-[2rem] w-full h-full">
-          <div className="mt-[1rem] h-[0.2rem] w-full border-b border-gray13"></div>
+          <div className=" mt-[1rem] h-[0.2rem] w-full bg-gray13"></div>
           <section className="flex flex-col gap-[4rem] w-full mt-[2rem]">
             <div>
               <MyPageSection title="내활동">
@@ -67,16 +67,15 @@ export default function MyPage() {
             </MyPageSection>
           </section>
           <section className="mt-[4.3rem] w-full justify-center flex gap-[3rem] text-gray8 text-[1.2rem] text-center font-Pretendard font-normal leading-4 underline">
-            <Link to={"/"} className="underline text-gray8">
+            {/* <Link to={"/"} className="underline text-gray8">
               회원탈퇴
-            </Link>
-            <Link
-              to={"/"}
+            </Link> */}
+            <button
               className="underline text-gray8"
               onClick={handleClickLogout}
             >
               로그아웃
-            </Link>
+            </button>
           </section>
         </div>
       </main>
