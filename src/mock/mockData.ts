@@ -160,6 +160,19 @@ export const PostList: Post[] = [
     createdAt: new Date("2024-05-17T00:00:00"),
     modifiedAt: new Date("2024-05-17T00:00:00"),
   },
+  {
+    postId: 11,
+    userId: 2,
+    ottTag: "넷플릭스",
+    title: "더본컴퍼니 다큐 보실분",
+    content: "백종원처럼 되고싶어요ㅜㅜ",
+    photoes: null,
+    thumbNail: "",
+    commentCount: 99,
+    isActive: true,
+    createdAt: new Date("2024-05-23T16:20:00"),
+    modifiedAt: new Date("2024-05-23T16:20:00"),
+  },
 ];
 
 export const UserList: User[] = [
