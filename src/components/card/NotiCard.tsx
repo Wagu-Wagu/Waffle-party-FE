@@ -1,6 +1,5 @@
 export default function NotiCard(props: any) {
-  const { data } = props;
-  console.log(data);
+  const { data, onClick } = props;
   const title = data.type === "댓글" ? data.title : data.comment;
   const content = data.type === "댓글" ? "글" : "댓글";
   const formatTitle = title.length > 20 ? `${title.slice(0, 20)}...` : title;
@@ -12,7 +11,10 @@ export default function NotiCard(props: any) {
   };
 
   return (
-    <div className="py-[1.6rem] px-[2rem] bg-gray14  border-b-2 border-gray13">
+    <main
+      className="py-[1.6rem] px-[2rem] bg-gray14  border-b-2 border-gray13"
+      onClick={() => onClick(data)}
+    >
       <div className="flex items-center justify-center gap-[2rem] ">
         {/* <div className="self-start "> */}
         <section
@@ -37,6 +39,6 @@ export default function NotiCard(props: any) {
           </span>
         </section>
       </div>
-    </div>
+    </main>
   );
 }
