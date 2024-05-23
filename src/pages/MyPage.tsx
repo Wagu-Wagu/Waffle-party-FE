@@ -23,7 +23,7 @@ export default function MyPage() {
   return (
     <>
       <Header leftChild="" title="마이" rightChild="" noBorder={true} />
-      <main className="h-screen-minus-12.8 flex flex-col items-center justify-center mt-[1rem]">
+      <main className="h-screen-minus-12.8 flex flex-col items-center justify-center mt-[4.8rem]">
         <UserCard
           isMyPage={true}
           data={userInfos[1]}

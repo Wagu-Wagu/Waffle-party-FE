@@ -13,7 +13,9 @@ export default function EmptyList({ icon, mainText, subText }: EmptyListProps) {
       <p className="font-medium text-[1.6rem] leading-[2.4rem] mt-4 mb-6">
         {mainText}
       </p>
-      <div className="text-caption01 font-regular text-gray8">{subText}</div>
+      <div className="text-center whitespace-pre-line text-caption01 font-regular text-gray8">
+        {subText}
+      </div>
     </div>
   );
 }
