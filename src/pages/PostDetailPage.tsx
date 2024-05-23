@@ -17,6 +17,7 @@ import HeaderButton from "../components/Header/HeaderButton";
 import { useNavigate, useParams } from "react-router-dom";
 import Chat from "../assets/icons/Chat.svg?react";
 import EmptyList from "../components/common/EmptyList";
+import Chip from "../components/common/Chip";
 
 export default function PostDetailPage() {
   const [isFocused, setIsFocused] = useState(false);
@@ -336,17 +337,12 @@ export default function PostDetailPage() {
         }
         noBorder={true}
       />
-      <main className="w-full h-screen-minus-12.8 bg-neutral-800">
-        <section className="px-[2rem] py-[1.5rem]">
-          <div className="px-[1.4rem] py-[0.8rem]  bg-gray13 rounded-[5rem] justify-center items-center inline-flex">
-            <div className="text-white text-[1.2rem] font-normal font-['Pretendard'] leading-[1.6rem]">
-              {data.ott}
+      <main className="w-full h-screen-minus-12.8 bg-neutral-80">
+        <section className="w-full h-screen-minus-46 mt-[4.8rem]">
+          <section className="px-[2rem] flex-col items-center justify-start w-full gap-[2.4rem] border-b-8 border-neutral-900">
+            <div className="py-[1.6rem]">
+              <Chip ott={data.ott} isButton={false} isCheck={false} />
             </div>
-          </div>
-        </section>
-
-        <section className="w-full">
-          <section className="inline-flex px-[2rem] flex-col items-center justify-start w-full gap-[2.4rem] border-b-8 border-neutral-900">
             <div className="w-full flex flex-col items-start justify-start gap-[1.6rem]">
               <div className="w-full justify-start items-end gap-2.5 inline-flex">
                 <UserCard
@@ -379,7 +375,7 @@ export default function PostDetailPage() {
                     댓글 {comments.length}
                   </div>
                 </div>
-                <div className="flex flex-col w-full gap-[1rem]">
+                <div className="flex flex-col w-full gap-[1rem] pb-[1rem]">
                   {comments.map((comment, index) => (
                     <React.Fragment key={index}>
                       <UserCard
