@@ -3,7 +3,6 @@ import Header from "../components/Header/Header";
 import HeaderButton from "../components/Header/HeaderButton";
 import CloseIcon from "./../assets/icons/CloseIcon.svg?react";
 import LogoYellow from "./../assets/icons/LogoYellow.svg?react";
-import KakaoTalkIcon from "./../assets/icons/KakaoTalkIcon.svg?react";
 import KakaoLogin from "../components/Login/KakaoLogin";
 
 export default function LoginPage() {
