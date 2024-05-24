@@ -8,6 +8,19 @@ import { useFormattedDate } from "../../hooks/useFormattedDate";
   return user ? user.nickName : "Unkown";
 }; */
 
+// ottTags 객체 추가
+const ottTags = {
+  NETFLIX: "넷플릭스",
+  WATCHA: "왓챠",
+  DISNEY: "디즈니+",
+  WAVE: "웨이브",
+  TIVING: "티빙",
+  COUPANGPLAY: "쿠팡플레이",
+  LAFTEL: "라프텔",
+  NAVERSERIES: "네이버시리즈",
+  ETC: "기타",
+};
+
 // PostVO 타입 정의
 interface PostVO {
   ottTag: string;
@@ -35,13 +48,16 @@ export default function PostListCard({ post }: { post: PostVO }) {
   // const nickName = getNickName(userId);
   const formattedDate = useFormattedDate(new Date(createdAt));
 
+  // ottTag를 한글로 변환
+  const ottTagKorean = ottTags[ottTag] || ottTag;
+
   return (
     <Link
       // to={`/post-detail/${postId}`}
       to={`/post-detail/${title}`}
       className="block p-8 border-b bg-gray14 border-gray13"
     >
-      <MiniChip ott={ottTag} />
+      <MiniChip ott={ottTagKorean} />
       <div className="flex mt-[0.8rem]">
         <div
           className={`flex-1 overflow-hidden ${thumbNail ? "pr-[1.2rem]" : ""}`}

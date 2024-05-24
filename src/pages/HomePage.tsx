@@ -57,16 +57,11 @@ export default function HomePage() {
         : [...prevSelectedOtts, ott],
     );
   };
-
-  console.log(selectedOtts.join(","));
-
   // api 호출
   const { data, error } = useSWR<AxiosResponse<Post[]>>(
     `api/v1/post?ottTags=${selectedOtts.join(",")}`,
     waffleFetcher,
   );
-
-  console.log(data);
 
   // 선택된 ott 태그에 따라 포스트 목록 필터링(더미)
   const filteredPostList =
