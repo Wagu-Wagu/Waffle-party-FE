@@ -1,6 +1,6 @@
 export interface postDetail {
-  ott: string | null;
+  ottTag: string | null;
   title: string;
   content: string;
-  postImage: string[] | null;
+  postImages: string[] | null;
 }

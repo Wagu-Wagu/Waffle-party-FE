@@ -1,12 +1,23 @@
-import profile from "../../assets/icons/profile.svg";
 import MoreIcon from "../../assets/icons/MoreIcon.svg?react";
-import PencilUnderLine from "../../assets/icons/PencilUnderLine.svg?react";
-import Lock from "../../assets/icons/UnLock.svg?react";
+import Lock from "../../assets/icons/Lock.svg?react";
+import MediumProfile from "../../assets/icons/ProfileComment.svg";
+import SmallProfile from "../../assets/icons/ProfileMoreComment.svg";
+
+interface userCardProps {
+  data: any;
+  onClick: () => void;
+  isMoreComment?: boolean;
+  showMoreIcon: boolean;
+}
 
 // props에는 받아온 데이터와, 마이페이지인지 여부가 들어가야 합니다.
-export default function UserCard(props: any) {
-  const { data, onClick, showMoreIcon } = props;
-  const proImg = data.profileImage ?? profile;
+export default function UserCard(props: userCardProps) {
+  const { data, onClick, isMoreComment, showMoreIcon } = props;
+  const proImg = data.profileImage
+    ? data.profileImage
+    : isMoreComment
+      ? SmallProfile
+      : MediumProfile;
 
   return (
     <section
@@ -20,7 +31,7 @@ export default function UserCard(props: any) {
         </>
       ) : (
         <div className="flex items-center gap-[1rem]">
-          <section className="bg-white box-border rounded-full w-[3.8rem] min-w-[3.8rem] h-[3.8rem]">
+          <section className="box-border bg-white rounded-full ">
             <img
               className="box-border rounded-full w-full h-full  object-cover w-[3.8rem] h-[3.8rem]"
               src={proImg}
