@@ -3,6 +3,10 @@
   bottom: 10px;
 }
 
+.custom-slick .slick-dots li {
+  margin: 0 2px;
+}
+
 .custom-slick .slick-dots li button:before {
   color: #8b8b8b;
 }
