@@ -8,7 +8,7 @@ export default function KakaoLogin() {
   return (
     <button
       onClick={() => (window.location.href = url)}
-      className="w-full mt-[2.5rem] mb-[7rem] flex items-center justify-center gap-[0.8rem] bg-[#fee500] py-[1.45rem] px-[9.5rem] rounded-[0.6rem]"
+      className="w-full mt-[2.5rem] mb-[4.8rem] flex items-center justify-center gap-[0.8rem] bg-[#fee500] py-[1.45rem] px-[9.5rem] rounded-[0.6rem]"
     >
       <img src={KakaoIcon} alt="" className="w-[2rem] h-[2rem]" />
       <span className="font-bold text-button">카카오 로그인</span>

@@ -18,8 +18,11 @@ export default function LoginPage() {
         title={"로그인/회원가입"}
       />
 
-      <main className="flex flex-col items-center justify-between h-screen-minus-46">
-        <div className="mt-[12.2rem]">
+      <main className="flex flex-col items-center justify-between h-screen main-header">
+        <div className="mt-[9.8rem]">
+          <p className="font-medium text-center text-gray5 text-subtitle">
+            OTT 같이 볼 사람이 필요할 때
+          </p>
           <LogoYellow />
         </div>
         <div>
