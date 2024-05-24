@@ -111,6 +111,9 @@ export default function HomePage() {
         {data?.data.map(({ postVO }) => (
           <PostListCard key={postVO.createdAt} post={postVO} />
         ))}
+        {/* {data?.data.map((post) => (
+          <PostListCard key={post.postId} post={post} />
+        ))} */}
       </main>
     </>
   );
