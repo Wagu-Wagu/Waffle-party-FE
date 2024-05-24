@@ -3,30 +3,28 @@ import CloseBtn from "../assets/icons/CloseIcon.svg?react";
 import ProfileImageUploader from "../components/common/ProfileImageUploader";
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { validationResultType } from "../types/validationResultType";
 import { useNavigate } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { userProfileState } from "../recoil/userProfile";
 
 export default function ProfileEditPage() {
-  const [nickname, setNickname] = useState<string>("");
   const [isValid, setIsValid] = useState<boolean>(false);
-  const setUserProfile = useSetRecoilState(userProfileState);
   const userProfile = useRecoilValue(userProfileState);
   const navigate = useNavigate();
 
   const handleSubmit = () => {
     if (isValid) {
       // TODO api 호출
+      console.log(userProfile);
 
       // 마이페이지로 돌아갑니다
       navigate(-1);
     }
   };
 
-  const handleInputChange = (value: string, res: validationResultType) => {
-    setNickname(value);
+  const handleInputChange = (res: validationResultType) => {
     if (res.success) {
       // 유효성 검사 통과 시
       setIsValid(true);
@@ -49,7 +47,7 @@ export default function ProfileEditPage() {
               disabled={false}
               onChange={handleInputChange}
               label="닉네임"
-              placeholder="기존 닉네임"
+              placeholder={userProfile.nickname}
               maxLen={10}
             />
           </div>

@@ -60,7 +60,7 @@ export const KakaoCallback = () => {
             refreshToken: res.data.refreshToken,
           };
           setUserToken(tokenParams);
-          nav("/terms");
+          nav("/nickname");
         }
       })
       .catch((e) => {

@@ -1,19 +1,23 @@
 import Header from "../components/Header/Header";
 import UserCard from "../components/card/UserCard";
-import { userInfos } from "../mock/userInfo";
 import MyPageListCard from "../components/card/MyPageListCard";
 import MyPageSection from "../components/MyPage/MyPageSection";
 import { Link, useNavigate } from "react-router-dom";
 import Navigation from "../components/Navigation/Navigation";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { userProfileData } from "../mock/userInfo";
+import { userProfileState } from "../recoil/userProfile";
+import { useEffect } from "react";
 
 export default function MyPage() {
   const navigate = useNavigate();
-  // interface HeaderProps {
-  //   leftChild?: React.ReactNode;
-  //   title?: string;
-  //   rightChild?: React.ReactNode;
-  //   noBorder?: boolean;
-  // }
+  const setUserProfile = useSetRecoilState(userProfileState);
+  const userProfile = useRecoilValue(userProfileState);
+
+  // useEffect(() => {
+  //   setUserProfile(userProfileData);
+  // }, []);
+
   const handleClickLogout = () => {
     // TODO logout api 연동
   };
@@ -26,11 +30,11 @@ export default function MyPage() {
       <main className="flex flex-col items-center justify-center main-header-nav pt-[1rem]">
         <UserCard
           isMyPage={true}
-          data={userInfos[1]}
+          data={userProfile}
           onClick={handleClickEdit}
         />
         <div className="px-[2rem] w-full h-full">
-          <div className=" mt-[1rem] h-[0.2rem] w-full bg-gray13"></div>
+          <div className="mt-[1rem] h-[0.2rem] w-full border-b border-gray13"></div>
           <section className="flex flex-col gap-[4rem] w-full mt-[2rem]">
             <div>
               <MyPageSection title="내활동">
