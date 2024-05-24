@@ -5,15 +5,35 @@ import FilterList from "../components/Home/FilterList";
 import PostListCard from "../components/Home/PostListCard";
 import Navigation from "../components/Navigation/Navigation";
 import LogoYellow from "./../assets/icons/LogoYellow.svg?react";
+import ProfileIcon from "./../assets/icons/ProfileIcon.svg?react";
 import Banner from "../components/Home/Banner";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { sortedPostListState } from "../recoil/postListState";
-import { userState } from "../recoil/userState";
-import { useNavigate } from "react-router-dom";
+import useSWR from "swr";
+// import { Post } from "../mock/mockData";
+import { waffleFetcher } from "../lib/axios";
+import { AxiosResponse } from "axios";
 import { getAccessToken } from "../lib/token";
+import { useNavigate } from "react-router-dom";
+import { userState } from "../recoil/userState";
 import HeaderButton from "../components/Header/HeaderButton";
-import ProfileIcon from "./../assets/icons/ProfileIcon.svg?react";
-import { classNames } from "classnames";
+
+// PostVO 타입 정의
+export interface PostVO {
+  ottTag: string;
+  title: string;
+  content: string;
+  photoes: any[];
+  nickName: string;
+  createdAt: string;
+  commentCount: number;
+  thumbNail: string | null;
+}
+
+// Post 타입 정의
+export interface Post {
+  postVO: PostVO;
+}
 
 export default function HomePage() {
   const [selectedOtts, setSelectedOtts] = useState<string[]>([]);
@@ -21,6 +41,7 @@ export default function HomePage() {
   const postList = useRecoilValue(sortedPostListState);
   const nav = useNavigate();
 
+  // 사용자가 로그인했는지 확인하고 토큰 설정
   useEffect(() => {
     const token = getAccessToken("accessToken");
     if (token) {
@@ -28,6 +49,7 @@ export default function HomePage() {
     }
   }, [setUser]);
 
+  // 체크된 ott 목록 업데이트 함수
   const handleOttSelect = (ott: string) => {
     setSelectedOtts((prevSelectedOtts) =>
       prevSelectedOtts.includes(ott)
@@ -36,6 +58,17 @@ export default function HomePage() {
     );
   };
 
+  console.log(selectedOtts.join(","));
+
+  // api 호출
+  const { data, error } = useSWR<AxiosResponse<Post[]>>(
+    `api/v1/post?ottTags=${selectedOtts.join(",")}`,
+    waffleFetcher,
+  );
+
+  console.log(data);
+
+  // 선택된 ott 태그에 따라 포스트 목록 필터링(더미)
   const filteredPostList =
     selectedOtts.length > 0
       ? postList?.filter((post) => selectedOtts.includes(post.ottTag))
@@ -69,8 +102,14 @@ export default function HomePage() {
       <main className="main-header-nav">
         <Banner />
         <FilterList onOttSelect={handleOttSelect} selectedOtts={selectedOtts} />
-        {filteredPostList?.map((post) => (
+        {/* 필터링 된 포스트 리스트(더미) */}
+        {/* {filteredPostList?.map((post) => (
           <PostListCard key={post.postId} post={post} />
+        ))} */}
+
+        {/* api요청으로 받아온 데이터 리스트 */}
+        {data?.data.map(({ postVO }) => (
+          <PostListCard key={postVO.createdAt} post={postVO} />
         ))}
       </main>
     </>
