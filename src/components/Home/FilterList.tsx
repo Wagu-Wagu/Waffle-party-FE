@@ -30,22 +30,6 @@ export default function FilterList({
     arrows: false,
   };
 
-  const sortedOttList = [...ottList].sort((a, b) => {
-    if (
-      selectedOtts.includes(ottTagsReverse[a]) &&
-      !selectedOtts.includes(ottTagsReverse[b])
-    ) {
-      return -1;
-    }
-    if (
-      !selectedOtts.includes(ottTagsReverse[a]) &&
-      selectedOtts.includes(ottTagsReverse[b])
-    ) {
-      return 1;
-    }
-    return 0;
-  });
-
   const handleChipClick = (ott: OttTagKorean) => {
     const englishKey = ottTagsReverse[ott]; // 한글 값을 영어 키 값으로 변환
     onOttSelect(englishKey); // 영어 키 값을 HomePage로 전달
@@ -89,7 +73,7 @@ export default function FilterList({
       className="bg-gray15 py-[1.5rem] px-[2rem]"
     >
       <Slider {...settings}>
-        {sortedOttList.map((ott) => (
+        {ottList.map((ott) => (
           <div className="mr-[0.8rem]" key={ott}>
             <Chip
               ott={ott}
