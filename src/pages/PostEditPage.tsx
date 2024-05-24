@@ -8,6 +8,8 @@ import ImageSlider from "../components/ImageSlider";
 import { useSetRecoilState } from "recoil";
 import { postDetailState } from "../recoil/atoms";
 import ImagePreview from "../components/ImagePreview";
+import HeaderButton from "../components/Header/HeaderButton";
+import { useNavigate } from "react-router-dom";
 
 export default function PostCreatePage() {
   const [isShow, setIsShow] = useState<boolean>(false);
@@ -19,9 +21,22 @@ export default function PostCreatePage() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [isValid, setIsValid] = useState(false);
 
   const setPostDetail = useSetRecoilState(postDetailState);
 
+  const nav = useNavigate();
+
+  /**
+   * ott, 제목, 내용 다 충족하면 등록버튼 활성화
+   */
+  useEffect(() => {
+    if (selectedOption && title && text) {
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
+  }, [selectedOption, setSelectedOption, title, setTitle, text, setText]);
   /**
    * OTT 선택
    * @param option
@@ -95,21 +110,28 @@ export default function PostCreatePage() {
       postImage: imgSrc,
     };
     setPostDetail(currentData);
-    console.log("등록 데이터:", currentData);
-    // Save data logic here
   };
 
   return (
     <>
-      {!showFullImage && (
-        <Header
-          leftChild={<Close />}
-          title="글 수정"
-          rightChild="수정"
-          noBorder={false}
-          onClick={handleRegister}
-        />
-      )}
+      <Header
+        leftChild={
+          <HeaderButton onClick={() => nav(-1)}>
+            <Close />
+          </HeaderButton>
+        }
+        title={showFullImage ? "" : "글 수정"}
+        rightChild={
+          <HeaderButton
+            onClick={() => {}}
+            className={`${isValid ? "text-white" : "text-gray10"}`}
+          >
+            등록
+          </HeaderButton>
+        }
+        noBorder={false}
+        onClick={handleRegister}
+      />
 
       <main className="px-[2rem] w-full h-screen-minus-46 mt-[4.6rem] ">
         <section
