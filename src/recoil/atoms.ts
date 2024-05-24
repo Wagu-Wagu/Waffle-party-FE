@@ -8,10 +8,10 @@ const { persistAtom } = recoilPersist();
 export const postDetailState = atom<postDetail>({
   key: "postDetail",
   default: {
-    ott: "",
+    ottTag: "",
     title: "",
     content: "",
-    postImage: null,
+    postImages: null,
   },
   effects_UNSTABLE: [persistAtom],
 });

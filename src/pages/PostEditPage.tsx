@@ -104,10 +104,10 @@ export default function PostCreatePage() {
   const handleRegister = () => {
     if (!selectedOption || !title || !text) return;
     const currentData = {
-      ott: selectedOption,
+      ottTag: selectedOption,
       title: title,
       content: text,
-      postImage: imgSrc,
+      postImages: imgSrc,
     };
     setPostDetail(currentData);
   };
@@ -123,14 +123,13 @@ export default function PostCreatePage() {
         title={showFullImage ? "" : "글 수정"}
         rightChild={
           <HeaderButton
-            onClick={() => {}}
+            onClick={handleRegister}
             className={`${isValid ? "text-white" : "text-gray10"}`}
           >
             등록
           </HeaderButton>
         }
         noBorder={false}
-        onClick={handleRegister}
       />
 
       <main className="px-[2rem] w-full h-screen-minus-46 mt-[4.6rem] ">
