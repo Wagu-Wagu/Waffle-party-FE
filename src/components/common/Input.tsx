@@ -176,9 +176,7 @@ export default function Input(props: InputProps) {
   );
 
   return (
-    <div
-      className={`gap-[0.2rem] box-border flex flex-col w-[32rem] ${getTextClass()}`}
-    >
+    <div className={`gap-[0.2rem] box-border flex flex-col ${getTextClass()}`}>
       <div
         className={`box-border rounded-[0.4rem] flex flex-col items-start justify-start px-[1.2rem] py-[0.8rem] w-[32rem] h-[5.6rem] border ${getBorderClass()}`}
       >

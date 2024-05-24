@@ -7,10 +7,10 @@ const { persistAtom } = recoilPersist();
 export const userProfileState = atom<userProfileType>({
   key: "userProfile",
   default: {
-    userId: "",
+    userId: 1,
     nickname: "",
     kakaoId: "",
-    profileImage: null,
+    userImage: null,
   },
   effects_UNSTABLE: [persistAtom],
 });

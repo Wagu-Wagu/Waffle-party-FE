@@ -1,22 +1,17 @@
 import Header from "../components/Header/Header";
-import UserCard from "../components/card/UserCard";
 import MyPageListCard from "../components/card/MyPageListCard";
 import MyPageSection from "../components/MyPage/MyPageSection";
 import { Link, useNavigate } from "react-router-dom";
 import Navigation from "../components/Navigation/Navigation";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { userProfileData } from "../mock/userInfo";
+import { useRecoilValue } from "recoil";
 import { userProfileState } from "../recoil/userProfile";
-import { useEffect } from "react";
+
+import ProfileImageUploader from "../components/common/ProfileImageUploader";
+import Pencil from "../assets/icons/PencilUnderLine.svg?react";
 
 export default function MyPage() {
   const navigate = useNavigate();
-  const setUserProfile = useSetRecoilState(userProfileState);
   const userProfile = useRecoilValue(userProfileState);
-
-  // useEffect(() => {
-  //   setUserProfile(userProfileData);
-  // }, []);
 
   const handleClickLogout = () => {
     // TODO logout api 연동
@@ -28,11 +23,22 @@ export default function MyPage() {
     <>
       <Header title="마이" />
       <main className="flex flex-col items-center justify-center main-header-nav pt-[1rem]">
-        <UserCard
-          isMyPage={true}
-          data={userProfile}
-          onClick={handleClickEdit}
-        />
+        <section className="flex w-full py-[1.3rem] pl-[2rem] gap-[1.5rem]">
+          <ProfileImageUploader imageSrc={userProfile.userImage} />
+          <div className="flex flex-col gap-[0.6rem] justify-center">
+            <div className="flex gap-[0.6rem]">
+              <p className="text-[1.6rem] font-bold leading-[2.4rem] text-white">
+                {userProfile.nickname}
+              </p>
+              <div onClick={handleClickEdit}>
+                <Pencil />
+              </div>
+            </div>
+            <span className="text-gray7 text-[1.2rem] font-normal leading-[1.6rem]">
+              {userProfile.kakaoId}
+            </span>
+          </div>
+        </section>
         <div className="px-[2rem] w-full h-full">
           <div className="mt-[1rem] h-[0.2rem] w-full border-b border-gray13"></div>
           <section className="flex flex-col gap-[4rem] w-full mt-[2rem]">

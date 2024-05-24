@@ -1,6 +1,6 @@
 export interface userProfileType {
-  userId: string;
+  userId: number;
   nickname: string;
   kakaoId: string;
-  profileImage: string | null;
+  userImage: string | null;
 }

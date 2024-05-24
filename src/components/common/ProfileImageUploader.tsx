@@ -57,9 +57,9 @@ export default function ProfileImageUploader(props: profileImageProps) {
   // };
 
   return (
-    <div className="relative w-[9rem]">
+    <div className="relative w-[5.9rem]">
       <img
-        className="w-[8.5rem] h-[8.5rem] rounded-full aspect-square box-border object-cover"
+        className="w-[5.9rem] h-[5.9rem] rounded-full aspect-square box-border object-cover"
         src={proImg}
         alt="프로필 이미지"
       />
@@ -74,7 +74,7 @@ export default function ProfileImageUploader(props: profileImageProps) {
           ref={inputRef}
         />
         <div
-          className="bg-gray12 w-[3rem] h-[3rem] rounded-full flex items-center justify-center"
+          className="bg-gray12 w-[2.3rem] h-[2.3rem] rounded-full flex items-center justify-center"
           onClick={handleClick}
         >
           <Camera />
