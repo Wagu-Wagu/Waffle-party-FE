@@ -18,13 +18,15 @@ function ImageSlider({ images, onClose }: sliderProps) {
       setCurrentSlide(newIndex),
   };
 
+  console.log(images);
+
   // TODO
   const maxLen = images?.length;
   const [currentSlide, setCurrentSlide] = useState(0);
 
   return (
     <div className="w-[50rem] h-[30rem] bg-cover bg-no-repeat bg-center">
-      <div className="text-[1.6rem] font-medium leading-[2.4rem] absolute top-[1.1rem] z-10 p-2 text-white transform -translate-x-1/2 left-1/2">
+      <div className="text-[1.6rem] font-medium leading-[2.4rem] absolute top-0 z-10 p-2 text-white transform -translate-x-1/2 left-1/2">
         <span className="text-white">{currentSlide + 1}</span>
         <span>&nbsp;/&nbsp;</span>
         <span className="text-gray9">{maxLen}</span>
@@ -41,7 +43,7 @@ function ImageSlider({ images, onClose }: sliderProps) {
       </Slider>
       {/* TODO 디자인 확정 나면 수정 */}
       <div
-        className="absolute bottom-[8rem] left-1/2 transform -translate-x-1/2"
+        className="absolute bottom-[8rem] left-1/2 transform -translate-x-1/2 cursor-pointer"
         onClick={onClose}
       >
         <Close />

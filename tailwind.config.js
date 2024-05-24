@@ -73,6 +73,7 @@ export default {
         additional1: "#FFE001",
         additional2: "#401D21",
         additional3: "#BDBDBD",
+        black80: "rgba(0,0,0,0.8)",
       },
       fontFamily: {
         sans: ["Pretendard", "ui-sans-serif", "system-ui"],
