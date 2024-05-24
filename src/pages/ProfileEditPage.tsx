@@ -3,13 +3,17 @@ import CloseBtn from "../assets/icons/CloseIcon.svg?react";
 import ProfileImageUploader from "../components/common/ProfileImageUploader";
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { validationResultType } from "../types/validationResultType";
 import { useNavigate } from "react-router-dom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { userProfileState } from "../recoil/userProfile";
 
 export default function ProfileEditPage() {
   const [nickname, setNickname] = useState<string>("");
   const [isValid, setIsValid] = useState<boolean>(false);
+  const setUserProfile = useSetRecoilState(userProfileState);
+  const userProfile = useRecoilValue(userProfileState);
   const navigate = useNavigate();
 
   const handleSubmit = () => {
@@ -35,18 +39,18 @@ export default function ProfileEditPage() {
   return (
     <>
       <Header leftChild={<CloseBtn />} title="프로필 변경" />
-      <div className="flex flex-col justify-between h-screen-minus-12.8">
+      <div className="flex flex-col justify-between h-screen-minus-46">
         <div>
-          <div className="mt-[3.8rem] flex justify-center">
-            <ProfileImageUploader imageSrc={undefined} />
+          <div className="mt-[4.8rem] pt-[4.8rem]  flex justify-center">
+            <ProfileImageUploader imageSrc={userProfile.profileImage} />
           </div>
-          <div className="mt-[4.8rem] flex justify-center">
+          <div className="mt-[4.8rem pt-[4.8rem] flex justify-center">
             <Input
               disabled={false}
               onChange={handleInputChange}
               label="닉네임"
               placeholder="기존 닉네임"
-              maxLen={50}
+              maxLen={10}
             />
           </div>
         </div>

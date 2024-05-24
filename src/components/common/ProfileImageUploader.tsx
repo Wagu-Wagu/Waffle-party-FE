@@ -3,7 +3,7 @@ import profile from "../../assets/icons/profile.svg";
 import Camera from "../../assets/icons/Camera.svg?react";
 
 interface profileImageProps {
-  imageSrc: string | undefined;
+  imageSrc: string | null;
 }
 export default function ProfileImageUploader(props: profileImageProps) {
   const { imageSrc } = props;

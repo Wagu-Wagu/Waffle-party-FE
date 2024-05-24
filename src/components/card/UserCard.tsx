@@ -6,7 +6,7 @@ import Lock from "../../assets/icons/UnLock.svg?react";
 // props에는 받아온 데이터와, 마이페이지인지 여부가 들어가야 합니다.
 export default function UserCard(props: any) {
   const { data, isMyPage, onClick, showMoreIcon } = props;
-  const proImg = data.profilePicture ?? profile;
+  const proImg = data.profileImage ?? profile;
 
   return (
     <section
