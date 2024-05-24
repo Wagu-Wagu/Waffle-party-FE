@@ -1,12 +1,7 @@
 import { Link } from "react-router-dom";
 import MiniChip from "../common/MiniChip";
-import { Post, UserList } from "../../mock/mockData";
 import { useFormattedDate } from "../../hooks/useFormattedDate";
-
-/* const getNickName = (userId: number): string => {
-  const user = UserList.find((user) => user.userId === userId);
-  return user ? user.nickName : "Unkown";
-}; */
+import { Post } from "../../types/ottPost";
 
 // ottTags 객체 추가
 const ottTags = {
@@ -21,19 +16,7 @@ const ottTags = {
   ETC: "기타",
 };
 
-// PostVO 타입 정의
-interface PostVO {
-  ottTag: string;
-  title: string;
-  content: string;
-  photoes: any[];
-  nickName: string;
-  createdAt: string;
-  commentCount: number;
-  thumbNail: string | null;
-}
-
-export default function PostListCard({ post }: { post: PostVO }) {
+export default function PostListCard({ post }: { post: Post }) {
   const {
     // postId,
     // userId,
@@ -45,7 +28,6 @@ export default function PostListCard({ post }: { post: PostVO }) {
     commentCount,
     nickName,
   } = post;
-  // const nickName = getNickName(userId);
   const formattedDate = useFormattedDate(new Date(createdAt));
 
   // ottTag를 한글로 변환
@@ -75,8 +57,7 @@ export default function PostListCard({ post }: { post: PostVO }) {
         </div>
         {thumbNail && (
           <img
-            // src={`${import.meta.env.VITE_POST_BASE_URL}/${thumbNail}`}
-            src={`https://s3.ap-northeast-2.amazonaws.com/waguwagu-bucket/user/image/d132fc75-094b-48e2-97c6-cd00ca3b001f.png`}
+            src={`${import.meta.env.VITE_POST_BASE_URL}${thumbNail}`}
             alt="thumbnail"
             className="w-[7.4rem] h-[7.4rem] rounded-[0.4rem] object-cover object-center"
           />
