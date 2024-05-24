@@ -10,6 +10,7 @@ import { postDetailState } from "../recoil/atoms";
 import ImagePreview from "../components/ImagePreview";
 import HeaderButton from "../components/Header/HeaderButton";
 import { useNavigate } from "react-router-dom";
+import { postCreate } from "../lib/api/post";
 
 export default function PostCreatePage() {
   const [isShow, setIsShow] = useState<boolean>(false);
@@ -102,15 +103,20 @@ export default function PostCreatePage() {
   /**
    * 등록 버튼
    */
-  const handleRegister = () => {
+  const handleRegister = async () => {
+    console.log("dd");
     if (!selectedOption || !title || !text) return;
     const currentData = {
-      ott: selectedOption,
+      ottTag: selectedOption,
       title: title,
       content: text,
-      postImage: imgSrc,
+      postImages: imgSrc,
     };
     setPostDetail(currentData);
+
+    // 수정예정
+    const userId = 1;
+    await postCreate(userId, currentData);
   };
 
   useEffect(() => {
@@ -128,14 +134,13 @@ export default function PostCreatePage() {
         title={showFullImage ? "" : "글 작성"}
         rightChild={
           <HeaderButton
-            onClick={() => {}}
+            onClick={handleRegister}
             className={`${isValid ? "text-white" : "text-gray10"}`}
           >
             등록
           </HeaderButton>
         }
         noBorder={false}
-        onClick={handleRegister}
       />
       <main className="px-[2rem] w-full h-screen-minus-46 mt-[4.6rem]">
         <section

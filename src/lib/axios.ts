@@ -12,7 +12,7 @@ client.interceptors.request.use((config: any) => {
   const token = getAccessToken("getAccessToken");
   const headers = {
     ...config.headers,
-    Authorization: token,
+    Authorization: `Bearer ${token}`,
   };
   return { ...config, headers };
 });
