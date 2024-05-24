@@ -1,4 +1,4 @@
-import KakaoTalkIcon from "./../../assets/icons/KakaoTalkIcon.svg?react";
+import KakaoIcon from "./../../assets/icons/KakaoIcon.svg";
 
 export default function KakaoLogin() {
   const KEY = import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY;
@@ -8,12 +8,10 @@ export default function KakaoLogin() {
   return (
     <button
       onClick={() => (window.location.href = url)}
-      className="mt-[2.5rem] mb-[7rem] flex items-center gap-4 bg-additional1 py-[1.45rem] px-[9.5rem] rounded-2xl"
+      className="w-full mt-[2.5rem] mb-[7rem] flex items-center justify-center gap-[0.8rem] bg-[#fee500] py-[1.45rem] px-[9.5rem] rounded-[0.6rem]"
     >
-      <KakaoTalkIcon />
-      <span className="font-bold text-body text-additional2">
-        카카오로 시작하기
-      </span>
+      <img src={KakaoIcon} alt="" className="w-[2rem] h-[2rem]" />
+      <span className="font-bold text-button">카카오 로그인</span>
     </button>
   );
 }

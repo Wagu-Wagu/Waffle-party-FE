@@ -160,6 +160,14 @@ export default function PostCreatePage() {
             onChange={(e) => setTitle(e.target.value)}
           />
 
+          {/* 사진이 들어갈 영역 */}
+          {imgSrc && (
+            <ImagePreview
+              images={imgSrc}
+              onClick={() => setShowFullImage(true)}
+            />
+          )}
+
           {/* 본문 */}
           <textarea
             className="bg-gray14 outline-none font-pretendard text-[1.4rem] font-medium leading-[2.2rem] text-gray8 resize-none overflow-hidden"
@@ -168,14 +176,6 @@ export default function PostCreatePage() {
             onChange={(e) => setText(e.target.value)}
             ref={textareaRef}
           />
-
-          {/* 사진이 들어갈 영역 */}
-          {imgSrc && (
-            <ImagePreview
-              images={imgSrc}
-              onClick={() => setShowFullImage(true)}
-            />
-          )}
         </section>
       </main>
       <div className="py-[1.6rem] px-[2rem] box-border fixed bottom-0 w-full max-w-[50rem] min-w-[36rem] h-[8rem] bg-gray14 border-2 border-gray13">
