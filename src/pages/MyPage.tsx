@@ -58,9 +58,14 @@ export default function MyPage() {
               </MyPageSection>
             </div>
             <MyPageSection title="디바이스 및 앱">
-              <MyPageListCard activeData={undefined} isArrow={true}>
-                업데이트 노트
-              </MyPageListCard>
+              <a
+                target="_blank"
+                href="https://wisesky915.notion.site/9be32afba5cc4f998c83f5d01dbe1a8c?pvs=4"
+              >
+                <MyPageListCard activeData={undefined} isArrow={true}>
+                  업데이트 노트
+                </MyPageListCard>
+              </a>
               <MyPageListCard activeData={undefined} isArrow={false}>
                 버전
               </MyPageListCard>
