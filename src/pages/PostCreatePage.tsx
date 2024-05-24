@@ -19,7 +19,10 @@ export default function PostCreatePage() {
   const [imgSrc, setImgSrc] = useState<string[] | null>(null);
   const [showFullImage, setShowFullImage] = useState<boolean>(false);
   const [scrollDown, setScrollDown] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [selectedOption, setSelectedOption] = useState<{
+    key: string;
+    value: string;
+  } | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isValid, setIsValid] = useState(false);
@@ -43,8 +46,9 @@ export default function PostCreatePage() {
    * OTT 선택
    * @param option
    */
-  const handleSelectOTT = (option: string) => {
+  const handleSelectOTT = (option: { key: string; value: string }) => {
     setSelectedOption(option);
+    console.log(option, option.key, option.value);
   };
 
   /**
@@ -80,6 +84,7 @@ export default function PostCreatePage() {
     const files = inputEl.files;
     if (!files || files.length === 0) return;
     const file = files[0];
+
     const reader = new FileReader();
     reader.onload = (e) => {
       if (e.target?.result) {
@@ -107,21 +112,17 @@ export default function PostCreatePage() {
     console.log("dd");
     if (!selectedOption || !title || !text) return;
     const currentData = {
-      ottTag: selectedOption,
+      ottTag: selectedOption.key,
       title: title,
       content: text,
       postImages: imgSrc,
     };
     setPostDetail(currentData);
+    console.log(currentData);
 
     // 수정예정
-    const userId = 1;
     await postCreate(currentData);
   };
-
-  useEffect(() => {
-    console.log(isShow);
-  }, [setIsShow, isShow]);
 
   return (
     <>
@@ -150,7 +151,7 @@ export default function PostCreatePage() {
           <p
             className={`font-pretendard text-[1.6rem] font-normal leading-[2.4rem] ${selectedOption ? "text-white" : "text-gray8"}`}
           >
-            {selectedOption ? selectedOption : "OTT를 선택해주세요."}
+            {selectedOption ? selectedOption.value : "OTT를 선택해주세요."}
           </p>
           <div className="flex items-center ml-auto">
             <RightArrow />
@@ -164,7 +165,6 @@ export default function PostCreatePage() {
             placeholder="제목을 입력해주세요."
             onChange={(e) => setTitle(e.target.value)}
           />
-
           {/* 사진이 들어갈 영역 */}
           {imgSrc && (
             <ImagePreview
@@ -172,7 +172,6 @@ export default function PostCreatePage() {
               onClick={() => setShowFullImage(true)}
             />
           )}
-
           {/* 본문 */}
           <textarea
             className="bg-gray14 outline-none font-pretendard text-[1.4rem] font-medium leading-[2.2rem] text-gray8 resize-none overflow-hidden"
