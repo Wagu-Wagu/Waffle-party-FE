@@ -2,9 +2,9 @@ import { postDetail } from "../../types/postDetail";
 import { client } from "../axios";
 import { setUserSession } from "../token";
 
-export const postCreate = async (userId: number, param: postDetail) => {
+export const postCreate = async (param: postDetail) => {
   try {
-    const { data } = await client.post(`/api/v1/post?userId=${userId}`, param);
+    const { data } = await client.post("/api/v1/post", param);
     console.log(data);
     if (data.data) {
       setUserSession(data.data.accessToken);

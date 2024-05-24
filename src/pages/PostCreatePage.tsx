@@ -116,7 +116,7 @@ export default function PostCreatePage() {
 
     // 수정예정
     const userId = 1;
-    await postCreate(userId, currentData);
+    await postCreate(currentData);
   };
 
   useEffect(() => {
