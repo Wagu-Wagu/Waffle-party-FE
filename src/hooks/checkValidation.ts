@@ -17,5 +17,5 @@ export default function checkValidation(nickname: string): {
     };
   }
 
-  return { success: true, message: "유효한 닉네임입니다." };
+  return { success: true, message: "사용 가능한 닉네임입니다." };
 }

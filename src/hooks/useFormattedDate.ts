@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-export const getFormattedDate = (date: Date): string => {
+export const getFormattedDate = (date: Date) => {
   const now = new Date();
   const isToday =
     date.getDate() === now.getDate() &&
