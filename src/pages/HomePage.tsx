@@ -7,10 +7,8 @@ import Navigation from "../components/Navigation/Navigation";
 import LogoYellow from "./../assets/icons/LogoYellow.svg?react";
 import ProfileIcon from "./../assets/icons/ProfileIcon.svg?react";
 import Banner from "../components/Home/Banner";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { sortedPostListState } from "../recoil/postListState";
+import { useRecoilState } from "recoil";
 import useSWR from "swr";
-// import { Post } from "../mock/mockData";
 import { waffleFetcher } from "../lib/axios";
 import { AxiosResponse } from "axios";
 import { getAccessToken } from "../lib/token";
@@ -18,8 +16,8 @@ import { useNavigate } from "react-router-dom";
 import { userState } from "../recoil/userState";
 import HeaderButton from "../components/Header/HeaderButton";
 
-// PostVO 타입 정의
-export interface PostVO {
+// Post 타입 정의
+interface Post {
   ottTag: string;
   title: string;
   content: string;
@@ -30,15 +28,14 @@ export interface PostVO {
   thumbNail: string | null;
 }
 
-// Post 타입 정의
-export interface Post {
-  postVO: PostVO;
+// API 응답 타입 정의
+interface PostResponse {
+  postVO: Post;
 }
 
 export default function HomePage() {
   const [selectedOtts, setSelectedOtts] = useState<string[]>([]);
   const [user, setUser] = useRecoilState(userState);
-  const postList = useRecoilValue(sortedPostListState);
   const nav = useNavigate();
 
   // 사용자가 로그인했는지 확인하고 토큰 설정
@@ -57,17 +54,11 @@ export default function HomePage() {
         : [...prevSelectedOtts, ott],
     );
   };
-  // api 호출
-  const { data, error } = useSWR<AxiosResponse<Post[]>>(
+
+  const { data } = useSWR<AxiosResponse<PostResponse[]>>(
     `api/v1/post?ottTags=${selectedOtts.join(",")}`,
     waffleFetcher,
   );
-
-  // 선택된 ott 태그에 따라 포스트 목록 필터링(더미)
-  const filteredPostList =
-    selectedOtts.length > 0
-      ? postList?.filter((post) => selectedOtts.includes(post.ottTag))
-      : postList;
 
   return (
     <>
@@ -97,18 +88,9 @@ export default function HomePage() {
       <main className="main-header-nav">
         <Banner />
         <FilterList onOttSelect={handleOttSelect} selectedOtts={selectedOtts} />
-        {/* 필터링 된 포스트 리스트(더미) */}
-        {/* {filteredPostList?.map((post) => (
-          <PostListCard key={post.postId} post={post} />
-        ))} */}
-
-        {/* api요청으로 받아온 데이터 리스트 */}
         {data?.data.map(({ postVO }) => (
           <PostListCard key={postVO.createdAt} post={postVO} />
         ))}
-        {/* {data?.data.map((post) => (
-          <PostListCard key={post.postId} post={post} />
-        ))} */}
       </main>
     </>
   );
