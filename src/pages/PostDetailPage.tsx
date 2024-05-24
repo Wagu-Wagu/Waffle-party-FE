@@ -4,7 +4,7 @@ import UserCard from "../components/card/UserCard";
 import Button from "../components/common/Button";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import UnLock from "../assets/icons/UnLock.svg?react";
-import Lock from "../assets/icons/Lock.svg?react";
+import Lock from "../assets/icons/LockActive.svg?react";
 import ImageSlider from "../components/ImageSlider";
 import React from "react";
 import formatDate from "../hooks/formatDate";
@@ -34,7 +34,7 @@ export default function PostDetailPage() {
   }>({ parent: null, child: null });
   // 받아온 데이터중 댓글데이터 넣기
   const [comments, setComments] = useState(data.comments);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const [isEdit, setIsEdit] = useState(false);
   const [isPost, setIsPost] = useState(false);
 
@@ -82,10 +82,25 @@ export default function PostDetailPage() {
    * 댓글 입력
    * @param event
    */
-  const handleChangeContent = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setInputValue(value);
+  const handleChangeContent = (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const textarea = event.target as HTMLTextAreaElement;
+    const value = textarea.value;
     setIsFocused(true);
+
+    const lineHeight = parseFloat(window.getComputedStyle(textarea).lineHeight);
+    const maxRows = 4;
+
+    // 텍스트의 행 수가 최대 행 수를 초과하면 입력을 막고 경고창을 표시합니다.
+    const rows = Math.floor(textarea.scrollHeight / lineHeight);
+    if (rows > maxRows) {
+      event.preventDefault();
+      window.alert("4줄까지만 입력 가능합니다");
+      return;
+    } else {
+      setInputValue(value);
+    }
   };
 
   /**
@@ -93,9 +108,16 @@ export default function PostDetailPage() {
    * @param event
    */
   const handleKeyPress = (
-    event: React.KeyboardEvent<HTMLInputElement>,
+    event: React.KeyboardEvent<HTMLTextAreaElement>,
     modalData: any,
   ) => {
+    // const textFlow = event.target as HTMLTextAreaElement;
+    // const lines = textFlow.value.split("\n");
+    // console.log(lines);
+    // if (lines.length > 4) {
+    //   event.preventDefault();
+    //   window.alert("4줄까지만 입력 가능합니다");
+    // }
     if (event.key === "Enter") {
       event.preventDefault();
       handleAddComment(modalData);
@@ -347,7 +369,7 @@ export default function PostDetailPage() {
               <div className="w-full justify-start items-end gap-2.5 inline-flex">
                 <UserCard
                   data={data}
-                  isMyPage={false}
+                  isMoreComment={false}
                   onClick={() => handleModal("post")}
                   showMoreIcon={data.mypost}
                 />
@@ -380,7 +402,7 @@ export default function PostDetailPage() {
                     <React.Fragment key={index}>
                       <UserCard
                         data={comment}
-                        isMyPage={false}
+                        isMoreComment={false}
                         showMoreIcon={true}
                         onClick={() => handleModal(comment)}
                       />
@@ -394,7 +416,7 @@ export default function PostDetailPage() {
                           <div className="pl-[4.8rem]" key={moreIndex}>
                             <UserCard
                               data={moreComment}
-                              isMyPage={false}
+                              isMoreComment={true}
                               showMoreIcon={true}
                               onClick={() => handleModal(comment, moreComment)}
                             />
@@ -438,8 +460,8 @@ export default function PostDetailPage() {
             <div
               className={`w-full text-gray10 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem] flex gap-[1.5rem]`}
             >
-              <input
-                className={`w-full bg-transparent outline-none whitespace-nowrap ${setPlaceHolderClass()} ${setTextClass()} }`}
+              <textarea
+                className={`w-full resize-none bg-transparent outline-none  ${setPlaceHolderClass()} ${setTextClass()}`}
                 placeholder={isFocused ? "" : "댓글을 남겨주세요."}
                 onFocus={() => setIsFocused(true)}
                 value={inputValue}
