@@ -8,6 +8,8 @@ import ImageSlider from "../components/ImageSlider";
 import { useSetRecoilState } from "recoil";
 import { postDetailState } from "../recoil/atoms";
 import ImagePreview from "../components/ImagePreview";
+import HeaderButton from "../components/Header/HeaderButton";
+import { useNavigate } from "react-router-dom";
 
 export default function PostCreatePage() {
   const [isShow, setIsShow] = useState<boolean>(false);
@@ -21,6 +23,8 @@ export default function PostCreatePage() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const setPostDetail = useSetRecoilState(postDetailState);
+
+  const nav = useNavigate();
 
   /**
    * OTT 선택
@@ -106,9 +110,17 @@ export default function PostCreatePage() {
   return (
     <>
       <Header
-        leftChild={<Close />}
+        leftChild={
+          <HeaderButton onClick={() => nav(-1)}>
+            <Close />
+          </HeaderButton>
+        }
         title="글 작성"
-        rightChild="등록"
+        rightChild={
+          <HeaderButton onClick={() => {}} className="text-gray10">
+            등록
+          </HeaderButton>
+        }
         noBorder={false}
         onClick={handleRegister}
       />
@@ -135,14 +147,6 @@ export default function PostCreatePage() {
             onChange={(e) => setTitle(e.target.value)}
           />
 
-          {/* 사진이 들어갈 영역 */}
-          {imgSrc && (
-            <ImagePreview
-              images={imgSrc}
-              onClick={() => setShowFullImage(true)}
-            />
-          )}
-
           {/* 본문 */}
           <textarea
             className="bg-gray14 outline-none font-pretendard text-[1.4rem] font-medium leading-[2.2rem] text-gray8 resize-none overflow-hidden"
@@ -151,6 +155,14 @@ export default function PostCreatePage() {
             onChange={(e) => setText(e.target.value)}
             ref={textareaRef}
           />
+
+          {/* 사진이 들어갈 영역 */}
+          {imgSrc && (
+            <ImagePreview
+              images={imgSrc}
+              onClick={() => setShowFullImage(true)}
+            />
+          )}
         </section>
       </main>
       <div className="py-[1.6rem] px-[2rem] box-border fixed bottom-0 w-full max-w-[50rem] min-w-[36rem] h-[8rem] bg-gray14 border-2 border-gray13">

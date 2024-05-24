@@ -22,23 +22,27 @@ export default function MyCommentsPage() {
         title="작성한 댓글"
         noBorder={false}
       />
-      <div className="mt-[4.6rem]">
-        {myComment.length > 0 ? (
-          myComment.map((item, index) => (
-            <MyCommentsCard
-              data={item}
-              key={index}
-              onClick={(commentEl: any) => handleClickComment(commentEl)}
+      <main className="main-header">
+        <div className="h-screen-minus-46">
+          {myComment.length > 0 ? (
+            myComment.map((item, index) => (
+              <div className="cursor-pointer">
+                <MyCommentsCard
+                  data={item}
+                  key={index}
+                  onClick={(commentEl: any) => handleClickComment(commentEl)}
+                />
+              </div>
+            ))
+          ) : (
+            <EmptyList
+              icon={<ChatIcon />}
+              mainText="아직 댓글이 없어요."
+              subText="첫 댓글을 작성해보세요."
             />
-          ))
-        ) : (
-          <EmptyList
-            icon={<ChatIcon />}
-            mainText="아직 댓글이 없어요."
-            subText="첫 댓글을 작성해보세요."
-          />
-        )}
-      </div>
+          )}
+        </div>
+      </main>
     </>
   );
 }

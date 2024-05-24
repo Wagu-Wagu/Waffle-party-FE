@@ -6,6 +6,7 @@ import Button from "../components/common/Button";
 import { useState } from "react";
 import { validationResultType } from "../types/validationResultType";
 import { useNavigate } from "react-router-dom";
+import HeaderButton from "../components/Header/HeaderButton";
 
 export default function ProfileEditPage() {
   const [nickname, setNickname] = useState<string>("");
@@ -34,7 +35,14 @@ export default function ProfileEditPage() {
 
   return (
     <>
-      <Header leftChild={<CloseBtn />} title="프로필 변경" />
+      <Header
+        leftChild={
+          <HeaderButton onClick={() => navigate(-1)}>
+            <CloseBtn />
+          </HeaderButton>
+        }
+        title="닉네임 수정"
+      />
       <div className="flex flex-col justify-between h-screen-minus-12.8">
         <div>
           <div className="mt-[3.8rem] flex justify-center">

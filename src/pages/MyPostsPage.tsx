@@ -31,11 +31,13 @@ export default function MyPostsPage() {
       />
       <main className="main-header">
         {filteredPostList.length === 0 && (
-          <EmptyList
-            icon={<AlertCircleError />}
-            mainText="작성하신 게시글이 없어요"
-            subText={<p>첫 게시글을 작성해주세요</p>}
-          />
+          <div className="h-screen-minus-46">
+            <EmptyList
+              icon={<AlertCircleError />}
+              mainText="작성하신 게시글이 없어요"
+              subText={<p>첫 게시글을 작성해주세요</p>}
+            />
+          </div>
         )}
         {filteredPostList.map((post) => (
           <PostListCard key={post.postId} post={post} />

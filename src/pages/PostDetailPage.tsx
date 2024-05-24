@@ -331,7 +331,7 @@ export default function PostDetailPage() {
     <>
       <Header
         leftChild={
-          <HeaderButton onClick={() => nav("/", { replace: true })}>
+          <HeaderButton onClick={() => nav(-1)}>
             <LeftArrow />
           </HeaderButton>
         }
@@ -343,7 +343,7 @@ export default function PostDetailPage() {
             <div className="py-[1.6rem]">
               <Chip ott={data.ott} isButton={false} isCheck={false} />
             </div>
-            <div className="w-full flex flex-col items-start justify-start gap-[1.6rem]">
+            <div className="w-full flex flex-col items-start justify-start gap-[1.6rem] mb-[2.4rem]">
               <div className="w-full justify-start items-end gap-2.5 inline-flex">
                 <UserCard
                   data={data}
