@@ -4,6 +4,8 @@ import InputDelete from "../../assets/icons/InputDelete.svg?react";
 import InputError from "../../assets/icons/InputError.svg?react";
 import checkValidation from "../../hooks/checkValidation";
 import { validationResultType } from "../../types/validationResultType";
+import { userProfileState } from "../../recoil/userProfile";
+import { useSetRecoilState } from "recoil";
 
 interface InputProps {
   disabled?: boolean;
@@ -11,7 +13,7 @@ interface InputProps {
   placeholder: string;
   maxLen: number;
   onClick?: () => void;
-  onChange: (value: string, res: validationResultType) => void;
+  onChange: (res: validationResultType) => void;
 }
 
 export default function Input(props: InputProps) {
@@ -21,6 +23,7 @@ export default function Input(props: InputProps) {
   const [isError, setIsError] = useState<boolean>(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
+  const setUserProfile = useSetRecoilState(userProfileState);
 
   /**
    * input이 변경될때마다 실행
@@ -44,9 +47,14 @@ export default function Input(props: InputProps) {
         setIsSuccess(false);
       }
     }
+    setUserProfile((prevState) => ({
+      ...prevState,
+      nickname: inputValue,
+    }));
+
     // 부모 컴포넌트에 value 전달
-    onChange(inputValue, res);
-  }, [inputValue, isSuccess, isError, setIsSuccess, setIsError]);
+    onChange(res);
+  }, [inputValue]);
 
   /**
    * input이 변경될때
@@ -69,6 +77,10 @@ export default function Input(props: InputProps) {
       setInputValue("");
       setIsError(false);
       setIsSuccess(false);
+      setUserProfile((prevState) => ({
+        ...prevState,
+        nickname: "",
+      }));
     }, 0);
   };
 
@@ -164,9 +176,7 @@ export default function Input(props: InputProps) {
   );
 
   return (
-    <div
-      className={`gap-[0.2rem] box-border flex flex-col w-[32rem] ${getTextClass()}`}
-    >
+    <div className={`gap-[0.2rem] box-border flex flex-col ${getTextClass()}`}>
       <div
         className={`box-border rounded-[0.4rem] flex flex-col items-start justify-start px-[1.2rem] py-[0.8rem] w-[32rem] h-[5.6rem] border ${getBorderClass()}`}
       >
