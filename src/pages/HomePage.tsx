@@ -15,18 +15,9 @@ import { getAccessToken } from "../lib/token";
 import { useNavigate } from "react-router-dom";
 import { userState } from "../recoil/userState";
 import HeaderButton from "../components/Header/HeaderButton";
+import { Post } from "../types/ottPost";
 
 // Post 타입 정의
-interface Post {
-  ottTag: string;
-  title: string;
-  content: string;
-  photoes: any[];
-  nickName: string;
-  createdAt: string;
-  commentCount: number;
-  thumbNail: string | null;
-}
 
 // API 응답 타입 정의
 interface PostResponse {
