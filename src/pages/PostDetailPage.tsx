@@ -359,8 +359,8 @@ export default function PostDetailPage() {
         }
         noBorder={true}
       />
-      <main className="w-full h-screen-minus-12.8 bg-neutral-80">
-        <section className="w-full h-screen-minus-46 mt-[4.8rem]">
+      <main className="w-full main-header pb-[7.2rem] bg-neutral-80">
+        <section className="w-full">
           <section className="px-[2rem] flex-col items-center justify-start w-full gap-[2.4rem] border-b-8 border-neutral-900">
             <div className="py-[1.6rem]">
               <Chip ott={data.ott} isButton={false} isCheck={false} />
@@ -397,7 +397,7 @@ export default function PostDetailPage() {
                     댓글 {comments.length}
                   </div>
                 </div>
-                <div className="flex flex-col w-full gap-[1rem] pb-[1rem]">
+                <div className="flex flex-col w-full gap-[1rem] pb-[0.5rem]">
                   {comments.map((comment, index) => (
                     <React.Fragment key={index}>
                       <UserCard
@@ -481,7 +481,7 @@ export default function PostDetailPage() {
             </Button>
           </div>
         </div>
-        <div className="w-full h-[3.8rem] relative bg-neutral-800" />
+        <div className="relative w-full bg-neutral-800" />
       </div>
       {showFullImage && (
         <div
