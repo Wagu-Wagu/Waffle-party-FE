@@ -6,6 +6,7 @@ import { LoginDto } from "../lib/api/dto/login.dto";
 import { postLogin } from "../lib/api/login";
 import { useSetRecoilState } from "recoil";
 import { userTokenState } from "../recoil/atoms";
+import { setUserSession } from "../lib/token";
 
 export const KakaoCallback = () => {
   const nav = useNavigate();
@@ -43,6 +44,7 @@ export const KakaoCallback = () => {
           if (res.data) {
             params.token = res.data.access_token;
             params.providerType = "KAKAO";
+            setUserSession(res.data.access_token);
             await getUser(params);
           }
         })

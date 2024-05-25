@@ -13,7 +13,8 @@ interface InputProps {
   placeholder: string;
   maxLen: number;
   onClick?: () => void;
-  onChange: (res: validationResultType) => void;
+  // onChange: (res: validationResultType) => void;
+  onChange: (res: validationResultType, value: string) => void;
 }
 
 export default function Input(props: InputProps) {
@@ -53,7 +54,8 @@ export default function Input(props: InputProps) {
     }));
 
     // 부모 컴포넌트에 value 전달
-    onChange(res);
+    // onChange(res);
+    onChange(res, inputValue);
   }, [inputValue]);
 
   /**
