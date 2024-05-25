@@ -40,7 +40,7 @@ const BasicModal = forwardRef<HTMLElement, modalProps>(
               variant="borderYellow"
               onClick={() => onConfirm(false)}
             >
-              취소하기
+              {isLogout ? "예" : "취소하기"}
             </Button>
             <Button
               type="button"
@@ -49,7 +49,7 @@ const BasicModal = forwardRef<HTMLElement, modalProps>(
               variant="yellow"
               onClick={() => onConfirm(true)}
             >
-              삭제하기
+              {isLogout ? "아니오" : "삭제하기"}
             </Button>
           </div>
         </div>

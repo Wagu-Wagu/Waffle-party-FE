@@ -2,26 +2,18 @@ import React, { forwardRef, useState } from "react";
 import BottomSheet from "./BottomSheet";
 import BottomSheetHeader from "./BottomSheetHeader";
 import Check from "../../assets/icons/Check.svg?react";
+import { ottTags } from "../../types/ottTags";
 interface modalProps {
   isShow: boolean;
   onClick?: () => void;
-  onSelect: (option: string) => void;
+  onSelect: (option: { key: string; value: string }) => void;
 }
 
 const ListModal = forwardRef<HTMLElement, modalProps>((props, ref) => {
   const { isShow, onSelect } = props;
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const ottOptions = [
-    "넷플릭스",
-    "왓챠",
-    "디즈니+",
-    "웨이브",
-    "티빙",
-    "쿠팡플레이",
-    "리프텔",
-    "네이버시리즈",
-    "기타",
-  ];
+  // const ottOptions = Object.values(ottTags);
+  const ottEntries = Object.entries(ottTags);
 
   return (
     <BottomSheet isShow={isShow} ref={ref}>
@@ -34,16 +26,16 @@ const ListModal = forwardRef<HTMLElement, modalProps>((props, ref) => {
           <li className="text-[2.8rem] h-[2.8rem] font-semibold leading-7">
             OTT를 선택해주세요.
           </li>
-          {ottOptions.map((option, index) => (
+          {ottEntries.map(([key, value], index) => (
             <li
-              key={option}
+              key={key}
               onClick={() => {
                 setSelectedOption(index);
-                onSelect(ottOptions[index]);
+                onSelect({ key, value });
               }}
               className="flex text-[1.6rem] items-center h-[2.4rem] w-full gap-2 cursor-pointer"
             >
-              {option}
+              {value}
               {selectedOption === index && (
                 <div className="ml-auto">
                   <Check />

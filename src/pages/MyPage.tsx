@@ -8,13 +8,17 @@ import { userProfileState } from "../recoil/userProfile";
 
 import ProfileImageUploader from "../components/common/ProfileImageUploader";
 import Pencil from "../assets/icons/PencilUnderLine.svg?react";
+import BasicModal from "../components/modal/BasicModal";
+import { useState } from "react";
 
 export default function MyPage() {
   const navigate = useNavigate();
   const userProfile = useRecoilValue(userProfileState);
+  const [isShow, setIsShow] = useState(false);
 
   const handleClickLogout = () => {
     // TODO logout api 연동
+    setIsShow((prev) => !prev);
   };
   const handleClickEdit = () => {
     navigate("/profile/edit");
@@ -87,7 +91,7 @@ export default function MyPage() {
             </Link> */}
             <button
               className="underline text-gray8"
-              onClick={handleClickLogout}
+              onClick={() => setIsShow((prev) => !prev)}
             >
               로그아웃
             </button>
@@ -95,6 +99,15 @@ export default function MyPage() {
         </div>
       </main>
       <Navigation />
+      {isShow && (
+        <>
+          <BasicModal
+            isShow={isShow}
+            isLogout={true}
+            onConfirm={handleClickLogout}
+          />
+        </>
+      )}
     </>
   );
 }
