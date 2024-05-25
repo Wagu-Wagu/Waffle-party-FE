@@ -1,6 +1,8 @@
+import { Blob } from "buffer";
 import { postDetail } from "../../types/postDetail";
-import { client } from "../axios";
-import { setUserSession } from "../token";
+import { client, imgClient } from "../axios";
+import { getAccessToken, setUserSession } from "../token";
+import { blob } from "stream/consumers";
 
 export const postCreate = async (param: postDetail) => {
   try {
@@ -9,14 +11,23 @@ export const postCreate = async (param: postDetail) => {
     formData.append("title", param.title);
     formData.append("content", param.content);
 
-    // Assuming imgSrc is an array of File objects
-    param.postImages?.forEach((image, index) => {
-      formData.append(`postImages[${index}]`, image);
-    });
-    console.log(formData);
+    if (param.postImages?.length > 0) {
+      for (let i = 0; i < param.postImages?.length; i++) {
+        formData.append("profileImages", param.postImages[i]);
+      }
+    }
 
-    const { data } = await client.post("/api/v1/post", formData);
-    console.log(data);
+    // 토큰 설정
+    const token = getAccessToken("accessToken");
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: token,
+      },
+    };
+
+    // POST 요청 보내기
+    const { data } = await client.post("/api/v1/post", formData, config);
     if (data.data) {
       setUserSession(data.data.accessToken);
     }

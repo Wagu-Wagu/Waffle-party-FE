@@ -18,7 +18,10 @@ export default function PostCreatePage() {
   const [imgSrc, setImgSrc] = useState<string[] | null>(null);
   const [showFullImage, setShowFullImage] = useState<boolean>(false);
   const [scrollDown, setScrollDown] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [selectedOption, setSelectedOption] = useState<{
+    key: string;
+    value: string;
+  } | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isValid, setIsValid] = useState(false);
@@ -41,7 +44,7 @@ export default function PostCreatePage() {
    * OTT 선택
    * @param option
    */
-  const handleSelectOTT = (option: string) => {
+  const handleSelectOTT = (option: { key: string; value: string }) => {
     setSelectedOption(option);
   };
 
@@ -104,7 +107,7 @@ export default function PostCreatePage() {
   const handleRegister = () => {
     if (!selectedOption || !title || !text) return;
     const currentData = {
-      ottTag: selectedOption,
+      ottTag: selectedOption.key,
       title: title,
       content: text,
       postImages: imgSrc,
@@ -140,7 +143,7 @@ export default function PostCreatePage() {
           <p
             className={`font-pretendard text-[1.6rem] font-normal leading-[2.4rem] ${selectedOption ? "text-white" : "text-gray8"}`}
           >
-            {selectedOption ? selectedOption : "OTT를 선택해주세요."}
+            {selectedOption ? selectedOption.value : "OTT를 선택해주세요."}
           </p>
           <div className="flex items-center ml-auto">
             <RightArrow />
