@@ -57,7 +57,7 @@ export default function HomePage() {
         leftChild={
           <h1
             aria-label="Waffle Party"
-            className="max-w-[8rem] max-h-[2.4rem] overflow-hidden flex items-center justify-center"
+            className="max-w-[12rem] max-h-[2.4rem] overflow-hidden flex items-center justify-center"
           >
             <div className="flex items-center justify-center w-full h-full">
               <HomePageLogo />
