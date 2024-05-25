@@ -359,7 +359,7 @@ export default function PostDetailPage() {
         }
         noBorder={true}
       />
-      <main className="w-full main-header pb-[7.2rem] bg-neutral-80">
+      <main className="w-full main-header pb-[8.4rem] bg-neutral-80">
         <section className="w-full">
           <section className="px-[2rem] flex-col items-center justify-start w-full gap-[2.4rem] border-b-8 border-neutral-900">
             <div className="py-[1.6rem]">
@@ -448,7 +448,7 @@ export default function PostDetailPage() {
         </section>
       </main>
       <div className="fixed max-w-[50rem] min-w-[36rem]  bottom-0 inline-flex flex-col items-start justify-start w-full v-[5.4rem]">
-        <div className="w-full px-[2.8rem] py-[1.1rem] bg-gray14 border-t-2 border-gray13 flex-col justify-start items-start  flex">
+        <div className="w-full px-[2.8rem] py-[1.7rem] bg-gray14 border-t-2 border-gray13 flex-col justify-start items-start  flex">
           <div className="w-full justify-start items-center gap-[15px] inline-flex">
             <div
               className="w-[2.4rem] h-[2.4rem]"
@@ -460,15 +460,17 @@ export default function PostDetailPage() {
             <div
               className={`w-full text-gray10 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem] flex gap-[1.5rem]`}
             >
-              <textarea
-                className={`w-full resize-none bg-transparent outline-none  ${setPlaceHolderClass()} ${setTextClass()}`}
-                placeholder={isFocused ? "" : "댓글을 남겨주세요."}
-                onFocus={() => setIsFocused(true)}
-                value={inputValue}
-                onChange={handleChangeContent}
-                onKeyDown={(e) => handleKeyPress(e, modalData)}
-                ref={inputRef}
-              />
+              <div className="flex items-center w-full h-[4.8rem]">
+                <textarea
+                  className={` w-full placeholder:pt-[1.2rem] resize-none bg-transparent outline-none ${setPlaceHolderClass()} ${setTextClass()}`}
+                  placeholder={isFocused ? "" : "댓글을 남겨주세요."}
+                  onFocus={() => setIsFocused(true)}
+                  value={inputValue}
+                  onChange={handleChangeContent}
+                  onKeyDown={(e) => handleKeyPress(e, modalData)}
+                  ref={inputRef}
+                />
+              </div>
             </div>
             <Button
               type="button"
