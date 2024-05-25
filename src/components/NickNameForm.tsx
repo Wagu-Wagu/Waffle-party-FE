@@ -32,7 +32,7 @@ export default function NickNameForm() {
     <main className="flex flex-col items-center h-screen main-header">
       <form className="flex flex-col justify-between h-full pb-[4.8rem]">
         <div>
-          <h3 className="mt-[9.6rem] mb-[4.8rem] font-semibold text-white text-title">
+          <h3 className="mt-[9.6rem] mb-[2rem] font-semibold text-white text-title">
             닉네임을 적어주세요
           </h3>
           <Input
