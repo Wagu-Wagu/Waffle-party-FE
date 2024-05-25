@@ -3,32 +3,102 @@ import MyPageListCard from "../components/card/MyPageListCard";
 import MyPageSection from "../components/MyPage/MyPageSection";
 import { Link, useNavigate } from "react-router-dom";
 import Navigation from "../components/Navigation/Navigation";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { userProfileState } from "../recoil/userProfile";
 
 import ProfileImageUploader from "../components/common/ProfileImageUploader";
 import Pencil from "../assets/icons/PencilUnderLine.svg?react";
 import BasicModal from "../components/modal/BasicModal";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import ActionSheet from "../components/modal/ActionSheet";
+import { optionState } from "../types/actionSheetOption";
+import ProfilePreview from "../components/ProfilePreview";
+import { userProfileType } from "../types/userProfile";
 
 export default function MyPage() {
   const navigate = useNavigate();
-  const userProfile = useRecoilValue(userProfileState);
   const [isShow, setIsShow] = useState(false);
+  const [showAlbum, setShowAlbum] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [userProfile, setUserProfile] = useRecoilState(userProfileState);
+  const [image, setImage] = useState(userProfile.userImage);
+  const [newImage, setNewImage] = useState<string | null>("");
+  const [option, setOption] = useState<optionState>({
+    type: "profile",
+    isUserImage: false,
+  });
+  const imageUploaderRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setImage(userProfile.userImage);
+  }, [userProfile]);
+
+  const handleSelectImage = () => {
+    if (imageUploaderRef.current) {
+      imageUploaderRef.current.click();
+    }
+  };
+
+  const handleRemoveImage = () => {
+    const res = window.confirm("삭제하시겠습니까?");
+    if (res) {
+      setUserProfile((prevUserProfile: userProfileType) => ({
+        ...prevUserProfile,
+        userImage: null,
+      }));
+      setShowAlbum(false);
+    }
+  };
+
+  const setProfileImage = () => {
+    setUserProfile((prevUserProfile: userProfileType) => ({
+      ...prevUserProfile,
+      userImage: newImage,
+    }));
+    setShowPreview(false);
+  };
 
   const handleClickLogout = () => {
-    // TODO logout api 연동
     setIsShow((prev) => !prev);
   };
+
   const handleClickEdit = () => {
     navigate("/profile/edit");
   };
+
   return (
     <>
       <Header title="마이" />
+      {showPreview && newImage && (
+        <ProfilePreview
+          imgSrc={newImage}
+          onClose={() => {
+            setNewImage(null);
+            setShowPreview(false);
+          }}
+          onConfirm={() => {
+            setProfileImage();
+          }}
+        />
+      )}
       <main className="flex flex-col items-center justify-center main-header-nav pt-[1rem]">
         <section className="flex w-full py-[1.3rem] pl-[2rem] gap-[1.5rem]">
-          <ProfileImageUploader imageSrc={userProfile.userImage} />
+          <ProfileImageUploader
+            imageSrc={userProfile.userImage}
+            onSelect={(src) => {
+              setShowPreview(true);
+              setShowAlbum(false);
+              setNewImage(src);
+            }}
+            onClick={() => {
+              setOption((prevOption) => ({
+                ...prevOption,
+                isUserImage: !!userProfile.userImage,
+              }));
+              setShowAlbum(true);
+            }}
+            ref={imageUploaderRef}
+          />
           <div className="flex flex-col gap-[0.6rem] justify-center">
             <div className="flex gap-[0.6rem]">
               <p className="text-[1.6rem] font-bold leading-[2.4rem] text-white">
@@ -58,7 +128,6 @@ export default function MyPage() {
                     작성한 댓글
                   </MyPageListCard>
                 </Link>
-                {/* 다른 내활동 관련 항목들도 여기에 추가 */}
               </MyPageSection>
             </div>
             <MyPageSection title="디바이스 및 앱">
@@ -73,7 +142,6 @@ export default function MyPage() {
               <MyPageListCard activeData={undefined} isArrow={false}>
                 버전
               </MyPageListCard>
-              {/* 다른 디바이스 및 앱 관련 항목들도 여기에 추가 */}
             </MyPageSection>
             <MyPageSection title="약관 및 정책">
               <MyPageListCard activeData={undefined} isArrow={true}>
@@ -82,13 +150,9 @@ export default function MyPage() {
               <MyPageListCard activeData={undefined} isArrow={true}>
                 개인 정보 처리 방침
               </MyPageListCard>
-              {/* 다른 약관 및 정책 관련 항목들도 여기에 추가 */}
             </MyPageSection>
           </section>
           <section className="mt-[4.3rem] w-full justify-center flex gap-[3rem] text-gray8 text-[1.2rem] text-center font-Pretendard font-normal leading-4 underline">
-            {/* <Link to={"/"} className="underline text-gray8">
-              회원탈퇴
-            </Link> */}
             <button
               className="underline text-gray8"
               onClick={() => setIsShow((prev) => !prev)}
@@ -98,15 +162,22 @@ export default function MyPage() {
           </section>
         </div>
       </main>
-      <Navigation />
+      {!showPreview && <Navigation />}
       {isShow && (
-        <>
-          <BasicModal
-            isShow={isShow}
-            isLogout={true}
-            onConfirm={handleClickLogout}
-          />
-        </>
+        <BasicModal
+          isShow={isShow}
+          isLogout={true}
+          onConfirm={handleClickLogout}
+        />
+      )}
+      {showAlbum && (
+        <ActionSheet
+          option={option}
+          isShow={showAlbum}
+          onSelectImage={handleSelectImage}
+          onRemoveImage={handleRemoveImage}
+          onClose={() => setShowAlbum(false)}
+        />
       )}
     </>
   );

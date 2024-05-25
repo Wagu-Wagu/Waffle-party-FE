@@ -18,6 +18,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Chat from "../assets/icons/Chat.svg?react";
 import EmptyList from "../components/common/EmptyList";
 import Chip from "../components/common/Chip";
+import { optionState } from "../types/actionSheetOption";
 
 export default function PostDetailPage() {
   const [isFocused, setIsFocused] = useState(false);
@@ -37,6 +38,10 @@ export default function PostDetailPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [isEdit, setIsEdit] = useState(false);
   const [isPost, setIsPost] = useState(false);
+  const [option, setOption] = useState<optionState>({
+    type: "",
+    isOwner: false,
+  });
 
   const { userId } = useParams();
 
@@ -53,7 +58,6 @@ export default function PostDetailPage() {
 
   // 모달 옵션 클릭 후 포커스 상태(답댓글, 수정)
   useLayoutEffect(() => {
-    console.log(inputRef.current);
     if (isFocused && inputRef.current) {
       inputRef.current.focus();
     }
@@ -61,11 +65,11 @@ export default function PostDetailPage() {
 
   // TODO any type 변경
   const handleModal = (parent: any, child?: any) => {
-    setModalActive((prev) => !prev);
+    // setModalActive((prev) => !prev);
     if (parent === "post") {
-      setIsPost(true);
+      // setIsPost(true);
     } else {
-      setIsPost(false);
+      // setIsPost(false);
       if (child) {
         // 부모요소 있으면 대댓글
         // parent에 상위 댓글 데이터, child에 대댓글 데이터
@@ -111,13 +115,6 @@ export default function PostDetailPage() {
     event: React.KeyboardEvent<HTMLTextAreaElement>,
     modalData: any,
   ) => {
-    // const textFlow = event.target as HTMLTextAreaElement;
-    // const lines = textFlow.value.split("\n");
-    // console.log(lines);
-    // if (lines.length > 4) {
-    //   event.preventDefault();
-    //   window.alert("4줄까지만 입력 가능합니다");
-    // }
     if (event.key === "Enter") {
       event.preventDefault();
       handleAddComment(modalData);
@@ -229,7 +226,7 @@ export default function PostDetailPage() {
   const closeConfirm = (isDeleteAction: boolean, modalData?: any) => {
     // 게시물 삭제인 경우
     if (isPost) {
-      setIsPost(false);
+      // setIsPost(false);
       setBasicModalActive(false);
       // api 함수 호출
       return;
@@ -276,13 +273,15 @@ export default function PostDetailPage() {
   // 게시물 수정
   const onPostEdit = () => {
     setModalActive(false);
-    setIsPost(false);
     nav(`/post-edit/${userId}`);
   };
   // 게시물 삭제
   const onPostDelete = () => {
     setModalActive(false);
     setBasicModalActive(true);
+  };
+  const onPostReport = () => {
+    setModalActive(false);
   };
   // 답댓글 달기
   const onCommentReply = () => {
@@ -291,15 +290,12 @@ export default function PostDetailPage() {
     setIsLocked(false);
     setModalActive(false);
     setIsEdit(false);
-    console.log(isFocused);
   };
   // 댓글 수정
   const onCommentEdit = () => {
     setModalActive(false);
     setIsFocused(true);
-    console.log(modalData);
     if (modalData.child) {
-      console.log("dd");
       setInputValue(modalData.child?.content as string);
       if (modalData.child?.lock) {
         setIsLocked(true);
@@ -370,8 +366,13 @@ export default function PostDetailPage() {
                 <UserCard
                   data={data}
                   isMoreComment={false}
-                  onClick={() => handleModal("post")}
-                  showMoreIcon={data.mypost}
+                  onClick={() => {
+                    setOption({
+                      type: "post",
+                      isOwner: data.mypost,
+                    });
+                    setModalActive((prev) => !prev);
+                  }}
                 />
               </div>
               <div className="w-full flex-col justify-start items-start gap-[1rem] flex">
@@ -403,8 +404,14 @@ export default function PostDetailPage() {
                       <UserCard
                         data={comment}
                         isMoreComment={false}
-                        showMoreIcon={true}
-                        onClick={() => handleModal(comment)}
+                        onClick={() => {
+                          handleModal(comment);
+                          setOption({
+                            type: "comment",
+                            isOwner: comment.mycomment,
+                          });
+                          setModalActive((prev) => !prev);
+                        }}
                       />
                       <div className="h-[0.1rem] bg-gray13"></div>
                       {/* 대댓글 */}
@@ -417,8 +424,14 @@ export default function PostDetailPage() {
                             <UserCard
                               data={moreComment}
                               isMoreComment={true}
-                              showMoreIcon={true}
-                              onClick={() => handleModal(comment, moreComment)}
+                              onClick={() => {
+                                handleModal(comment, moreComment);
+                                setOption({
+                                  type: "reply",
+                                  isOwner: moreComment.mymorecomment,
+                                });
+                                setModalActive((prev) => !prev);
+                              }}
                             />
                             <div className="h-[0.1rem] bg-gray13"></div>
                           </div>
@@ -501,16 +514,16 @@ export default function PostDetailPage() {
       )}
       {modalActive && (
         <ActionSheet
+          option={option}
           isShow={modalActive}
-          isPost={isPost}
-          modalData={modalData}
           onPostEdit={onPostEdit}
           onPostDelete={onPostDelete}
+          onPostReport={onPostReport}
           onCommentReply={onCommentReply}
           onCommentEdit={onCommentEdit}
           onCommentDelete={onCommentDelete}
           onReport={onReport}
-          onClose={() => setModalActive(false)}
+          onClose={() => setModalActive((prev) => !prev)}
           ref={modalRef}
         />
       )}
