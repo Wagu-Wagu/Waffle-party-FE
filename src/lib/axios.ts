@@ -14,14 +14,18 @@ client.interceptors.request.use((config: any) => {
     ...config.headers,
     Authorization: `Bearer ${token}`,
   };
+  console.log("Request Headers:", headers);
+  console.log("Request Data:", config.data);
   return { ...config, headers };
 });
 
 client.interceptors.response.use(
   function (response) {
+    console.log("Response Data:", response.data); // 응답 데이터를 콘솔에 출력
     return response;
   },
   (error) => {
+    console.error("Response Error:", error.response); // 에러 응답을 콘솔에 출력
     return error.response;
   },
 );

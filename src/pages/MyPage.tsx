@@ -14,6 +14,8 @@ import ActionSheet from "../components/modal/ActionSheet";
 import { optionState } from "../types/actionSheetOption";
 import ProfilePreview from "../components/ProfilePreview";
 import { userProfileType } from "../types/userProfile";
+import useSWR from "swr";
+import axios from "axios";
 
 export default function MyPage() {
   const navigate = useNavigate();
@@ -28,6 +30,24 @@ export default function MyPage() {
     isUserImage: false,
   });
   const imageUploaderRef = useRef<HTMLInputElement>(null);
+
+  const fetcher = (url: string) =>
+    axios
+      .get(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${localStorage.getItem("accessToken")}`,
+        },
+      })
+      .then((res) => res.data);
+
+  const { data, error } = useSWR(
+    `${import.meta.env.VITE_API_URI}/api/v1/user/my`,
+    fetcher,
+  );
+
+  const userInfo = data?.data.userInfo;
+  console.log(userInfo);
 
   useEffect(() => {
     setImage(userProfile.userImage);
@@ -66,6 +86,14 @@ export default function MyPage() {
     navigate("/profile/edit");
   };
 
+  if (error) {
+    return <div>데이터를 불러오는데 실패했습니다.</div>;
+  }
+
+  if (!data) {
+    return <div>로딩 중...</div>;
+  }
+
   return (
     <>
       <Header title="마이" />
@@ -102,14 +130,14 @@ export default function MyPage() {
           <div className="flex flex-col gap-[0.6rem] justify-center">
             <div className="flex gap-[0.6rem]">
               <p className="text-[1.6rem] font-bold leading-[2.4rem] text-white">
-                {userProfile.nickname}
+                {userInfo.nickName || ""}
               </p>
               <div onClick={handleClickEdit}>
                 <Pencil />
               </div>
             </div>
             <span className="text-gray7 text-[1.2rem] font-normal leading-[1.6rem]">
-              {userProfile.kakaoId}
+              {userInfo.email || ""}
             </span>
           </div>
         </section>
@@ -119,12 +147,18 @@ export default function MyPage() {
             <div>
               <MyPageSection title="내활동">
                 <Link to="/mypage/post">
-                  <MyPageListCard activeData={4} isArrow={true}>
+                  <MyPageListCard
+                    activeData={userInfo.postCount}
+                    isArrow={true}
+                  >
                     작성한 글
                   </MyPageListCard>
                 </Link>
                 <Link to="/mypage/comment">
-                  <MyPageListCard activeData={3} isArrow={true}>
+                  <MyPageListCard
+                    activeData={userInfo.commentCount}
+                    isArrow={true}
+                  >
                     작성한 댓글
                   </MyPageListCard>
                 </Link>
@@ -139,7 +173,11 @@ export default function MyPage() {
                   업데이트 노트
                 </MyPageListCard>
               </a>
-              <MyPageListCard activeData={undefined} isArrow={false}>
+              <MyPageListCard
+                waguVersion={data?.data.waguVersion}
+                activeData={undefined}
+                isArrow={false}
+              >
                 버전
               </MyPageListCard>
             </MyPageSection>
