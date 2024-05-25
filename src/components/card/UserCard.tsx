@@ -31,7 +31,7 @@ export default function UserCard(props: userCardProps) {
         </>
       ) : (
         <div className="flex items-center gap-[1rem]">
-          <section className="box-border bg-white rounded-full ">
+          <section className="box-border rounded-full ">
             <img
               className="box-border rounded-full w-full h-full  object-cover w-[3.8rem] h-[3.8rem]"
               src={proImg}
