@@ -182,12 +182,16 @@ export default function MyPage() {
               </MyPageListCard>
             </MyPageSection>
             <MyPageSection title="약관 및 정책">
-              <MyPageListCard activeData={undefined} isArrow={true}>
-                서비스 이용약관
-              </MyPageListCard>
-              <MyPageListCard activeData={undefined} isArrow={true}>
-                개인 정보 처리 방침
-              </MyPageListCard>
+              <Link to="/terms">
+                <MyPageListCard activeData={undefined} isArrow={true}>
+                  서비스 이용약관
+                </MyPageListCard>
+              </Link>
+              <Link to="/privacy-policy">
+                <MyPageListCard activeData={undefined} isArrow={true}>
+                  개인 정보 처리 방침
+                </MyPageListCard>
+              </Link>
             </MyPageSection>
           </section>
           <section className="mt-[4.3rem] w-full justify-center flex gap-[3rem] text-gray8 text-[1.2rem] text-center font-Pretendard font-normal leading-4 underline">

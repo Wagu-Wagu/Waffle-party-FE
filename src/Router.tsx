@@ -13,6 +13,7 @@ import MyCommentsPage from "./pages/MyCommentsPage";
 import MyPostsPage from "./pages/MyPostsPage";
 import NicknamePage from "./pages/NicknamePage";
 import { KakaoCallback } from "./pages/KakaoCallback";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 
 export default function Router() {
   return (
@@ -21,8 +22,10 @@ export default function Router() {
         <Routes>
           {/* 로그인/회원가입 */}
           <Route path="/login" element={<LoginPage />} />
-          {/* 이용 약관 페이지 */}
+          {/* 서비스 이용 약관 페이지 */}
           <Route path="/terms" element={<TermsPage />} />
+          {/* 개인 정보 처리 방침 페이지 */}
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           {/* 닉네임 설정 페이지 */}
           <Route path="/nickname" element={<NicknamePage />} />
           {/* 카카오 로그인 콜백 */}
