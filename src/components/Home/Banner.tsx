@@ -41,8 +41,7 @@ export default function Banner() {
             <img
               src={image.src}
               alt={`banner-${index}`}
-              // className="object-cover object-center w-full h-[15rem]"
-              className="w-full h-[15rem]"
+              className="object-cover object-center w-full h-[15rem]"
             />
           </a>
         ))}
