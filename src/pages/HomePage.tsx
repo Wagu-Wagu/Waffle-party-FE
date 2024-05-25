@@ -4,7 +4,7 @@ import HeaderLoginButton from "../components/Header/HeaderLoginButton";
 import FilterList from "../components/Home/FilterList";
 import PostListCard from "../components/Home/PostListCard";
 import Navigation from "../components/Navigation/Navigation";
-import LogoYellow from "./../assets/icons/LogoYellow.svg?react";
+import HomePageLogo from "./../assets/icons/HomePageLogo.svg?react";
 import ProfileIcon from "./../assets/icons/ProfileIcon.svg?react";
 import Banner from "../components/Home/Banner";
 import { useRecoilState } from "recoil";
@@ -60,7 +60,7 @@ export default function HomePage() {
             className="max-w-[8rem] max-h-[2.4rem] overflow-hidden flex items-center justify-center"
           >
             <div className="flex items-center justify-center w-full h-full">
-              <LogoYellow />
+              <HomePageLogo />
             </div>
           </h1>
         }

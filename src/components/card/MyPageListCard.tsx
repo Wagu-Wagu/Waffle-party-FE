@@ -2,12 +2,13 @@ import RightArrow from "../../assets/icons/RightArrow.svg?react";
 interface myPageListCardProps {
   isArrow: boolean;
   activeData?: number | undefined;
+  waguVersion?: string;
   onClick?: () => void;
   children: React.ReactNode;
 }
 
 export default function MyPageListCard(props: myPageListCardProps) {
-  const { isArrow, activeData, onClick, children } = props;
+  const { isArrow, activeData, onClick, children, waguVersion } = props;
   return (
     <section className="text-[1.6rem] h-[2.4rem] w-full text-white font-light leading-6 flex">
       <p className="flex items-center"> {children}</p>
@@ -18,7 +19,7 @@ export default function MyPageListCard(props: myPageListCardProps) {
             <RightArrow />{" "}
           </div>
         ) : (
-          <p>1.1.0</p>
+          <p>{waguVersion}</p>
         )}
       </div>
     </section>

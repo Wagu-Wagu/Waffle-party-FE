@@ -2,13 +2,13 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header/Header";
 import HeaderButton from "../components/Header/HeaderButton";
 import CloseIcon from "./../assets/icons/CloseIcon.svg?react";
-import LogoYellow from "./../assets/icons/LogoYellow.svg?react";
+import WafflePartyLogo from "./../assets/icons/WafflePartyLogo.svg?react";
 import KakaoLogin from "../components/Login/KakaoLogin";
 
 export default function LoginPage() {
   const nav = useNavigate();
   return (
-    <>
+    <div className="bg-gray15">
       <Header
         leftChild={
           <HeaderButton onClick={() => nav("/", { replace: true })}>
@@ -20,10 +20,10 @@ export default function LoginPage() {
 
       <main className="flex flex-col items-center justify-between h-screen main-header">
         <div className="mt-[9.8rem]">
-          <p className="font-medium text-center text-gray5 text-subtitle">
-            OTT 같이 볼 사람이 필요할 때
+          <p className="font-medium mb-[2rem] text-center text-gray5 text-subtitle">
+            OTT 같이 볼 사람이 필요할 땐,
           </p>
-          <LogoYellow />
+          <WafflePartyLogo />
         </div>
         <div>
           <div className="flex items-center gap-4">
@@ -34,6 +34,6 @@ export default function LoginPage() {
           <KakaoLogin />
         </div>
       </main>
-    </>
+    </div>
   );
 }
