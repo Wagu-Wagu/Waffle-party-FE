@@ -14,7 +14,7 @@ export const data: {
   comments: any[]; // comments의 타입을 any[]로 지정
 } = {
   id: 1,
-  mypost: true,
+  mypost: false,
   ott: "티빙",
   title: "여고추리반3 보실 분",
   text: "무서운 저주가 떠도는 학교로 전학 간 추리반 학생들이 학교에 숨겨진 진실에 다가갈수록 더욱더 거대한 사건을 마주하면서 벌어지는 미스터리 어드벤처 여고추리반3 같이 봐요!",
@@ -83,7 +83,7 @@ export const data: {
         {
           lock: true,
           isUser: true,
-          mymorecomment: true,
+          mymorecomment: false,
           nickname: "유저6",
           timestamp: "2024.5.18",
           content:

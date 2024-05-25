@@ -7,12 +7,10 @@ interface userCardProps {
   data: any;
   onClick: () => void;
   isMoreComment?: boolean;
-  showMoreIcon: boolean;
 }
 
-// props에는 받아온 데이터와, 마이페이지인지 여부가 들어가야 합니다.
 export default function UserCard(props: userCardProps) {
-  const { data, onClick, isMoreComment, showMoreIcon } = props;
+  const { data, onClick, isMoreComment } = props;
   const proImg = data.profileImage
     ? data.profileImage
     : isMoreComment
@@ -52,8 +50,7 @@ export default function UserCard(props: userCardProps) {
                 className="w-[2.4rem] h-[2.4rem] flex justify-end  cursor-pointer"
                 onClick={onClick}
               >
-                {/* 내 게시물이 아니면 더보기 아이콘 안뜸 */}
-                {showMoreIcon && <MoreIcon />}
+                <MoreIcon />
               </div>
             </section>
           </section>
