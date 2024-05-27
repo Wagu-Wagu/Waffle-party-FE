@@ -4,13 +4,21 @@ import HeaderButton from "../components/Header/HeaderButton";
 import CloseIcon from "./../assets/icons/CloseIcon.svg?react";
 import NickNameForm from "../components/NickNameForm";
 import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { userTokenState } from "../recoil/atoms";
 
 export default function NicknamePage() {
   const nav = useNavigate();
+  const userToken = useRecoilValue(userTokenState);
+
+  console.log(userToken);
 
   const handleOnboardingSubmit = async (nickname: string) => {
     try {
       console.log("닉네임 제출:", nickname);
+      0;
+      console.log("토큰:", userToken.accessToken);
+
       const response = await axios.patch(
         `${import.meta.env.VITE_API_URI}/api/v1/user/onboard`,
         {
@@ -19,7 +27,7 @@ export default function NicknamePage() {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${localStorage.getItem("accessToken")}`,
+            Authorization: `${userToken.accessToken}`,
           },
         },
       );
