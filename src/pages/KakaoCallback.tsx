@@ -44,7 +44,6 @@ export const KakaoCallback = () => {
           if (res.data) {
             params.token = res.data.access_token;
             params.providerType = "KAKAO";
-            setUserSession(res.data.access_token);
             await getUser(params);
           }
         })

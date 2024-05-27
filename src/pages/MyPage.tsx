@@ -3,7 +3,7 @@ import MyPageListCard from "../components/card/MyPageListCard";
 import MyPageSection from "../components/MyPage/MyPageSection";
 import { Link, useNavigate } from "react-router-dom";
 import Navigation from "../components/Navigation/Navigation";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { userProfileState } from "../recoil/userProfile";
 
 import ProfileImageUploader from "../components/common/ProfileImageUploader";
@@ -16,6 +16,7 @@ import ProfilePreview from "../components/ProfilePreview";
 import { userProfileType } from "../types/userProfile";
 import useSWR from "swr";
 import axios from "axios";
+import { userTokenState } from "../recoil/atoms";
 
 export default function MyPage() {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ export default function MyPage() {
   const [showAlbum, setShowAlbum] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [userProfile, setUserProfile] = useRecoilState(userProfileState);
+  const userToken = useRecoilValue(userTokenState);
   const [image, setImage] = useState(userProfile.userImage);
   const [newImage, setNewImage] = useState<string | null>("");
   const [option, setOption] = useState<optionState>({
@@ -36,7 +38,7 @@ export default function MyPage() {
       .get(url, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${localStorage.getItem("accessToken")}`,
+          Authorization: `${userToken.accessToken}`,
         },
       })
       .then((res) => res.data);
