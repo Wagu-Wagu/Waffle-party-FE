@@ -33,7 +33,7 @@ export default function ProfileEditPage() {
       console.log("응답 데이터:", response.data);
 
       if (response.data.success) {
-        return navigate("-1", { replace: true });
+        return navigate("/mypage", { replace: true });
       }
     } catch (error: any) {
       if (error.response) {

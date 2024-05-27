@@ -1,4 +1,5 @@
 export interface Post {
+  postId: number;
   ottTag: string;
   title: string;
   content: string;

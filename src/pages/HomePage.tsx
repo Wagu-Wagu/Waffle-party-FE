@@ -80,7 +80,7 @@ export default function HomePage() {
         <Banner />
         <FilterList onOttSelect={handleOttSelect} selectedOtts={selectedOtts} />
         {data?.data.map(({ postVO }) => (
-          <PostListCard key={postVO.createdAt} post={postVO} />
+          <PostListCard key={postVO.postId} post={postVO} />
         ))}
       </main>
     </>
