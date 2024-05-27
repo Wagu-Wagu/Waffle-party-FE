@@ -3,8 +3,8 @@ import MiniChip from "../common/MiniChip";
 import { useFormattedDate } from "../../hooks/useFormattedDate";
 import { Post } from "../../types/ottPost";
 
-// ottTags 객체 추가
-const ottTags = {
+// ottTags 객체
+const ottTags: { [key: string]: string } = {
   NETFLIX: "넷플릭스",
   WATCHA: "왓챠",
   DISNEY: "디즈니+",
@@ -18,7 +18,7 @@ const ottTags = {
 
 export default function PostListCard({ post }: { post: Post }) {
   const {
-    // postId,
+    postId,
     // userId,
     ottTag,
     title,
@@ -35,8 +35,7 @@ export default function PostListCard({ post }: { post: Post }) {
 
   return (
     <Link
-      // to={`/post-detail/${postId}`}
-      to={`/post-detail/${title}`}
+      to={`/post-detail/${postId}`}
       className="block p-8 border-b bg-gray14 border-gray13"
     >
       <MiniChip ott={ottTagKorean} />
