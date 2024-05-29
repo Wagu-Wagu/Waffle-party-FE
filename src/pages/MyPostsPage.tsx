@@ -1,58 +1,28 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header/Header";
 import HeaderButton from "../components/Header/HeaderButton";
-import PostListCard from "../components/Home/PostListCard";
+import PostListCard from "../components/card/PostListCard";
 import LeftArrowIcon from "./../assets/icons/LeftArrowIcon.svg?react";
 import AlertCircleError from "./../assets/icons/AlertCirlcleError.svg?react";
 import EmptyList from "../components/common/EmptyList";
-import { useRecoilValue } from "recoil";
-import { sortedPostListState } from "../recoil/postListState";
-import { userTokenState } from "../recoil/atoms";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { Post } from "../types/ottPost";
-
-// 현재 로그인 한 사용자의 id 임시 지정
-const currentUserId = 3;
+import { useRecoilState } from "recoil";
+import useGetMyPost from "../hooks/useGetMyPost";
+import { userPostState } from "../recoil/userProfile";
+import { useEffect } from "react";
+import { userPostType } from "../types/userProfile";
 
 export default function MyPostsPage() {
-  const nav = useNavigate();
-  const userToken = useRecoilValue(userTokenState);
-  const [postList, setPostList] = useState<Post[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { userId } = useParams();
+  const [userPost, setUserPost] = useRecoilState(userPostState);
 
-  /*   const postList = useRecoilValue(sortedPostListState);
-  // 현재 로그인 한 사용자의 id를 비교해서 필터링
-  const filteredPostList = postList.filter(
-    (post) => post.userId === currentUserId,
-  ); */
+  // 내가 작성한 글 get
+  const { userPostData } = useGetMyPost(userId);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URI}/api/v1/user/my/posts`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `${userToken.accessToken}`,
-            },
-          },
-        );
-        console.log(response.data);
-        setPostList(response.data.data);
-        setLoading(false);
-      } catch (error: any) {
-        setError(error);
-        setLoading(false);
-      }
-    };
+    setUserPost(userPostData);
+  }, [userPostData]);
 
-    fetchPosts();
-  }, [userToken]);
-
-  console.log(postList);
+  const nav = useNavigate();
 
   return (
     <>
@@ -65,7 +35,7 @@ export default function MyPostsPage() {
         title="작성한 글"
       />
       <main className="main-header">
-        {postList === null || postList.length === 0 ? (
+        {userPost?.length === 0 ? (
           <div className="h-screen-minus-46">
             <EmptyList
               icon={<AlertCircleError />}
@@ -74,7 +44,9 @@ export default function MyPostsPage() {
             />
           </div>
         ) : (
-          postList.map((post) => <PostListCard key={post.postId} post={post} />)
+          userPost?.map((post: userPostType) => (
+            <PostListCard key={post.postId} post={post} />
+          ))
         )}
       </main>
     </>

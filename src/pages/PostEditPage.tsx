@@ -113,6 +113,7 @@ export default function PostCreatePage() {
       postImages: imgSrc,
     };
     setPostDetail(currentData);
+    nav(-1);
   };
 
   return (

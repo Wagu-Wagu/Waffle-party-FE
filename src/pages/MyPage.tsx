@@ -3,9 +3,8 @@ import MyPageListCard from "../components/card/MyPageListCard";
 import MyPageSection from "../components/MyPage/MyPageSection";
 import { Link, useNavigate } from "react-router-dom";
 import Navigation from "../components/Navigation/Navigation";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { userProfileState } from "../recoil/userProfile";
-
+import { userInfoState, userProfileState } from "../recoil/userProfile";
+import { useRecoilState } from "recoil";
 import ProfileImageUploader from "../components/common/ProfileImageUploader";
 import Pencil from "../assets/icons/PencilUnderLine.svg?react";
 import BasicModal from "../components/modal/BasicModal";
@@ -13,70 +12,98 @@ import { useEffect, useRef, useState } from "react";
 import ActionSheet from "../components/modal/ActionSheet";
 import { optionState } from "../types/actionSheetOption";
 import ProfilePreview from "../components/ProfilePreview";
-import { userProfileType } from "../types/userProfile";
-import useSWR from "swr";
-import axios from "axios";
-import { userTokenState } from "../recoil/atoms";
+import { userInfoType, userProfileType } from "../types/userProfile";
+import { patchProfileImage } from "../lib/api/profile";
+import useGetMyProfile from "../hooks/useGetMyProfile";
 
 export default function MyPage() {
   const navigate = useNavigate();
-  const [isShow, setIsShow] = useState(false);
-  const [showAlbum, setShowAlbum] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
+  const [isShow, setIsShow] = useState(false); //basic 모달창
+  const [showAlbum, setShowAlbum] = useState(false); //action sheet 모달창
+  const [showPreview, setShowPreview] = useState(false); //미리보기
   const [userProfile, setUserProfile] = useRecoilState(userProfileState);
-  const userToken = useRecoilValue(userTokenState);
-  const [image, setImage] = useState(userProfile.userImage);
-  const [newImage, setNewImage] = useState<string | null>("");
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const [imageSrc, setImageSrc] = useState(""); //받아온 이미지
+  const [newImage, setNewImage] = useState<string>(""); //새로 바꾼 이미지
+  const [newFile, setNewFile] = useState<File | null>(null); //새로 바꾼 파일
+  // 모달 state
   const [option, setOption] = useState<optionState>({
     type: "profile",
     isUserImage: false,
   });
   const imageUploaderRef = useRef<HTMLInputElement>(null);
 
-  const fetcher = (url: string) =>
-    axios
-      .get(url, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${userToken.accessToken}`,
-        },
-      })
-      .then((res) => res.data);
+  const { userProfileData } = useGetMyProfile();
+  const baseURL = import.meta.env.VITE_USER_BASE_URL;
+  const userId = userProfileData?.userInfo.userId;
 
-  const { data, error } = useSWR(
-    `${import.meta.env.VITE_API_URI}/api/v1/user/my`,
-    fetcher,
-  );
-
-  const userInfo = data?.data.userInfo;
-  console.log(userInfo);
-
+  /**
+   * 유저 데이터 recoil 업데이트
+   */
   useEffect(() => {
-    setImage(userProfile.userImage);
-  }, [userProfile]);
+    if (userProfileData) {
+      setUserProfile(userProfileData);
+      setUserInfo(userProfileData.userInfo);
+      setImageSrc(
+        userInfo?.userImage
+          ? `${baseURL}${userProfileData.userInfo.userImage}`
+          : "",
+      );
+    }
+  }, [userProfileData]);
 
+  /**
+   * 파일을 선택했을때
+   */
   const handleSelectImage = () => {
     if (imageUploaderRef.current) {
       imageUploaderRef.current.click();
     }
   };
 
-  const handleRemoveImage = () => {
+  /**
+   * 프로필 이미지 삭제
+   */
+  const handleRemoveImage = async () => {
     const res = window.confirm("삭제하시겠습니까?");
     if (res) {
       setUserProfile((prevUserProfile: userProfileType) => ({
         ...prevUserProfile,
-        userImage: null,
+        userInfo: {
+          ...prevUserProfile.userInfo,
+          userImage: "",
+        },
       }));
+      setUserInfo((prevUserInfo: userInfoType) => ({
+        ...prevUserInfo,
+        userImage: "",
+      }));
+      // TODO 파일 업로드 api
+      await patchProfileImage(newFile);
+      setImageSrc("");
       setShowAlbum(false);
     }
   };
 
-  const setProfileImage = () => {
+  /**
+   * 프로필 이미지 설정
+   * @param src
+   */
+  const setProfileImage = async () => {
     setUserProfile((prevUserProfile: userProfileType) => ({
       ...prevUserProfile,
+      userInfo: {
+        ...prevUserProfile.userInfo,
+        userImage: `${baseURL}${newFile?.name}`,
+      },
+    }));
+    setUserInfo((prevUserInfo: userInfoType) => ({
+      ...prevUserInfo,
       userImage: newImage,
     }));
+    // TODO 파일 업로드 api
+    await patchProfileImage(newFile);
+    setImageSrc(newImage);
     setShowPreview(false);
   };
 
@@ -88,42 +115,36 @@ export default function MyPage() {
     navigate("/profile/edit");
   };
 
-  if (error) {
-    return <div>데이터를 불러오는데 실패했습니다.</div>;
-  }
-
-  if (!data) {
-    return <div>로딩 중...</div>;
-  }
-
   return (
     <>
       <Header title="마이" />
       {showPreview && newImage && (
         <ProfilePreview
+          // 미리보기에는 새로운 이미지 띄우기
           imgSrc={newImage}
           onClose={() => {
-            setNewImage(null);
             setShowPreview(false);
           }}
-          onConfirm={() => {
-            setProfileImage();
-          }}
+          onConfirm={setProfileImage}
         />
       )}
       <main className="flex flex-col items-center justify-center main-header-nav pt-[1rem]">
         <section className="flex w-full py-[1.3rem] pl-[2rem] gap-[1.5rem]">
           <ProfileImageUploader
-            imageSrc={userProfile.userImage}
-            onSelect={(src) => {
+            imageSrc={imageSrc}
+            // 사진을 골랐을때
+            onSelect={(file, src) => {
               setShowPreview(true);
               setShowAlbum(false);
+              // 사진 고르면 새로운 사진으로 업데이트
+              setNewFile(file);
               setNewImage(src);
             }}
+            // 프로필 사진을 클릭하면 state에 맞는 action sheet
             onClick={() => {
               setOption((prevOption) => ({
                 ...prevOption,
-                isUserImage: !!userProfile.userImage,
+                isUserImage: !!userProfile?.userInfo?.userImage,
               }));
               setShowAlbum(true);
             }}
@@ -132,14 +153,14 @@ export default function MyPage() {
           <div className="flex flex-col gap-[0.6rem] justify-center">
             <div className="flex gap-[0.6rem]">
               <p className="text-[1.6rem] font-bold leading-[2.4rem] text-white">
-                {userInfo.nickName || ""}
+                {userProfile?.userInfo?.nickName || ""}
               </p>
               <div onClick={handleClickEdit}>
                 <Pencil />
               </div>
             </div>
             <span className="text-gray7 text-[1.2rem] font-normal leading-[1.6rem]">
-              {userInfo.email || ""}
+              {userProfile?.userInfo?.email || ""}
             </span>
           </div>
         </section>
@@ -148,17 +169,17 @@ export default function MyPage() {
           <section className="flex flex-col gap-[4rem] w-full mt-[2rem]">
             <div>
               <MyPageSection title="내활동">
-                <Link to="/mypage/post">
+                <Link to={`/mypage/post/${userId}`}>
                   <MyPageListCard
-                    activeData={userInfo.postCount}
+                    activeData={userProfile?.userInfo?.postCount}
                     isArrow={true}
                   >
                     작성한 글
                   </MyPageListCard>
                 </Link>
-                <Link to="/mypage/comment">
+                <Link to={`/mypage/comment/${userId}`}>
                   <MyPageListCard
-                    activeData={userInfo.commentCount}
+                    activeData={userProfile?.userInfo?.commentCount}
                     isArrow={true}
                   >
                     작성한 댓글
@@ -176,7 +197,7 @@ export default function MyPage() {
                 </MyPageListCard>
               </a>
               <MyPageListCard
-                waguVersion={data?.data.waguVersion}
+                waguVersion={userProfile?.waguVersion}
                 activeData={undefined}
                 isArrow={false}
               >
@@ -207,13 +228,16 @@ export default function MyPage() {
         </div>
       </main>
       {!showPreview && <Navigation />}
+      {/* 로그아웃 모달 */}
       {isShow && (
         <BasicModal
           isShow={isShow}
           isLogout={true}
           onConfirm={handleClickLogout}
+          setModalActive={setIsShow}
         />
       )}
+      {/*  */}
       {showAlbum && (
         <ActionSheet
           option={option}
@@ -221,6 +245,7 @@ export default function MyPage() {
           onSelectImage={handleSelectImage}
           onRemoveImage={handleRemoveImage}
           onClose={() => setShowAlbum(false)}
+          setModalActive={setShowAlbum}
         />
       )}
     </>

@@ -17,6 +17,7 @@ interface modalProps {
   onSelectImage?: () => void;
   onRemoveImage?: () => void;
   children?: React.ReactNode;
+  setModalActive: (active: boolean) => void;
 }
 
 const ActionSheet = forwardRef<HTMLElement, modalProps>(
@@ -34,6 +35,7 @@ const ActionSheet = forwardRef<HTMLElement, modalProps>(
       onClose,
       onSelectImage,
       onRemoveImage,
+      setModalActive,
     } = props;
 
     // 게시물수정
@@ -97,7 +99,7 @@ const ActionSheet = forwardRef<HTMLElement, modalProps>(
     const options = getOptions(option);
 
     return (
-      <BottomSheet isShow={isShow} ref={ref}>
+      <BottomSheet isShow={isShow} ref={ref} setModalActive={setModalActive}>
         <BottomSheetHeader />
         <div className="flex flex-col gap-[0.8rem]">
           <ul className="bg-gray14">

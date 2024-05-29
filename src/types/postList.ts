@@ -1,4 +1,8 @@
-export interface Post {
+export interface postListType {
+  postVO: postType;
+}
+
+export interface postType {
   postId: number;
   ottTag: string;
   title: string;

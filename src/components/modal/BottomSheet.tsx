@@ -3,12 +3,13 @@ import React, { useEffect, useState, forwardRef, Ref } from "react";
 interface modalProps {
   // post, comment
   isShow?: boolean;
+  setModalActive: (active: boolean) => void;
   // onClick?: (e: React.MouseEvent<Element, MouseEvent>) => void;
   children?: React.ReactNode;
 }
 
 const BottomSheet = forwardRef((props: modalProps, ref: Ref<HTMLElement>) => {
-  const { isShow, children } = props;
+  const { isShow, children, setModalActive } = props;
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -33,6 +34,7 @@ const BottomSheet = forwardRef((props: modalProps, ref: Ref<HTMLElement>) => {
     if (e.target === e.currentTarget) {
       e.stopPropagation();
       setIsVisible(false);
+      setModalActive(false); // 모달을 닫음
     }
   };
 

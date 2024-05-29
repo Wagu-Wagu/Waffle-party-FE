@@ -1,21 +1,25 @@
 import { useState, useEffect, forwardRef } from "react";
 import profile from "../../assets/icons/profile.svg";
+import ProfileMyPage from "../../assets/icons/ProfileMyPage.svg?react";
 import Camera from "../../assets/icons/Camera.svg?react";
 
 interface ProfileImageProps {
-  imageSrc: string | null;
+  imageSrc: string;
   onClick: () => void;
-  onSelect: (src: string) => void;
+  onSelect: (file: File, src: string) => void;
 }
 
 const ProfileImageUploader = forwardRef<HTMLInputElement, ProfileImageProps>(
   (props, ref) => {
     const { imageSrc, onClick, onSelect } = props;
-    const [proImg, setProImg] = useState(imageSrc ?? profile);
+    // 빈 스트링이면 기본이미지
+    const [proImg, setProImg] = useState(() => {
+      return imageSrc !== "" ? imageSrc : profile;
+    });
 
     useEffect(() => {
       setProImg(imageSrc ?? profile);
-    }, [imageSrc]);
+    }, [imageSrc, onSelect]);
 
     const getProImg = () => {
       const inputEl = ref as React.RefObject<HTMLInputElement>;
@@ -26,19 +30,23 @@ const ProfileImageUploader = forwardRef<HTMLInputElement, ProfileImageProps>(
       const reader = new FileReader();
       reader.onload = (e) => {
         if (e.target?.result) {
-          onSelect(e.target.result as string);
+          onSelect(file, e.target.result as string);
         }
       };
       reader.readAsDataURL(file);
     };
 
     return (
-      <div className="relative w-[5.9rem]">
-        <img
-          className="w-[5.9rem] h-[5.9rem] rounded-full aspect-square box-border object-cover"
-          src={proImg}
-          alt="프로필 이미지"
-        />
+      <div className="relative w-[5.9rem]" onClick={onClick}>
+        {imageSrc ? (
+          <img
+            className="w-[5.9rem] h-[5.9rem] rounded-full aspect-square box-border object-cover"
+            src={proImg}
+            alt="프로필 이미지"
+          />
+        ) : (
+          <ProfileMyPage />
+        )}
 
         <div className="absolute bottom-0 right-0">
           <input
@@ -49,10 +57,7 @@ const ProfileImageUploader = forwardRef<HTMLInputElement, ProfileImageProps>(
             accept="image/*"
             ref={ref}
           />
-          <div
-            className="bg-gray12 w-[2.3rem] h-[2.3rem] rounded-full flex items-center justify-center"
-            onClick={onClick}
-          >
+          <div className="bg-gray12 w-[2.3rem] h-[2.3rem] rounded-full flex items-center justify-center">
             <Camera />
           </div>
         </div>

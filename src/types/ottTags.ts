@@ -1,4 +1,4 @@
-export const ottTags = {
+export const ottTags: Record<string, string> = {
   NETFLIX: "넷플릭스",
   WATCHA: "왓챠",
   DISNEY: "디즈니+",

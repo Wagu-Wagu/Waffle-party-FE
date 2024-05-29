@@ -46,9 +46,9 @@ export default function Router() {
           {/* 프로필 수정 */}
           <Route path="/profile/edit" element={<ProfileEditPage />} />
           {/* 내가 작성한 글 페이지 */}
-          <Route path="/mypage/post" element={<MyPostsPage />} />
+          <Route path="/mypage/post/:userId" element={<MyPostsPage />} />
           {/* 내가 작성한 댓글 페이지 */}
-          <Route path="/mypage/comment" element={<MyCommentsPage />} />
+          <Route path="/mypage/comment/:userId" element={<MyCommentsPage />} />
 
           {/* 그 외 경로는 홈으로 리디렉트 */}
           <Route path="*" element={<Navigate to="/" />} />

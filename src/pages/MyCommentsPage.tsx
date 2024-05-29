@@ -1,16 +1,25 @@
 import Header from "../components/Header/Header";
 import MyCommentsCard from "../components/card/MyCommentsCard";
 import LeftArrow from "../assets/icons/LeftArrowIcon.svg?react";
-import { myComment } from "../mock/myComment";
 import HeaderButton from "../components/Header/HeaderButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import EmptyList from "../components/common/EmptyList";
 import ChatIcon from "../assets/icons/Chat.svg?react";
+import useGetMyComment from "../hooks/useGetMyComment";
+import { useRecoilState } from "recoil";
+import { userCommentState } from "../recoil/userProfile";
+import { useEffect } from "react";
+import { userCommentType } from "../types/userProfile";
 export default function MyCommentsPage() {
+  const { userId } = useParams();
+  const [userComment, setUserComment] = useRecoilState(userCommentState);
   const nav = useNavigate();
-  const handleClickComment = (commentEl: any) => {
-    nav(`/post-detail/${commentEl.postId}`);
-  };
+  const { userCommentData } = useGetMyComment(userId);
+
+  useEffect(() => {
+    setUserComment(userCommentData);
+  }, [userCommentData]);
+
   return (
     <>
       <Header
@@ -24,14 +33,10 @@ export default function MyCommentsPage() {
       />
       <main className="main-header">
         <div className="h-screen-minus-46">
-          {myComment.length > 0 ? (
-            myComment.map((item, index) => (
-              <div className="cursor-pointer">
-                <MyCommentsCard
-                  data={item}
-                  key={index}
-                  onClick={(commentEl: any) => handleClickComment(commentEl)}
-                />
+          {userComment?.length > 0 ? (
+            userComment?.map((comment: userCommentType, index) => (
+              <div className="cursor-pointer" key={index}>
+                <MyCommentsCard key={comment.postId} comment={comment} />
               </div>
             ))
           ) : (

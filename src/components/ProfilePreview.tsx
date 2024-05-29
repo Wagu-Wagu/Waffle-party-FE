@@ -4,7 +4,7 @@ import HeaderButton from "./Header/HeaderButton";
 interface previewProps {
   imgSrc: string;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (v: string) => void;
 }
 
 export default function ProfilePreview(props: previewProps) {
@@ -14,7 +14,9 @@ export default function ProfilePreview(props: previewProps) {
       <Header
         leftChild={<HeaderButton onClick={onClose}>취소</HeaderButton>}
         title="미리보기"
-        rightChild={<HeaderButton onClick={onConfirm}>완료</HeaderButton>}
+        rightChild={
+          <HeaderButton onClick={() => onConfirm(imgSrc)}>완료</HeaderButton>
+        }
       />
       <section className="absolute z-10 w-full h-full bg-black">
         <div className="absolute w-full transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
