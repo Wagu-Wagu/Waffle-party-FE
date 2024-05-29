@@ -33,6 +33,9 @@ export default function MyPage() {
   });
   const imageUploaderRef = useRef<HTMLInputElement>(null);
 
+  /**
+   * 마이페이지 정보 조회
+   */
   const { userProfileData } = useGetMyProfile();
   const baseURL = import.meta.env.VITE_USER_BASE_URL;
   const userId = userProfileData?.userInfo.userId;
@@ -45,7 +48,7 @@ export default function MyPage() {
       setUserProfile(userProfileData);
       setUserInfo(userProfileData.userInfo);
       setImageSrc(
-        userInfo?.userImage
+        userProfileData.userInfo?.userImage
           ? `${baseURL}${userProfileData.userInfo.userImage}`
           : "",
       );
