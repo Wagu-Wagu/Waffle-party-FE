@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { LoginDto } from "../lib/api/dto/login.dto";
 import { postLogin } from "../lib/api/login";
 import { useSetRecoilState } from "recoil";
-import { userTokenState } from "../recoil/atoms";
+import { userTokenState } from "../recoil/userState";
 import { setUserSession } from "../lib/token";
 
 export const KakaoCallback = () => {
