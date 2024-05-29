@@ -2,30 +2,22 @@ import { useEffect, useState } from "react";
 import Header from "../components/Header/Header";
 import HeaderLoginButton from "../components/Header/HeaderLoginButton";
 import FilterList from "../components/Home/FilterList";
-import PostListCard from "../components/Home/PostListCard";
+import PostListCard from "../components/card/PostListCard";
 import Navigation from "../components/Navigation/Navigation";
 import HomePageLogo from "./../assets/icons/HomePageLogo.svg?react";
 import ProfileIcon from "./../assets/icons/ProfileIcon.svg?react";
 import Banner from "../components/Home/Banner";
 import { useRecoilState } from "recoil";
-import useSWR from "swr";
-import { waffleFetcher } from "../lib/axios";
-import { AxiosResponse } from "axios";
 import { getAccessToken } from "../lib/token";
 import { useNavigate } from "react-router-dom";
 import { userState } from "../recoil/userState";
 import HeaderButton from "../components/Header/HeaderButton";
-import { Post } from "../types/ottPost";
-
-// Post 타입 정의
-
-// API 응답 타입 정의
-interface PostResponse {
-  postVO: Post;
-}
+import useGetPostList from "../hooks/useGetPostList";
+import { postListState } from "../recoil/postListState";
 
 export default function HomePage() {
   const [selectedOtts, setSelectedOtts] = useState<string[]>([]);
+  const [postList, setPostList] = useRecoilState(postListState);
   const [user, setUser] = useRecoilState(userState);
   const nav = useNavigate();
 
@@ -46,10 +38,15 @@ export default function HomePage() {
     );
   };
 
-  const { data } = useSWR<AxiosResponse<PostResponse[]>>(
-    `api/v1/post?ottTags=${selectedOtts.join(",")}`,
-    waffleFetcher,
-  );
+  // 게시글 목록 가져오기
+  const { postListData } = useGetPostList(selectedOtts);
+
+  // 게시글 목록 recoil 상태 업데이트
+  useEffect(() => {
+    if (postListData) {
+      setPostList(postListData);
+    }
+  }, [postListData]);
 
   return (
     <>
@@ -79,7 +76,7 @@ export default function HomePage() {
       <main className="main-header-nav">
         <Banner />
         <FilterList onOttSelect={handleOttSelect} selectedOtts={selectedOtts} />
-        {data?.data.map(({ postVO }) => (
+        {postList?.map(({ postVO }) => (
           <PostListCard key={postVO.postId} post={postVO} />
         ))}
       </main>
