@@ -20,7 +20,7 @@ export const getFormattedDate = (date: Date) => {
       month: "2-digit",
       day: "2-digit",
     };
-    return date.toLocaleDateString(undefined, options);
+    return date.toLocaleDateString("ko-KR", options).replace(/\.$/, "");
   }
 };
 

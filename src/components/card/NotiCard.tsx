@@ -1,3 +1,5 @@
+import { useFormattedDate } from "../../hooks/useFormattedDate";
+
 export default function NotiCard(props: any) {
   const { data, onClick } = props;
   const title = data.type === "댓글" ? data.title : data.comment;
@@ -9,6 +11,8 @@ export default function NotiCard(props: any) {
     }
     return "text-red5 border-red5";
   };
+
+  const formattedDate = useFormattedDate(new Date(data.timestamp));
 
   return (
     <main
@@ -35,7 +39,7 @@ export default function NotiCard(props: any) {
             </span>
           </div>
           <span className="flex gap-[1.4rem] text-gray9 text-[1.2rem] font-semibold font-['Pretendard'] leading-[1.2rem]">
-            {data.timestamp}
+            {formattedDate}
           </span>
         </section>
       </div>

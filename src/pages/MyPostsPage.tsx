@@ -20,6 +20,7 @@ export default function MyPostsPage() {
 
   useEffect(() => {
     setUserPost(userPostData);
+    console.log(userPost);
   }, [userPostData]);
 
   const nav = useNavigate();
@@ -35,7 +36,11 @@ export default function MyPostsPage() {
         title="작성한 글"
       />
       <main className="main-header">
-        {userPost?.length === 0 ? (
+        {userPost?.length > 0 ? (
+          userPost?.map((post: userPostType) => (
+            <PostListCard key={post.postId} post={post} />
+          ))
+        ) : (
           <div className="h-screen-minus-46">
             <EmptyList
               icon={<AlertCircleError />}
@@ -43,10 +48,6 @@ export default function MyPostsPage() {
               subText={<p>첫 게시글을 작성해주세요</p>}
             />
           </div>
-        ) : (
-          userPost?.map((post: userPostType) => (
-            <PostListCard key={post.postId} post={post} />
-          ))
         )}
       </main>
     </>
