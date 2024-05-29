@@ -37,7 +37,6 @@ export default function PostDetailPage() {
   const [comments, setComments] = useState(data.comments);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [isEdit, setIsEdit] = useState(false);
-  const [isPost, setIsPost] = useState(false);
   const [option, setOption] = useState<optionState>({
     type: "",
     isOwner: false,
@@ -47,6 +46,9 @@ export default function PostDetailPage() {
 
   const nav = useNavigate();
 
+  /**
+   * 댓글 등록할때마다 변경
+   */
   useEffect(() => {
     if (inputValue.length === 0) {
       setIsFocused(false);
@@ -225,7 +227,7 @@ export default function PostDetailPage() {
    */
   const closeConfirm = (isDeleteAction: boolean, modalData?: any) => {
     // 게시물 삭제인 경우
-    if (isPost) {
+    if (option.type === "post") {
       // setIsPost(false);
       setBasicModalActive(false);
       // api 함수 호출
@@ -523,6 +525,7 @@ export default function PostDetailPage() {
           onCommentEdit={onCommentEdit}
           onCommentDelete={onCommentDelete}
           onReport={onReport}
+          setModalActive={setModalActive}
           onClose={() => setModalActive((prev) => !prev)}
           ref={modalRef}
         />
@@ -532,8 +535,9 @@ export default function PostDetailPage() {
           ref={modalRef}
           isShow={basicModalActive}
           isLogout={false}
-          target={isPost ? "게시글" : modalData.parent ? "답댓글" : "댓글"}
+          option={option.type}
           onConfirm={(isConfirm) => closeConfirm(isConfirm, modalData)}
+          setModalActive={setBasicModalActive}
         />
       )}
     </>
