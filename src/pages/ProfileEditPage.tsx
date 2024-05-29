@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import NickNameForm from "../components/NickNameForm";
 import HeaderButton from "../components/Header/HeaderButton";
 import { useRecoilValue } from "recoil";
-import { userTokenState } from "../recoil/atoms";
+import { userTokenState } from "../recoil/userState";
 import axios from "axios";
 
 export default function ProfileEditPage() {
