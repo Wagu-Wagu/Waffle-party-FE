@@ -1,21 +1,38 @@
 import BottomSheet from "./BottomSheet";
 import BottomSheetHeader from "./BottomSheetHeader";
 import Button from "../common/Button";
-import { forwardRef } from "react";
+import { forwardRef, useMemo } from "react";
 
 interface modalProps {
   isShow: boolean;
   isLogout: boolean;
-  target?: string;
+  option?: string;
   onConfirm: (v: boolean) => void;
   children?: React.ReactNode;
+  setModalActive: (active: boolean) => void;
 }
 
 const BasicModal = forwardRef<HTMLElement, modalProps>(
   (props: modalProps, ref) => {
-    const { isShow, isLogout, target, onConfirm } = props;
+    const { isShow, isLogout, option, onConfirm, setModalActive } = props;
+
+    /**
+     * 게시글, 댓글, 답댓글 구분
+     */
+    const target = useMemo(() => {
+      switch (option) {
+        case "post":
+          return "게시글";
+        case "comment":
+          return "댓글";
+        case "reply":
+          return "답댓글";
+        default:
+          return "";
+      }
+    }, [option]);
     return (
-      <BottomSheet isShow={isShow} ref={ref}>
+      <BottomSheet isShow={isShow} ref={ref} setModalActive={setModalActive}>
         <BottomSheetHeader />
         <div className="flex flex-col gap-[3rem] bg-gray14 px-[2rem] py-[2.3rem] text-white">
           {isLogout ? (
