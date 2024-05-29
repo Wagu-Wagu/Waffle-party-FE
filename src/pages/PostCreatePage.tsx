@@ -26,6 +26,7 @@ export default function PostCreatePage() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isValid, setIsValid] = useState(false);
+  const [newFile, setNewFile] = useState<File[] | null>([]);
 
   const setPostDetail = useSetRecoilState(postDetailState);
 
@@ -48,7 +49,6 @@ export default function PostCreatePage() {
    */
   const handleSelectOTT = (option: { key: string; value: string }) => {
     setSelectedOption(option);
-    console.log(option, option.key, option.value);
   };
 
   /**
@@ -84,6 +84,7 @@ export default function PostCreatePage() {
     const files = inputEl.files;
     if (!files || files.length === 0) return;
     const file = files[0];
+    setNewFile((prevFiles) => (prevFiles ? [...prevFiles, file] : [file]));
 
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -109,7 +110,6 @@ export default function PostCreatePage() {
    * 등록 버튼
    */
   const handleRegister = async () => {
-    console.log("dd");
     if (!selectedOption || !title || !text) return;
     const currentData = {
       ottTag: selectedOption.key,
@@ -118,10 +118,10 @@ export default function PostCreatePage() {
       postImages: imgSrc,
     };
     setPostDetail(currentData);
-    console.log(currentData);
 
     // 수정예정
-    await postCreate(currentData);
+    await postCreate(currentData, newFile);
+    nav(-1);
   };
 
   return (

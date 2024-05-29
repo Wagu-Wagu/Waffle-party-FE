@@ -1,20 +1,21 @@
-import { Blob } from "buffer";
 import { postDetail } from "../../types/postDetail";
-import { client, imgClient } from "../axios";
+import { client } from "../axios";
 import { getAccessToken, setUserSession } from "../token";
-import { blob } from "stream/consumers";
 
-export const postCreate = async (param: postDetail) => {
+export const postCreate = async (param: postDetail, files: File[] | null) => {
   try {
     const formData = new FormData();
     formData.append("ottTag", param.ottTag);
     formData.append("title", param.title);
     formData.append("content", param.content);
 
-    if (param.postImages?.length > 0) {
-      for (let i = 0; i < param.postImages?.length; i++) {
-        formData.append("profileImages", param.postImages[i]);
+    if (files && files.length > 0) {
+      for (let i = 0; i < files.length; i++) {
+        formData.append("postImages", files[i], files[i].name);
       }
+    } else {
+      // 빈 파일을 추가하여 빈 리스트로 처리
+      formData.append("postImages", new Blob(), "");
     }
 
     // 토큰 설정
