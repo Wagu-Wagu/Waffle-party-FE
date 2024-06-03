@@ -1,3 +1,3 @@
-export class nickNameDto {
+export class NickNameDto {
   nickName: string | undefined = undefined;
 }
