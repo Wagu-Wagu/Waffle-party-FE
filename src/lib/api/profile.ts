@@ -1,6 +1,6 @@
 import { client } from "../axios";
 import { getAccessToken } from "../token";
-import { onBoardDto } from "./dto/user.dto";
+import { nickNameDto } from "./dto/user.dto";
 import { AxiosError } from "axios";
 
 /**
@@ -43,12 +43,11 @@ export const patchProfileImage = async (file: File | null) => {
  * @returns
  */
 export const patchOnBoard = async (
-  param: onBoardDto,
+  param: nickNameDto,
   nav: (path: string) => void,
 ) => {
   try {
     const { data } = await client.patch("/api/v1/user/onboard", param);
-    nav("/");
     return data;
   } catch (e: any) {
     const error = e as AxiosError<any>;
@@ -66,6 +65,31 @@ export const patchOnBoard = async (
       }
     } else {
       console.error("온보딩 요청 중 에러 발생:", error.message);
+    }
+    throw e;
+  }
+};
+
+/**
+ * 유저 닉네임 변경
+ * @param param
+ * @returns
+ */
+export const patchNickName = async (param: nickNameDto) => {
+  try {
+    const { data } = await client.patch("/api/v1/user/nickName", param);
+    return data;
+  } catch (e: any) {
+    const error = e as AxiosError<any>;
+    if (error.response) {
+      if (error.response.status === 400) {
+        const errorMessage = error.response.data.message;
+        window.alert(errorMessage);
+      } else {
+        console.error("닉네임 변경 중 에러 발생:", error.response.data);
+      }
+    } else {
+      console.error("닉네임 변경 중 에러 발생:", error.message);
     }
     throw e;
   }

@@ -37,7 +37,7 @@ const ProfileImageUploader = forwardRef<HTMLInputElement, ProfileImageProps>(
     };
 
     return (
-      <div className="relative w-[5.9rem]" onClick={onClick}>
+      <div className="relative w-[5.9rem] cursor-pointer" onClick={onClick}>
         {imageSrc ? (
           <img
             className="w-[5.9rem] h-[5.9rem] rounded-full aspect-square box-border object-cover"
