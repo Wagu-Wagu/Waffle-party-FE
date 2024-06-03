@@ -4,11 +4,11 @@ import HeaderButton from "../components/Header/HeaderButton";
 import CloseIcon from "./../assets/icons/CloseIcon.svg?react";
 import NickNameForm from "../components/NickNameForm";
 import { patchOnBoard } from "../lib/api/profile";
-import { nickNameDto } from "../lib/api/dto/user.dto";
+import { NickNameDto } from "../lib/api/dto/user.dto";
 
 export default function NicknamePage() {
   const nav = useNavigate();
-  const param = new nickNameDto();
+  const param = new NickNameDto();
 
   const handleOnboardingSubmit = async (nickname: string) => {
     param.nickName = nickname;

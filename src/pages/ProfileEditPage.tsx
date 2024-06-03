@@ -3,12 +3,12 @@ import CloseBtn from "../assets/icons/CloseIcon.svg?react";
 import { useNavigate } from "react-router-dom";
 import NickNameForm from "../components/NickNameForm";
 import HeaderButton from "../components/Header/HeaderButton";
-import { nickNameDto } from "../lib/api/dto/user.dto";
+import { NickNameDto } from "../lib/api/dto/user.dto";
 import { patchNickName } from "../lib/api/profile";
 
 export default function ProfileEditPage() {
   const navigate = useNavigate();
-  const param = new nickNameDto();
+  const param = new NickNameDto();
 
   const handleNicknameChange = async (nickname: string) => {
     param.nickName = nickname;

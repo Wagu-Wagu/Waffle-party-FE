@@ -1,6 +1,6 @@
 import { client } from "../axios";
 import { getAccessToken } from "../token";
-import { nickNameDto } from "./dto/user.dto";
+import { NickNameDto } from "./dto/user.dto";
 import { AxiosError } from "axios";
 
 /**
@@ -43,7 +43,7 @@ export const patchProfileImage = async (file: File | null) => {
  * @returns
  */
 export const patchOnBoard = async (
-  param: nickNameDto,
+  param: NickNameDto,
   nav: (path: string) => void,
 ) => {
   try {
@@ -75,7 +75,7 @@ export const patchOnBoard = async (
  * @param param
  * @returns
  */
-export const patchNickName = async (param: nickNameDto) => {
+export const patchNickName = async (param: NickNameDto) => {
   try {
     const { data } = await client.patch("/api/v1/user/nickName", param);
     return data;

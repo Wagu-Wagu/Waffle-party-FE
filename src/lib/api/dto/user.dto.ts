@@ -1,3 +1,3 @@
-export class onBoardDto {
+export class nickNameDto {
   nickName: string | undefined = undefined;
 }
