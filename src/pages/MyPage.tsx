@@ -3,7 +3,7 @@ import MyPageListCard from "../components/card/MyPageListCard";
 import MyPageSection from "../components/MyPage/MyPageSection";
 import { Link, useNavigate } from "react-router-dom";
 import Navigation from "../components/Navigation/Navigation";
-import { userInfoState, userProfileState } from "../recoil/userProfile";
+import { userProfileState } from "../recoil/userProfile";
 import { useRecoilState } from "recoil";
 import ProfileImageUploader from "../components/common/ProfileImageUploader";
 import Pencil from "../assets/icons/PencilUnderLine.svg?react";
@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import ActionSheet from "../components/modal/ActionSheet";
 import { optionState } from "../types/actionSheetOption";
 import ProfilePreview from "../components/ProfilePreview";
-import { userInfoType, userProfileType } from "../types/userProfile";
+import { userProfileType } from "../types/userProfile";
 import { patchProfileImage } from "../lib/api/profile";
 import useGetMyProfile from "../hooks/useGetMyProfile";
 
@@ -22,7 +22,6 @@ export default function MyPage() {
   const [showAlbum, setShowAlbum] = useState(false); //action sheet 모달창
   const [showPreview, setShowPreview] = useState(false); //미리보기
   const [userProfile, setUserProfile] = useRecoilState(userProfileState);
-  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const [imageSrc, setImageSrc] = useState(""); //받아온 이미지
   const [newImage, setNewImage] = useState<string>(""); //새로 바꾼 이미지
   const [newFile, setNewFile] = useState<File | null>(null); //새로 바꾼 파일
@@ -46,7 +45,6 @@ export default function MyPage() {
   useEffect(() => {
     if (userProfileData) {
       setUserProfile(userProfileData);
-      setUserInfo(userProfileData.userInfo);
       setImageSrc(
         userProfileData.userInfo?.userImage
           ? `${baseURL}${userProfileData.userInfo.userImage}`
@@ -77,10 +75,7 @@ export default function MyPage() {
           userImage: "",
         },
       }));
-      setUserInfo((prevUserInfo: userInfoType) => ({
-        ...prevUserInfo,
-        userImage: "",
-      }));
+
       // TODO 파일 업로드 api
       await patchProfileImage(newFile);
       setImageSrc("");
@@ -100,10 +95,7 @@ export default function MyPage() {
         userImage: `${baseURL}${newFile?.name}`,
       },
     }));
-    setUserInfo((prevUserInfo: userInfoType) => ({
-      ...prevUserInfo,
-      userImage: newImage,
-    }));
+
     // TODO 파일 업로드 api
     await patchProfileImage(newFile);
     setImageSrc(newImage);
@@ -158,7 +150,7 @@ export default function MyPage() {
               <p className="text-[1.6rem] font-bold leading-[2.4rem] text-white">
                 {userProfile?.userInfo?.nickName || ""}
               </p>
-              <div onClick={handleClickEdit}>
+              <div className="cursor-pointer" onClick={handleClickEdit}>
                 <Pencil />
               </div>
             </div>
@@ -221,6 +213,12 @@ export default function MyPage() {
             </MyPageSection>
           </section>
           <section className="mt-[4.3rem] w-full justify-center flex gap-[3rem] text-gray8 text-[1.2rem] text-center font-Pretendard font-normal leading-4 underline">
+            <button
+              className="underline text-gray8"
+              onClick={() => setIsShow((prev) => !prev)}
+            >
+              회원탈퇴
+            </button>
             <button
               className="underline text-gray8"
               onClick={() => setIsShow((prev) => !prev)}

@@ -3,10 +3,9 @@ import { useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LoginDto } from "../lib/api/dto/login.dto";
-import { postLogin } from "../lib/api/login";
+import { getUserOnBoard, postLogin } from "../lib/api/login";
 import { useSetRecoilState } from "recoil";
 import { userTokenState } from "../recoil/userState";
-import { setUserSession } from "../lib/token";
 
 export const KakaoCallback = () => {
   const nav = useNavigate();
@@ -54,14 +53,20 @@ export const KakaoCallback = () => {
 
   const getUser = (params: LoginDto) => {
     postLogin(params)
-      .then((res) => {
+      .then(async (res) => {
         if (res.data) {
           const tokenParams = {
             accessToken: res.data.accessToken,
             refreshToken: res.data.refreshToken,
           };
           setUserToken(tokenParams);
-          nav("/nickname");
+          const isUserOnBoarded = await getUserOnBoard();
+          if (isUserOnBoarded) {
+            window.alert("이미 온보딩을 한 유저입니다.");
+            nav("/");
+          } else {
+            nav("/nickname");
+          }
         }
       })
       .catch((e) => {

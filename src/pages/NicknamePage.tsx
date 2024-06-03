@@ -4,15 +4,18 @@ import HeaderButton from "../components/Header/HeaderButton";
 import CloseIcon from "./../assets/icons/CloseIcon.svg?react";
 import NickNameForm from "../components/NickNameForm";
 import { patchOnBoard } from "../lib/api/profile";
-import { onBoardDto } from "../lib/api/dto/user.dto";
+import { NickNameDto } from "../lib/api/dto/user.dto";
 
 export default function NicknamePage() {
   const nav = useNavigate();
-  const param = new onBoardDto();
+  const param = new NickNameDto();
 
   const handleOnboardingSubmit = async (nickname: string) => {
     param.nickName = nickname;
-    await patchOnBoard(param, nav);
+    const res = await patchOnBoard(param, nav);
+    if (res.success) {
+      nav("/");
+    }
   };
 
   return (
