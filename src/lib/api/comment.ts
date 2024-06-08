@@ -30,3 +30,16 @@ export const postChildComment = async (param: ChildCommentDto) => {
   }
 };
 
+/**
+ * 댓글, 답댓글 수정
+ * @param param
+ * @returns
+ */
+export const editComment = async (param: CommentEditDto) => {
+  try {
+    const { data } = await client.patch("/api/v1/comment", param);
+    return data;
+  } catch (e) {
+    console.error(e);
+  }
+};
