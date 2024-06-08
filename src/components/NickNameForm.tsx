@@ -4,25 +4,16 @@ import Input from "./common/Input";
 import Button from "./common/Button";
 
 interface NickNameFormProps {
+  initValue?: string;
   onSubmit: (nickname: string) => void;
 }
 
-export default function NickNameForm({ onSubmit }: NickNameFormProps) {
+export default function NickNameForm({
+  initValue,
+  onSubmit,
+}: NickNameFormProps) {
   const [isValid, setIsValid] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>("");
-
-  /*   const nav = useNavigate();
-  const userProfile = useRecoilValue(userProfileState); */
-
-  /*   const handleSubmit = () => {
-    if (isValid) {
-      // TODO api 호출
-      console.log(userProfile);
-
-      // 마이페이지로 돌아갑니다
-      nav("/");
-    }
-  }; */
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,11 +22,11 @@ export default function NickNameForm({ onSubmit }: NickNameFormProps) {
     }
   };
 
-  const handleNickNameChange = (res: validationResultType, value: string) => {
+  const handleNickNameChange = (res: validationResultType) => {
     if (res.success) {
       // 유효성 검사 통과 시
       setIsValid(true);
-      setNickname(value);
+      setNickname(res.value);
     } else {
       // 유효성 검사 실패 시
       setIsValid(false);
@@ -55,9 +46,7 @@ export default function NickNameForm({ onSubmit }: NickNameFormProps) {
             label="닉네임"
             placeholder="닉네임을 적어주세요."
             maxLen={8}
-            /* onChange={(res) => {
-              handleNickNameChange(res);
-            }} */
+            value={initValue ? initValue : ""}
             onChange={handleNickNameChange}
           />
         </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import InputCheck from "../../assets/icons/InputCheck.svg?react";
 import InputDelete from "../../assets/icons/InputDelete.svg?react";
 import InputError from "../../assets/icons/InputError.svg?react";
@@ -9,54 +9,24 @@ import { useSetRecoilState } from "recoil";
 
 interface InputProps {
   disabled?: boolean;
+  value: string;
   label: string;
   placeholder: string;
   maxLen: number;
   onClick?: () => void;
   // onChange: (res: validationResultType) => void;
-  onChange: (res: validationResultType, value: string) => void;
+  onChange: (res: validationResultType) => void;
 }
 
 export default function Input(props: InputProps) {
-  const { disabled, label, placeholder, maxLen, onClick, onChange } = props;
-  const [inputValue, setInputValue] = useState<string>("");
+  const { disabled, label, value, placeholder, maxLen, onClick, onChange } =
+    props;
+  const [inputValue, setInputValue] = useState<string>(value);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const setUserProfile = useSetRecoilState(userProfileState);
-
-  /**
-   * input이 변경될때마다 실행
-   */
-  useEffect(() => {
-    // 유효성 검사
-    const res = checkValidation(inputValue);
-
-    if (res.success) {
-      setMessage(res.message);
-      setIsSuccess(true);
-      setIsError(false);
-    } else {
-      if (inputValue.length === 0) {
-        setIsSuccess(false);
-        setIsError(false);
-        setMessage("");
-      } else {
-        setMessage(res.message);
-        setIsError(true);
-        setIsSuccess(false);
-      }
-    }
-    setUserProfile((prevState) => ({
-      ...prevState,
-      nickname: inputValue,
-    }));
-
-    // 부모 컴포넌트에 value 전달
-    // onChange(res);
-    onChange(res, inputValue);
-  }, [inputValue]);
 
   /**
    * input이 변경될때
@@ -66,6 +36,25 @@ export default function Input(props: InputProps) {
     const value = event.target.value;
     if (value.length <= maxLen) {
       setInputValue(value);
+      const res = checkValidation(value);
+
+      onChange(res);
+
+      if (res.success) {
+        setMessage(res.message);
+        setIsSuccess(true);
+        setIsError(false);
+      } else {
+        if (value.length === 0) {
+          setIsSuccess(false);
+          setIsError(true);
+          setMessage(res.message);
+        } else {
+          setMessage(res.message);
+          setIsError(true);
+          setIsSuccess(false);
+        }
+      }
     }
   };
 
@@ -77,8 +66,10 @@ export default function Input(props: InputProps) {
     event.stopPropagation();
     setTimeout(() => {
       setInputValue("");
+      setMessage("");
       setIsError(false);
       setIsSuccess(false);
+      onChange(checkValidation(""));
       setUserProfile((prevState) => ({
         ...prevState,
         nickname: "",
@@ -168,6 +159,7 @@ export default function Input(props: InputProps) {
       >
         <InputError />
       </div>
+
       <div
         className="flex justify-center items-center w-[1.6rem] h-[1.6rem] cursor-pointer"
         onClick={handleDeleteClick}
@@ -199,9 +191,11 @@ export default function Input(props: InputProps) {
             {isFocused ? (
               isSuccess ? (
                 <RenderSuccessIcons onClick={onClick} />
-              ) : isError ? (
+              ) : isError && inputValue.length > 0 ? (
                 <RenderErrorIcons onClick={onClick} />
-              ) : null
+              ) : (
+                <RenderDefaultIcons onClick={onClick} />
+              )
             ) : (
               <RenderDefaultIcons onClick={onClick} />
             )}

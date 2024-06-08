@@ -5,8 +5,12 @@ import NickNameForm from "../components/NickNameForm";
 import HeaderButton from "../components/Header/HeaderButton";
 import { NickNameDto } from "../lib/api/dto/user.dto";
 import { patchNickName } from "../lib/api/profile";
+import { useRecoilValue } from "recoil";
+import { userProfileState } from "../recoil/userProfile";
 
 export default function ProfileEditPage() {
+  const userInfo = useRecoilValue(userProfileState);
+  const initNickName = userInfo.userInfo.nickName;
   const navigate = useNavigate();
   const param = new NickNameDto();
 
@@ -28,7 +32,7 @@ export default function ProfileEditPage() {
         }
         title="닉네임 수정"
       />
-      <NickNameForm onSubmit={handleNicknameChange} />
+      <NickNameForm onSubmit={handleNicknameChange} initValue={initNickName} />
     </>
   );
 }
