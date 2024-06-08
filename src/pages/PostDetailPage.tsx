@@ -5,46 +5,86 @@ import Button from "../components/common/Button";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import UnLock from "../assets/icons/UnLock.svg?react";
 import Lock from "../assets/icons/LockActive.svg?react";
-import ImageSlider from "../components/ImageSlider";
 import React from "react";
-import formatDate from "../hooks/formatDate";
 import ImagePreview from "../components/ImagePreview";
 import ActionSheet from "../components/modal/ActionSheet";
 import BasicModal from "../components/modal/BasicModal";
-import { data } from "../mock/detail";
-import { dummyContentType, dummyMoreContentType } from "../types/comment";
 import HeaderButton from "../components/Header/HeaderButton";
 import { useNavigate, useParams } from "react-router-dom";
 import Chat from "../assets/icons/Chat.svg?react";
 import EmptyList from "../components/common/EmptyList";
 import Chip from "../components/common/Chip";
 import { optionState } from "../types/actionSheetOption";
+import useGetPostDetail from "../hooks/useGetPostDetail";
+import { useRecoilState } from "recoil";
+import { postDetailState } from "../recoil/postDetailState";
+import { postCommentType } from "../types/postDetail";
+import {
+  ChildCommentDto,
+  CommentDto,
+  CommentEditDto,
+} from "../lib/api/dto/comment.dto";
+import { userProfileState } from "../recoil/userProfile";
+import { editComment, postChildComment, postComment } from "../lib/api/comment";
+import { ottTags } from "../types/ottTags";
+import useGetMyProfile from "../hooks/useGetMyProfile";
 
 export default function PostDetailPage() {
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isLocked, setIsLocked] = useState(false);
   const [uptoSubmit, setUptoSubmit] = useState(false);
-  const [showFullImage, setShowFullImage] = useState<boolean>(false);
   const [modalActive, setModalActive] = useState(false);
   const [basicModalActive, setBasicModalActive] = useState(false);
-  const modalRef = useRef<HTMLElement>(null);
-  const [modalData, setModalData] = useState<{
-    parent: dummyContentType | null;
-    child: dummyMoreContentType | null;
-  }>({ parent: null, child: null });
-  // 받아온 데이터중 댓글데이터 넣기
-  const [comments, setComments] = useState(data.comments);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [comments, setComments] = useState<postCommentType[]>([]); // 받아온 데이터중 댓글데이터 넣기
   const [isEdit, setIsEdit] = useState(false);
   const [option, setOption] = useState<optionState>({
     type: "",
     isOwner: false,
   });
+  const [postDetail, setPostDetail] = useRecoilState(postDetailState);
+  const [userProfile, setUserProfile] = useRecoilState(userProfileState);
+  const [isParent, setIsParent] = useState(true);
+  const [commentData, setCommentData] = useState<any>(); //더보기에서 선택한 댓글 or 답댓글 정보 저장
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const { userId } = useParams();
+  const { postId } = useParams();
+
+  const baseURL = import.meta.env.VITE_POST_BASE_URL;
 
   const nav = useNavigate();
+  let params;
+
+  /**
+   * 게시글 상세 조회 api
+   */
+  const { postDetailData } = useGetPostDetail(postId as string);
+
+  useEffect(() => {
+    if (postDetailData) {
+      const updatedPostDetail = {
+        ...postDetailData,
+        postDetail: {
+          ...postDetailData.postDetail,
+          photoes: postDetailData.postDetail.photoes.map((photo) => {
+            return `${baseURL}${photo.replace(/"/g, "")}`;
+          }),
+        },
+      };
+      setPostDetail(updatedPostDetail);
+      setComments(postDetailData.comments);
+    }
+  }, [postDetailData]);
+
+  /**
+   * 현재 유저 정보 api
+   */
+  const { userProfileData } = useGetMyProfile();
+  useEffect(() => {
+    if (userProfileData) {
+      setUserProfile(userProfileData);
+    }
+  }, [userProfileData]);
 
   /**
    * 댓글 등록할때마다 변경
@@ -65,25 +105,6 @@ export default function PostDetailPage() {
     }
   }, [isFocused]);
 
-  // TODO any type 변경
-  const handleModal = (parent: any, child?: any) => {
-    // setModalActive((prev) => !prev);
-    if (parent === "post") {
-      // setIsPost(true);
-    } else {
-      // setIsPost(false);
-      if (child) {
-        // 부모요소 있으면 대댓글
-        // parent에 상위 댓글 데이터, child에 대댓글 데이터
-        setModalData({ parent: parent, child: child });
-      } else {
-        // 부모요소 없으면 댓글
-        // parent는 없고, child에 댓글 데이터
-        setModalData({ parent: parent, child: null });
-      }
-    }
-  };
-
   /**
    * 댓글 입력
    * @param event
@@ -98,7 +119,6 @@ export default function PostDetailPage() {
     const lineHeight = parseFloat(window.getComputedStyle(textarea).lineHeight);
     const maxRows = 4;
 
-    // 텍스트의 행 수가 최대 행 수를 초과하면 입력을 막고 경고창을 표시합니다.
     const rows = Math.floor(textarea.scrollHeight / lineHeight);
     if (rows > maxRows) {
       event.preventDefault();
@@ -115,11 +135,11 @@ export default function PostDetailPage() {
    */
   const handleKeyPress = (
     event: React.KeyboardEvent<HTMLTextAreaElement>,
-    modalData: any,
+    commentData: any,
   ) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      handleAddComment(modalData);
+      handleAddComment(commentData);
     }
   };
 
@@ -127,147 +147,123 @@ export default function PostDetailPage() {
    *
    * @returns 댓글 등록
    */
-  const handleAddComment = (modalData: any) => {
+  const handleAddComment = async (commentData: any) => {
     if (inputValue.trim() === "") return;
 
     const currentDate: Date = new Date();
-    const formattedDate: string = formatDate(currentDate);
 
-    // TODO 추후에 바뀔 부분
-    const newComment = {
-      mycomment: true,
-      nickname: "새로운 답변자",
-      timestamp: formattedDate,
-      content: inputValue,
-      profilePicture:
-        "https://gam-image-test.s3.ap-northeast-2.amazonaws.com/work/b7d98ae9-c597-48cf-a625-dc6c8bac0001%E1%84%86%E1%85%A2%E1%84%80%E1%85%A5%E1%84%8C%E1%85%B5%E1%86%AB%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3.jpeg",
-      morecomment: [],
-      lock: isLocked,
-      isUser: true,
-    };
-
-    if (comments.length === 0) {
-      setComments((prev) => [...prev, newComment]);
-      setInputValue("");
-      setIsLocked(false);
-      return;
-    }
-
-    // 댓글 수정
     if (isEdit) {
-      // 답댓글이면
-      if (modalData.child) {
-        setComments((prevComments) => {
-          return prevComments.map((comment) => {
-            if (comment.nickname === modalData.parent?.nickname) {
-              return {
-                ...comment,
-                morecomment: comment.morecomment.map(
-                  (moreComment: dummyMoreContentType) => {
-                    if (moreComment.nickname === modalData.child?.nickname) {
-                      return {
-                        ...moreComment,
-                        content: inputValue,
-                        lock: isLocked,
-                      };
-                    }
-                    return moreComment;
-                  },
-                ),
-              };
-            }
-            return comment;
-          });
-        });
-      } else {
-        setComments((prevComments) => {
-          return prevComments.map((comment) => {
-            if (comment.nickname === modalData.parent.nickname) {
-              // 선택한 댓글의 content만 변경
-              return {
-                ...comment,
-                content: inputValue,
-              };
-            }
-            // 선택하지 않은 댓글은 그대로 반환
-            return comment;
-          });
-        });
+      /**
+       * 댓글, 답댓글 수정
+       */
+      params = new CommentEditDto();
+      params.postId = postDetail.postDetail.postId;
+      params.isSecret = isLocked;
+      params.content = inputValue;
+      params.commentUserId = commentData.commentUserId;
+      params.commentId = commentData.commentId;
+      await editComment(params);
+      // comments 배열 복사
+      const updatedComments = [...comments];
+
+      // commentData의 commentId와 일치하는 댓글 찾기
+      const index = updatedComments.findIndex(
+        (comment) => comment.commentId === commentData.commentId,
+      );
+
+      // 해당 댓글이 존재하는 경우 정보 업데이트
+      if (index !== -1) {
+        updatedComments[index] = {
+          ...updatedComments[index],
+          isSecret: isLocked,
+          content: inputValue,
+        };
       }
-      setIsEdit(false);
+      // 변경된 comments 배열로 업데이트
+      setComments(updatedComments);
     } else {
-      // 댓글 등록
-
-      if (!modalData.parent) {
-        setComments((prevComments) => [...prevComments, newComment]);
+      /**
+       * 댓글, 답댓글 등록
+       */
+      if (isParent) {
+        // 댓글 등록 로직
+        params = new CommentDto();
+        params.postId = postDetail.postDetail.postId;
+        params.isSecret = isLocked;
+        params.content = inputValue;
+        await postComment(params);
       } else {
-        // 대댓글 등록
+        // 답댓글 등록 로직
+        params = new ChildCommentDto();
+        params.parentCommentId = commentData.commentId;
+        params.postId = postDetail.postDetail.postId;
+        params.isSecret = isLocked;
+        params.content = inputValue;
+        await postChildComment(params);
+      }
 
-        setComments((prevComments) =>
-          prevComments.map((comment) =>
-            comment.nickname === modalData.parent.nickname
-              ? {
-                  ...comment,
-                  morecomment: [...(comment.morecomment || []), newComment],
-                }
-              : comment,
-          ),
+      const newComment: any = {
+        ...(commentData ? { ...commentData } : { commentId: 1 }),
+        commenterNickName: userProfile.userInfo.nickName,
+        userImage: userProfile.userInfo.userImage,
+        createdAt: currentDate,
+        content: inputValue,
+        isParentComment: isParent,
+        isMyComment: true,
+        isSecret: isLocked,
+        isVisible: true,
+      };
+      if (isParent) {
+        setComments([...comments, newComment]);
+      } else {
+        // 부모 댓글 바로 아래에 새로운 답댓글 추가
+        const updatedComments = [...comments];
+        const parentIndex = updatedComments.findIndex(
+          (commentEl) => commentEl.commentId === commentData.commentId,
         );
+
+        let insertIndex = parentIndex + 1;
+        while (
+          insertIndex < updatedComments.length &&
+          !updatedComments[insertIndex].isParentComment
+        ) {
+          insertIndex++;
+        }
+        updatedComments.splice(insertIndex, 0, newComment);
+        setComments(updatedComments);
       }
     }
     setInputValue("");
-    setModalData({ parent: null, child: null });
     setIsLocked(false);
+    setIsEdit(false);
   };
 
   /**
-   * 댓글, 대댓글 삭제 또는 취소
+   * 게시물, 댓글, 답댓글 삭제
    * @param isDeleteAction
    * @param modalData
    */
-  const closeConfirm = (isDeleteAction: boolean, modalData?: any) => {
-    // 게시물 삭제인 경우
-    if (option.type === "post") {
-      // setIsPost(false);
-      setBasicModalActive(false);
-      // api 함수 호출
-      return;
-    }
-
-    // 삭제
+  const closeConfirm = (isDeleteAction: boolean, commentData: any) => {
+    console.log(isDeleteAction);
     if (isDeleteAction) {
-      if (modalData.child) {
-        setComments((prevComments) => {
-          return prevComments.map((comment) => {
-            // 선택한 댓글에 달린 답댓글들만 삭제
-
-            if (comment.nickname === modalData.parent.nickname) {
-              // 답댓글들을 필터링하여 삭제된 답댓글을 제외한 새로운 답댓글 배열 생성
-              const updatedReplies = comment.morecomment.filter(
-                (reply: dummyMoreContentType) =>
-                  reply.nickname !== modalData.child.nickname,
-              );
-              // 기존 댓글의 답댓글을 업데이트하여 새로운 답댓글 배열로 설정
-              return {
-                ...comment,
-                morecomment: updatedReplies,
-              };
-            }
-            // 선택하지 않은 댓글은 그대로 반환
-            return comment;
-          });
-        });
+      /**
+       * 게시물 삭제
+       */
+      if (option.type === "post") {
+        // setIsPost(false);
+        setBasicModalActive(false);
+        // api 함수 호출
+        return;
       } else {
-        setComments((prevComments) => {
-          // 삭제된 댓글을 제외한 새로운 댓글 배열 생성
-          const updatedComments = prevComments.filter(
-            (comment) => comment.nickname !== modalData.parent.nickname,
-          );
-          return updatedComments;
-        });
+        /**
+         * 댓글, 답댓글 삭제
+         */
+        const updatedComments = comments.filter(
+          (comment) => comment.commentId !== commentData.commentId,
+        );
+
+        setComments(updatedComments);
       }
-      // 예시 API 호출
-      // deleteCommentAPI().then(response => { ... });
     }
     setBasicModalActive(false);
   };
@@ -275,7 +271,7 @@ export default function PostDetailPage() {
   // 게시물 수정
   const onPostEdit = () => {
     setModalActive(false);
-    nav(`/post-edit/${userId}`);
+    nav(`/post-edit/${postId}`);
   };
   // 게시물 삭제
   const onPostDelete = () => {
@@ -297,22 +293,14 @@ export default function PostDetailPage() {
   const onCommentEdit = () => {
     setModalActive(false);
     setIsFocused(true);
-    if (modalData.child) {
-      setInputValue(modalData.child?.content as string);
-      if (modalData.child?.lock) {
-        setIsLocked(true);
-      } else {
-        setIsLocked(false);
-      }
+    console.log(commentData);
+    if (commentData.isSecret) {
+      setIsLocked(true);
     } else {
-      setInputValue(modalData.parent?.content as string);
-      if (modalData.parent?.lock) {
-        setIsLocked(true);
-      } else {
-        setIsLocked(false);
-      }
+      setIsLocked(false);
     }
     setIsEdit(true);
+    setInputValue(commentData.content);
   };
   // 댓글 삭제
   const onCommentDelete = () => {
@@ -361,17 +349,20 @@ export default function PostDetailPage() {
         <section className="w-full">
           <section className="px-[2rem] flex-col items-center justify-start w-full gap-[2.4rem] border-b-8 border-neutral-900">
             <div className="py-[1.6rem]">
-              <Chip ott={data.ott} isButton={false} isCheck={false} />
+              <Chip
+                ott={ottTags[postDetail.postDetail.ottTag]}
+                isButton={false}
+                isCheck={false}
+              />
             </div>
             <div className="w-full flex flex-col items-start justify-start gap-[1.6rem] mb-[2.4rem]">
               <div className="w-full justify-start items-end gap-2.5 inline-flex">
                 <UserCard
-                  data={data}
-                  isMoreComment={false}
+                  data={postDetail.postDetail}
                   onClick={() => {
                     setOption({
                       type: "post",
-                      isOwner: data.mypost,
+                      isOwner: postDetail.postDetail.isMyPost,
                     });
                     setModalActive((prev) => !prev);
                   }}
@@ -379,66 +370,65 @@ export default function PostDetailPage() {
               </div>
               <div className="w-full flex-col justify-start items-start gap-[1rem] flex">
                 <div className="w-full h-[2.8rem] text-white text-[2rem] font-bold font-['Pretendard'] leading-[2.8rem]">
-                  {data.title}
+                  {postDetail.postDetail.title}
                 </div>
-                <ImagePreview
-                  images={data.thumbnail}
-                  onClick={() => setShowFullImage(true)}
-                />
+                {postDetail.postDetail.photoes && (
+                  <>
+                    <ImagePreview images={postDetail.postDetail.photoes} />
+                  </>
+                )}
                 <div className="w-full text-gray1 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem]">
-                  {data.text}
+                  {postDetail.postDetail.content}
                 </div>
               </div>
             </div>
             <div className="w-full h-0.5 relative" />
           </section>
           <section className="inline-flex flex-col items-center justify-start w-full px-[2rem] pt-[2.4rem]">
-            {comments.length > 0 ? (
+            {postDetail.comments.length > 0 ? (
               <>
                 <div className="pb-[2rem] inline-flex items-start justify-start w-full gap-5 lex-col">
                   <div className="text-white text-[1.2rem] font-medium font-['Pretendard'] leading-[1.6rem]">
-                    댓글 {comments.length}
+                    댓글 {postDetail.comments.length}
                   </div>
                 </div>
-                <div className="flex flex-col w-full gap-[1rem] pb-[0.5rem]">
+                <div className="flex flex-col w-full gap-[1.2rem] pb-[0.5rem]">
                   {comments.map((comment, index) => (
                     <React.Fragment key={index}>
-                      <UserCard
-                        data={comment}
-                        isMoreComment={false}
-                        onClick={() => {
-                          handleModal(comment);
-                          setOption({
-                            type: "comment",
-                            isOwner: comment.mycomment,
-                          });
-                          setModalActive((prev) => !prev);
-                        }}
-                      />
-                      <div className="h-[0.1rem] bg-gray13"></div>
-                      {/* 대댓글 */}
-                      {comment.morecomment?.map(
-                        (
-                          moreComment: dummyMoreContentType,
-                          moreIndex: number,
-                        ) => (
-                          <div className="pl-[4.8rem]" key={moreIndex}>
-                            <UserCard
-                              data={moreComment}
-                              isMoreComment={true}
-                              onClick={() => {
-                                handleModal(comment, moreComment);
-                                setOption({
-                                  type: "reply",
-                                  isOwner: moreComment.mymorecomment,
-                                });
-                                setModalActive((prev) => !prev);
-                              }}
-                            />
-                            <div className="h-[0.1rem] bg-gray13"></div>
-                          </div>
-                        ),
+                      {comment.isParentComment ? (
+                        // 댓글
+                        <>
+                          <UserCard
+                            data={comment}
+                            onClick={() => {
+                              setCommentData(comment);
+                              setIsParent(false);
+                              setOption({
+                                type: "comment",
+                                isOwner: comment.isMyComment,
+                              });
+                              setModalActive((prev) => !prev);
+                            }}
+                          />
+                        </>
+                      ) : (
+                        // 답댓글
+                        <div className="pl-[4.8rem]">
+                          <UserCard
+                            data={comment}
+                            onClick={() => {
+                              setCommentData(comment);
+                              setIsParent(false);
+                              setOption({
+                                type: "reply",
+                                isOwner: comment.isMyComment,
+                              });
+                              setModalActive((prev) => !prev);
+                            }}
+                          />
+                        </div>
                       )}
+                      <div className="h-[0.1rem] bg-gray13"></div>
                     </React.Fragment>
                   ))}
                 </div>
@@ -462,58 +452,39 @@ export default function PostDetailPage() {
           </section>
         </section>
       </main>
-      <div className="fixed max-w-[50rem] min-w-[36rem]  bottom-0 inline-flex flex-col items-start justify-start w-full v-[5.4rem]">
-        <div className="w-full px-[2.8rem] py-[1.7rem] bg-gray14 border-t-2 border-gray13 flex-col justify-start items-start  flex">
-          <div className="w-full justify-start items-center gap-[15px] inline-flex">
-            <div
-              className="w-[2.4rem] h-[2.4rem]"
-              onClick={() => setIsLocked((prev) => !prev)}
-            >
-              {isLocked ? <Lock /> : <UnLock />}
-            </div>
+      <section className="fixed max-w-[50rem] min-w-[36rem] bottom-0 flex gap-[1.5rem] w-full px-[2rem] py-[1.1rem] border-t-2 bg-gray14 border-gray13 ">
+        <div
+          className="w-[2.4rem] h-[2.4rem]"
+          onClick={() => setIsLocked((prev) => !prev)}
+        >
+          {isLocked ? <Lock /> : <UnLock />}
+        </div>
 
-            <div
-              className={`w-full text-gray10 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem] flex gap-[1.5rem]`}
-            >
-              <div className="flex items-center w-full h-[4.8rem]">
-                <textarea
-                  className={` w-full placeholder:pt-[1.2rem] resize-none bg-transparent outline-none ${setPlaceHolderClass()} ${setTextClass()}`}
-                  placeholder={isFocused ? "" : "댓글을 남겨주세요."}
-                  onFocus={() => setIsFocused(true)}
-                  value={inputValue}
-                  onChange={handleChangeContent}
-                  onKeyDown={(e) => handleKeyPress(e, modalData)}
-                  ref={inputRef}
-                />
-              </div>
-            </div>
-            <Button
-              type="button"
-              disabled={uptoSubmit ? false : true}
-              size="xxs"
-              variant="yellow"
-              onClick={() => handleAddComment(modalData)}
-            >
-              등록
-            </Button>
+        <div
+          className={`w-full text-gray10 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem] flex gap-[1.5rem]`}
+        >
+          <div className="flex items-center w-full ">
+            <textarea
+              className={` w-full placeholder-pt-[1.2rem] resize-none bg-transparent outline-none ${setPlaceHolderClass()} ${setTextClass()}`}
+              placeholder={isFocused ? "" : "댓글을 남겨주세요."}
+              onFocus={() => setIsFocused(true)}
+              value={inputValue}
+              onChange={handleChangeContent}
+              onKeyDown={(e) => handleKeyPress(e, commentData)}
+              ref={inputRef}
+            />
           </div>
         </div>
-        <div className="relative w-full bg-neutral-800" />
-      </div>
-      {showFullImage && (
-        <div
-          className="fixed top-0 left-0 flex items-center justify-center w-full h-full bg-black bg-opacity-50"
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowFullImage(false);
-          }}
+        <Button
+          type="button"
+          disabled={uptoSubmit ? false : true}
+          size="xxs"
+          variant="yellow"
+          onClick={() => handleAddComment(commentData)}
         >
-          <ImageSlider
-            images={data.thumbnail}
-            onClose={() => setShowFullImage(false)}
-          />
-        </div>
-      )}
+          등록
+        </Button>
+      </section>
       {modalActive && (
         <ActionSheet
           option={option}
@@ -527,16 +498,14 @@ export default function PostDetailPage() {
           onReport={onReport}
           setModalActive={setModalActive}
           onClose={() => setModalActive((prev) => !prev)}
-          ref={modalRef}
         />
       )}
       {basicModalActive && (
         <BasicModal
-          ref={modalRef}
           isShow={basicModalActive}
           isLogout={false}
           option={option.type}
-          onConfirm={(isConfirm) => closeConfirm(isConfirm, modalData)}
+          onConfirm={(isConfirm) => closeConfirm(isConfirm, commentData)}
           setModalActive={setBasicModalActive}
         />
       )}
