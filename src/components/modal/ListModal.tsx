@@ -1,22 +1,31 @@
-import React, { forwardRef, useState } from "react";
+import { useEffect, useState } from "react";
 import BottomSheet from "./BottomSheet";
 import BottomSheetHeader from "./BottomSheetHeader";
 import Check from "../../assets/icons/Check.svg?react";
 import { ottTags } from "../../types/ottTags";
 interface modalProps {
   isShow: boolean;
+  optionIndex?: number | undefined;
   onClick?: () => void;
   onSelect: (option: { key: string; value: string }) => void;
+  setModalActive: (active: boolean) => void;
+  setOptionIndex: (select: number) => void;
 }
 
-const ListModal = forwardRef<HTMLElement, modalProps>((props, ref) => {
-  const { isShow, onSelect } = props;
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  // const ottOptions = Object.values(ottTags);
+export default function ListModal(props: modalProps) {
+  const { isShow, optionIndex, onSelect, setModalActive, setOptionIndex } =
+    props;
   const ottEntries = Object.entries(ottTags);
+  const [selectedOption, setSelectedOption] = useState<number | undefined>(
+    optionIndex ? optionIndex : undefined,
+  );
+
+  useEffect(() => {
+    setSelectedOption(optionIndex);
+  }, [optionIndex]);
 
   return (
-    <BottomSheet isShow={isShow} ref={ref}>
+    <BottomSheet isShow={isShow} setModalActive={setModalActive}>
       <BottomSheetHeader />
       <div
         className="text-white font-pretendard bg-gray14 py-[3rem] px-[2rem]"
@@ -30,6 +39,7 @@ const ListModal = forwardRef<HTMLElement, modalProps>((props, ref) => {
             <li
               key={key}
               onClick={() => {
+                setOptionIndex(index);
                 setSelectedOption(index);
                 onSelect({ key, value });
               }}
@@ -47,6 +57,4 @@ const ListModal = forwardRef<HTMLElement, modalProps>((props, ref) => {
       </div>
     </BottomSheet>
   );
-});
-
-export default ListModal;
+}

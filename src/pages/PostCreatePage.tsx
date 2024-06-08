@@ -4,33 +4,33 @@ import Header from "../components/Header/Header";
 import Close from "../assets/icons/CloseIcon.svg?react";
 import RightArrow from "../assets/icons/RightArrow.svg?react";
 import Image from "../assets/icons/Image.svg?react";
-import ImageSlider from "../components/ImageSlider";
-import { useSetRecoilState } from "recoil";
-import { postDetailState } from "../recoil/atoms";
-import ImagePreview from "../components/ImagePreview";
 import HeaderButton from "../components/Header/HeaderButton";
 import { useNavigate } from "react-router-dom";
 import { postCreate } from "../lib/api/post";
+import { PostCreateDto } from "../lib/api/dto/post.dto";
+import ImagePreview from "../components/ImagePreview";
 
 export default function PostCreatePage() {
   const [isShow, setIsShow] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
   const [text, setText] = useState<string>("");
   const [imgSrc, setImgSrc] = useState<string[] | null>(null);
-  const [showFullImage, setShowFullImage] = useState<boolean>(false);
   const [scrollDown, setScrollDown] = useState(false);
   const [selectedOption, setSelectedOption] = useState<{
     key: string;
     value: string;
   } | null>(null);
+  const [optionIndex, setOptionIndex] = useState<number | undefined>(undefined);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isValid, setIsValid] = useState(false);
   const [newFile, setNewFile] = useState<File[] | null>([]);
 
-  const setPostDetail = useSetRecoilState(postDetailState);
+  // const setPostDetail = useSetRecoilState(postDetailState);
 
   const nav = useNavigate();
+
+  const param = new PostCreateDto();
 
   /**
    * ott, 제목, 내용 다 충족하면 등록버튼 활성화
@@ -111,16 +111,15 @@ export default function PostCreatePage() {
    */
   const handleRegister = async () => {
     if (!selectedOption || !title || !text) return;
-    const currentData = {
-      ottTag: selectedOption.key,
-      title: title,
-      content: text,
-      postImages: imgSrc,
-    };
-    setPostDetail(currentData);
 
-    // 수정예정
-    await postCreate(currentData, newFile);
+    console.log(newFile);
+
+    param.ottTag = selectedOption.key;
+    param.title = title;
+    param.content = text;
+    param.postImages = newFile;
+
+    await postCreate(param);
     nav(-1);
   };
 
@@ -132,7 +131,7 @@ export default function PostCreatePage() {
             <Close />
           </HeaderButton>
         }
-        title={showFullImage ? "" : "글 작성"}
+        title="글 작성"
         rightChild={
           <HeaderButton
             onClick={handleRegister}
@@ -169,7 +168,16 @@ export default function PostCreatePage() {
           {imgSrc && (
             <ImagePreview
               images={imgSrc}
-              onClick={() => setShowFullImage(true)}
+              isImageUploading={true}
+              onDelete={(index) => {
+                const updatedImages = imgSrc.filter((_, i) => i !== index);
+                setImgSrc(updatedImages);
+
+                if (newFile) {
+                  const updatedFiles = newFile.filter((_, i) => i !== index);
+                  setNewFile(updatedFiles);
+                }
+              }}
             />
           )}
           {/* 본문 */}
@@ -198,26 +206,14 @@ export default function PostCreatePage() {
           <span className="text-additional3 text-[1.2rem] font-normal leading-[1.6rem]">
             사진
           </span>
-
-          {showFullImage && (
-            <div
-              className="fixed top-0 left-0 flex items-center justify-center w-full h-full bg-black bg-opacity-50"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowFullImage(false);
-              }}
-            >
-              <ImageSlider
-                images={imgSrc}
-                onClose={() => setShowFullImage(false)}
-              />
-            </div>
-          )}
         </div>
         {isShow && (
           <ListModal
             isShow={isShow}
+            optionIndex={optionIndex}
             onSelect={(option) => handleSelectOTT(option)}
+            setModalActive={setIsShow}
+            setOptionIndex={setOptionIndex}
           />
         )}
       </div>

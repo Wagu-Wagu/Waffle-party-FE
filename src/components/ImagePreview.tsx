@@ -1,19 +1,30 @@
-interface previewProps {
+import React, { useState } from "react";
+import FullImage from "./FullImage";
+import Close from "../assets/icons/ImageDeleteButton.svg?react";
+
+interface ImageUploaderProps {
   images: string[];
-  onClick: () => void;
+  isImageUploading?: boolean;
+  onDelete?: (index: number) => void;
 }
-export default function ImagePreview(props: previewProps) {
-  const { images, onClick } = props;
+
+export default function ImageUploader(props: ImageUploaderProps) {
+  const { images, isImageUploading, onDelete } = props;
+  const [showFullImage, setShowFullImage] = useState<boolean>(false);
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
+
+  const handleImageClick = (src: string) => {
+    setCurrentImage(src);
+    setShowFullImage(true);
+  };
+
   return (
-    <div className="flex w-full" onClick={onClick}>
+    <div className="flex w-full gap-[1.2rem]">
       {images.map((src, index) => (
         <div
-          className="h-[17rem] "
+          className="h-[12rem] w-[12rem] relative rounded-[0.8rem]"
           key={index}
-          style={{
-            width: `${index === 0 ? 60.94 : 39.06}%`,
-            position: "relative",
-          }}
+          onClick={() => handleImageClick(src)}
         >
           <img
             className="h-full rounded-[0.8rem] w-full object-cover"
@@ -25,11 +36,38 @@ export default function ImagePreview(props: previewProps) {
               objectFit: "cover",
             }}
           />
-          {index === 1 && (
-            <div className="absolute top-0 left-0 w-full h-full bg-black80 rounded-r-[0.8rem]" />
+          {isImageUploading && onDelete && (
+            <>
+              {/* 대표사진 */}
+              {index === 0 && (
+                <div className="absolute bottom-0 left-0 w-full h-[2.4rem] bg-neutral-700 rounded-b-[0.8rem] text-white text-[1.2rem] flex justify-center items-center">
+                  대표사진
+                </div>
+              )}
+              {/* 이미지 삭제 */}
+              <div
+                className="absolute top-0 right-0 p-[0.4rem]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(index);
+                }}
+              >
+                <Close />
+              </div>
+            </>
           )}
         </div>
       ))}
+
+      {/* 이미지 전체 보기 */}
+      {showFullImage && currentImage && (
+        <FullImage
+          image={currentImage}
+          onClose={() => {
+            setShowFullImage(false);
+          }}
+        />
+      )}
     </div>
   );
 }

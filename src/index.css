@@ -98,3 +98,16 @@ textarea::-webkit-scrollbar {
 textarea {
   scrollbar-width: none;
 }
+
+.custom-scroll {
+  overflow: auto; /* 스크롤 가능하게 설정 */
+}
+
+.custom-scroll::-webkit-scrollbar {
+  display: none; /* 웹킷 브라우저에서 스크롤바 숨기기 */
+}
+
+.custom-scroll {
+  -ms-overflow-style: none; /* IE 및 Edge에서 스크롤바 숨기기 */
+  scrollbar-width: none; /* Firefox에서 스크롤바 숨기기 */
+}

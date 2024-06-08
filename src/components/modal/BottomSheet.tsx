@@ -1,14 +1,12 @@
-import React, { useEffect, useState, forwardRef, Ref } from "react";
+import React, { useEffect, useState } from "react";
 
 interface modalProps {
-  // post, comment
   isShow?: boolean;
   setModalActive: (active: boolean) => void;
-  // onClick?: (e: React.MouseEvent<Element, MouseEvent>) => void;
   children?: React.ReactNode;
 }
 
-const BottomSheet = forwardRef((props: modalProps, ref: Ref<HTMLElement>) => {
+export default function BottomSheet(props: modalProps) {
   const { isShow, children, setModalActive } = props;
   const [isVisible, setIsVisible] = useState(false);
 
@@ -43,10 +41,9 @@ const BottomSheet = forwardRef((props: modalProps, ref: Ref<HTMLElement>) => {
       {isVisible && (
         <section
           className={`fixed top-0 left-0 z-50 w-full h-full bg-black bg-opacity-70 flex justify-center items-end`}
-          ref={ref}
           onClick={handleCloseModal}
         >
-          <div className="max-w-[50rem] w-full px-[0.8rem]">
+          <div className="max-w-[50rem] w-full">
             <div className={`w-full ${modalClassName}`}>
               {/* 모달 내용 */}
               {isShow && children}
@@ -56,6 +53,4 @@ const BottomSheet = forwardRef((props: modalProps, ref: Ref<HTMLElement>) => {
       )}
     </>
   );
-});
-
-export default BottomSheet;
+}
