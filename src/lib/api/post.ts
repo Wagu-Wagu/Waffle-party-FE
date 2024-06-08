@@ -1,17 +1,32 @@
-import { postDetail } from "../../types/postDetail";
 import { client } from "../axios";
 import { getAccessToken, setUserSession } from "../token";
+import { PostCreateDto, PostEditDto } from "./dto/post.dto";
 
-export const postCreate = async (param: postDetail, files: File[] | null) => {
+/**
+ * 게시글 생성
+ * @param param
+ * @returns
+ */
+export const postCreate = async (param: PostCreateDto) => {
   try {
     const formData = new FormData();
-    formData.append("ottTag", param.ottTag);
-    formData.append("title", param.title);
-    formData.append("content", param.content);
+    if (param.ottTag !== undefined) {
+      formData.append("ottTag", param.ottTag);
+    }
+    if (param.title !== undefined) {
+      formData.append("title", param.title);
+    }
+    if (param.content !== undefined) {
+      formData.append("content", param.content);
+    }
 
-    if (files && files.length > 0) {
-      for (let i = 0; i < files.length; i++) {
-        formData.append("postImages", files[i], files[i].name);
+    if (param.postImages && param.postImages.length > 0) {
+      for (let i = 0; i < param.postImages.length; i++) {
+        formData.append(
+          "postImages",
+          param.postImages[i],
+          param.postImages[i].name,
+        );
       }
     } else {
       // 빈 파일을 추가하여 빈 리스트로 처리
@@ -32,6 +47,22 @@ export const postCreate = async (param: postDetail, files: File[] | null) => {
     if (data.data) {
       setUserSession(data.data.accessToken);
     }
+    return data;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+/**
+ * 게시글 수정
+ * @param param
+ * @returns
+ */
+export const patchEdit = async (param: PostEditDto) => {
+  try {
+    // POST 요청 보내기
+    const { data } = await client.patch("/api/v1/post", param);
+    console.log(data);
     return data;
   } catch (e) {
     console.error(e);

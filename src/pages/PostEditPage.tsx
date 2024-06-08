@@ -4,29 +4,55 @@ import Header from "../components/Header/Header";
 import Close from "../assets/icons/CloseIcon.svg?react";
 import RightArrow from "../assets/icons/RightArrow.svg?react";
 import Image from "../assets/icons/Image.svg?react";
-import ImageSlider from "../components/ImageSlider";
-import { useSetRecoilState } from "recoil";
-import { postDetailState } from "../recoil/atoms";
 import ImagePreview from "../components/ImagePreview";
 import HeaderButton from "../components/Header/HeaderButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { patchEdit } from "../lib/api/post";
+import { useRecoilState } from "recoil";
+import { postDetailState } from "../recoil/postDetailState";
+import { ottTags } from "../types/ottTags";
+import { PostEditDto } from "../lib/api/dto/post.dto";
+import { postUrl } from "../lib/api/image";
 
 export default function PostCreatePage() {
   const [isShow, setIsShow] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
   const [text, setText] = useState<string>("");
-  const [imgSrc, setImgSrc] = useState<string[] | null>(null);
-  const [showFullImage, setShowFullImage] = useState<boolean>(false);
+  const [imgSrc, setImgSrc] = useState<string[] | undefined>([]);
+  const [s3Url, setS3Url] = useState<string[] | undefined>([]);
   const [scrollDown, setScrollDown] = useState(false);
   const [selectedOption, setSelectedOption] = useState<{
     key: string;
     value: string;
   } | null>(null);
+  const [optionIndex, setOptionIndex] = useState<number | undefined>(undefined);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isValid, setIsValid] = useState(false);
+  const [newFile, setNewFile] = useState<File[] | null>([]);
+  const [postDetail, setPostDetail] = useRecoilState(postDetailState);
 
-  const setPostDetail = useSetRecoilState(postDetailState);
+  const { postId } = useParams();
+  // const baseURL = import.meta.env.VITE_POST_BASE_URL;
+
+  const param = new PostEditDto();
+
+  /**
+   * 게시글 상세 recoil 에서 가져오기
+   */
+  useEffect(() => {
+    if (postDetail) {
+      const key = postDetail.postDetail.ottTag;
+      const value = ottTags[postDetail.postDetail.ottTag];
+      setSelectedOption({ key, value });
+      setTitle(postDetail.postDetail.title);
+      setText(postDetail.postDetail.content);
+      setImgSrc(postDetail.postDetail.photoes);
+      setS3Url(postDetail.postDetail.photoes);
+      const index = Object.keys(ottTags).indexOf(key);
+      setOptionIndex(index);
+    }
+  }, [postDetail, setPostDetail]);
 
   const nav = useNavigate();
 
@@ -40,6 +66,7 @@ export default function PostCreatePage() {
       setIsValid(false);
     }
   }, [selectedOption, setSelectedOption, title, setTitle, text, setText]);
+
   /**
    * OTT 선택
    * @param option
@@ -81,6 +108,9 @@ export default function PostCreatePage() {
     const files = inputEl.files;
     if (!files || files.length === 0) return;
     const file = files[0];
+    setNewFile((prevFiles) => (prevFiles ? [...prevFiles, file] : [file]));
+    console.log(newFile);
+
     const reader = new FileReader();
     reader.onload = (e) => {
       if (e.target?.result) {
@@ -104,16 +134,33 @@ export default function PostCreatePage() {
   /**
    * 등록 버튼
    */
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!selectedOption || !title || !text) return;
-    const currentData = {
-      ottTag: selectedOption.key,
-      title: title,
-      content: text,
-      postImages: imgSrc,
-    };
-    setPostDetail(currentData);
-    nav(-1);
+    if (postId) {
+      param.postId = postId;
+    }
+
+    try {
+      if (newFile) {
+        // s3 url 받아오기
+        const res = await postUrl(newFile);
+        if (s3Url) {
+          setS3Url([...s3Url, res]);
+        } else {
+          setS3Url([...res]);
+        }
+      }
+      param.ottTag = selectedOption.key;
+      param.title = title;
+      param.content = text;
+      param.postImages = s3Url;
+
+      // 수정예정
+      await patchEdit(param);
+      nav(-1);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -124,19 +171,18 @@ export default function PostCreatePage() {
             <Close />
           </HeaderButton>
         }
-        title={showFullImage ? "" : "글 수정"}
+        title={"글 수정"}
         rightChild={
           <HeaderButton
             onClick={handleRegister}
             className={`${isValid ? "text-white" : "text-gray10"}`}
           >
-            등록
+            수정
           </HeaderButton>
         }
         noBorder={false}
       />
-
-      <main className="px-[2rem] w-full h-screen-minus-46 mt-[4.6rem] ">
+      <main className="px-[2rem] w-full h-screen-minus-46 mt-[4.6rem]">
         <section
           className="flex py-[1.8rem] cursor-pointer"
           onClick={() => setIsShow((prev) => !prev)}
@@ -157,16 +203,29 @@ export default function PostCreatePage() {
             className="bg-gray14 outline-none font-semibold text-[2rem] font-pretendard leading-[2.8rem] text-gray8"
             placeholder="제목을 입력해주세요."
             onChange={(e) => setTitle(e.target.value)}
+            value={title}
           />
-
           {/* 사진이 들어갈 영역 */}
           {imgSrc && (
             <ImagePreview
               images={imgSrc}
-              onClick={() => setShowFullImage(true)}
+              isImageUploading={true}
+              onDelete={(index) => {
+                const updatedImages = imgSrc.filter((_, i) => i !== index);
+                setImgSrc(updatedImages);
+
+                if (s3Url) {
+                  const updatedS3Url = s3Url.filter((_, i) => i !== index);
+                  setImgSrc(updatedS3Url);
+                }
+
+                if (newFile) {
+                  const updatedFiles = newFile.filter((_, i) => i !== index);
+                  setNewFile(updatedFiles);
+                }
+              }}
             />
           )}
-
           {/* 본문 */}
           <textarea
             className="bg-gray14 outline-none font-pretendard text-[1.4rem] font-medium leading-[2.2rem] text-gray8 resize-none overflow-hidden"
@@ -193,27 +252,16 @@ export default function PostCreatePage() {
           <span className="text-additional3 text-[1.2rem] font-normal leading-[1.6rem]">
             사진
           </span>
-          {showFullImage && (
-            <div
-              className="fixed top-0 left-0 flex items-center justify-center w-full h-full bg-black bg-opacity-50"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowFullImage(false);
-              }}
-            >
-              <ImageSlider
-                images={imgSrc}
-                onClose={() => setShowFullImage(false)}
-              />
-            </div>
-          )}
-          {isShow && (
-            <ListModal
-              isShow={isShow}
-              onSelect={(option) => handleSelectOTT(option)}
-            />
-          )}
         </div>
+        {isShow && (
+          <ListModal
+            isShow={isShow}
+            optionIndex={optionIndex}
+            onSelect={(option) => handleSelectOTT(option)}
+            setModalActive={setIsShow}
+            setOptionIndex={setOptionIndex}
+          />
+        )}
       </div>
     </>
   );
