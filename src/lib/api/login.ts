@@ -18,7 +18,6 @@ export const getUserOnBoard = async () => {
   try {
     const { data } = await client.get("/api/v1/user/isOnboard");
     if (data.data) {
-      console.log(data);
       return data;
     }
     return data;

@@ -12,7 +12,6 @@ export default function ImageUploader(props: ImageUploaderProps) {
   const { images, isImageUploading, onDelete } = props;
   const [showFullImage, setShowFullImage] = useState<boolean>(false);
   const [currentImage, setCurrentImage] = useState<string | null>(null);
-  console.log(showFullImage);
 
   const handleImageClick = (src: string) => {
     setCurrentImage(src);

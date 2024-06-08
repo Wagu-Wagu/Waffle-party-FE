@@ -109,7 +109,6 @@ export default function PostCreatePage() {
     if (!files || files.length === 0) return;
     const file = files[0];
     setNewFile((prevFiles) => (prevFiles ? [...prevFiles, file] : [file]));
-    console.log(newFile);
 
     const reader = new FileReader();
     reader.onload = (e) => {

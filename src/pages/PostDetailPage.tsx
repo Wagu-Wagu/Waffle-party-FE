@@ -244,7 +244,6 @@ export default function PostDetailPage() {
    * @param modalData
    */
   const closeConfirm = (isDeleteAction: boolean, commentData: any) => {
-    console.log(isDeleteAction);
     if (isDeleteAction) {
       /**
        * 게시물 삭제
@@ -293,7 +292,6 @@ export default function PostDetailPage() {
   const onCommentEdit = () => {
     setModalActive(false);
     setIsFocused(true);
-    console.log(commentData);
     if (commentData.isSecret) {
       setIsLocked(true);
     } else {

@@ -7,7 +7,6 @@ import { ChildCommentDto, CommentDto, CommentEditDto } from "./dto/comment.dto";
  * @returns
  */
 export const postComment = async (param: CommentDto) => {
-  console.log(param);
   try {
     const { data } = await client.post("/api/v1/comment", param);
     return data;
