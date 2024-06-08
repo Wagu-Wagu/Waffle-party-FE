@@ -6,6 +6,7 @@ import { LoginDto } from "../lib/api/dto/login.dto";
 import { getUserOnBoard, postLogin } from "../lib/api/login";
 import { useSetRecoilState } from "recoil";
 import { userTokenState } from "../recoil/userState";
+import Loading from "../components/Login/Loading";
 
 export const KakaoCallback = () => {
   const nav = useNavigate();
@@ -49,7 +50,7 @@ export const KakaoCallback = () => {
         .catch((e) => console.error(e));
     };
     getToken();
-  }, [nav]);
+  }, []);
 
   const getUser = (params: LoginDto) => {
     postLogin(params)
@@ -74,5 +75,5 @@ export const KakaoCallback = () => {
       });
   };
 
-  return <div>로그인 처리 중...</div>;
+  return <Loading />;
 };
