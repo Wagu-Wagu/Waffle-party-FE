@@ -1,0 +1,32 @@
+import { client } from "../axios";
+import { ChildCommentDto, CommentDto, CommentEditDto } from "./dto/comment.dto";
+
+/**
+ * 댓글 등록
+ * @param param
+ * @returns
+ */
+export const postComment = async (param: CommentDto) => {
+  console.log(param);
+  try {
+    const { data } = await client.post("/api/v1/comment", param);
+    return data;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+/**
+ * 답댓글 등록
+ * @param param
+ * @returns
+ */
+export const postChildComment = async (param: ChildCommentDto) => {
+  try {
+    const { data } = await client.post("/api/v1/comment/reply", param);
+    return data;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
