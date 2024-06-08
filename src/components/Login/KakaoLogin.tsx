@@ -3,7 +3,7 @@ import KakaoIcon from "./../../assets/icons/KakaoIcon.svg";
 export default function KakaoLogin() {
   const KEY = import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY;
   const REDIRECT_URL = import.meta.env.VITE_REDIRECT_URL;
-  const url = `https://kauth.kakao.com/oauth/authorize?client_id=${KEY}&redirect_uri=${REDIRECT_URL}&response_type=code`;
+  const url = `https://kauth.kakao.com/oauth/authorize?client_id=${KEY}&redirect_uri=${REDIRECT_URL}&response_type=code&prompt=login`;
 
   return (
     <button
