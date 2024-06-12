@@ -5,7 +5,8 @@ import { useMemo } from "react";
 
 interface modalProps {
   isShow: boolean;
-  isLogout: boolean;
+  isLogout?: boolean;
+  isWithDrawal?: boolean;
   option?: string;
   onConfirm: (v: boolean) => void;
   children?: React.ReactNode;
@@ -13,7 +14,8 @@ interface modalProps {
 }
 
 export default function BasicModal(props: modalProps) {
-  const { isShow, isLogout, option, onConfirm, setModalActive } = props;
+  const { isShow, isLogout, isWithDrawal, option, onConfirm, setModalActive } =
+    props;
 
   /**
    * 게시글, 댓글, 답댓글 구분
@@ -33,17 +35,21 @@ export default function BasicModal(props: modalProps) {
   return (
     <BottomSheet isShow={isShow} setModalActive={setModalActive}>
       <BottomSheetHeader />
-      <div className="flex flex-col gap-[3rem] bg-gray14 px-[2rem] py-[2.3rem] text-white">
+      <div className="flex flex-col gap-[3rem] bg-gray14 px-[2.3rem] py-[2rem] text-white items-center self-center">
         {isLogout ? (
-          <p className="text-[2rem] h-[2.8rem] text-center font-pretendard font-normal leading-[1.6rem]">
+          <p className="text-[2rem] h-[2.8rem] text-center font-pretendard font-normal leading-[1.6rem] flex items-center">
             로그아웃 하시겠어요?
           </p>
+        ) : isWithDrawal ? (
+          <p className="text-[2rem] h-[2.8rem] text-center font-pretendard font-normal leading-[1.6rem] flex items-center">
+            정말 탈퇴하시겠어요?
+          </p>
         ) : (
-          <div className="flex flex-col gap-[1.2rem]">
-            <p className="text-[2rem] h-[2.8rem] text-center font-pretendard font-normal leading-[1.6rem]">
+          <div className="flex flex-col gap-[1.2rem] items-center">
+            <p className="text-[2rem] h-[2.8rem] font-pretendard font-normal leading-[1.6rem] flex items-center">
               {target}을 삭제하시겠어요?
             </p>
-            <p className="text-gray3 text-center font-pretendard text-[1.2rem] font-normal leading-[1.6rem]">
+            <p className="text-gray3 font-pretendard text-[1.2rem] font-normal leading-[1.6rem] flex items-center">
               삭제하시면 다시 되돌릴 수 없어요.
             </p>
           </div>
@@ -56,7 +62,7 @@ export default function BasicModal(props: modalProps) {
             variant="borderYellow"
             onClick={() => onConfirm(false)}
           >
-            {isLogout ? "예" : "취소하기"}
+            {isLogout || isWithDrawal ? "예" : "취소하기"}
           </Button>
           <Button
             type="button"
@@ -65,7 +71,7 @@ export default function BasicModal(props: modalProps) {
             variant="yellow"
             onClick={() => onConfirm(true)}
           >
-            {isLogout ? "아니오" : "삭제하기"}
+            {isLogout || isWithDrawal ? "아니오" : "삭제하기"}
           </Button>
         </div>
       </div>

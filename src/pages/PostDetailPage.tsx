@@ -501,7 +501,6 @@ export default function PostDetailPage() {
       {basicModalActive && (
         <BasicModal
           isShow={basicModalActive}
-          isLogout={false}
           option={option.type}
           onConfirm={(isConfirm) => closeConfirm(isConfirm, commentData)}
           setModalActive={setBasicModalActive}

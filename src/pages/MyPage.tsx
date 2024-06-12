@@ -25,11 +25,13 @@ export default function MyPage() {
   const [imageSrc, setImageSrc] = useState(""); //받아온 이미지
   const [newImage, setNewImage] = useState<string>(""); //새로 바꾼 이미지
   const [newFile, setNewFile] = useState<File | null>(null); //새로 바꾼 파일
-  // 모달 state
+  // action sheet state
   const [option, setOption] = useState<optionState>({
     type: "profile",
     isUserImage: false,
   });
+  // basic modal state
+  const [modalType, setModalType] = useState<string>("");
   const imageUploaderRef = useRef<HTMLInputElement>(null);
 
   /**
@@ -215,13 +217,19 @@ export default function MyPage() {
           <section className="mt-[4.3rem] w-full justify-center flex gap-[3rem] text-gray8 text-[1.2rem] text-center font-Pretendard font-normal leading-4 underline">
             <button
               className="underline text-gray8"
-              onClick={() => setIsShow((prev) => !prev)}
+              onClick={() => {
+                setIsShow(true);
+                setModalType("회원탈퇴");
+              }}
             >
               회원탈퇴
             </button>
             <button
               className="underline text-gray8"
-              onClick={() => setIsShow((prev) => !prev)}
+              onClick={() => {
+                setIsShow(true);
+                setModalType("로그아웃");
+              }}
             >
               로그아웃
             </button>
@@ -233,7 +241,8 @@ export default function MyPage() {
       {isShow && (
         <BasicModal
           isShow={isShow}
-          isLogout={true}
+          isLogout={modalType === "로그아웃"}
+          isWithDrawal={modalType === "회원탈퇴"}
           onConfirm={handleClickLogout}
           setModalActive={setIsShow}
         />
