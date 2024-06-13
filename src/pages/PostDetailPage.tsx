@@ -60,6 +60,17 @@ export default function PostDetailPage() {
   let params;
 
   /**
+   * 이미지 URL에서 큰따옴표 없앰
+   * @param photoArray
+   * @returns
+   */
+  const setImageSrc = (photoArray: string[]) => {
+    return photoArray.map((photo: string) => {
+      return photo.replace(/"/g, "");
+    });
+  };
+
+  /**
    * 초기 댓글창 높이 계산
    */
   useEffect(() => {
@@ -80,9 +91,7 @@ export default function PostDetailPage() {
         ...postDetailData,
         postDetail: {
           ...postDetailData.postDetail,
-          photoes: postDetailData.postDetail.photoes.map((photo) => {
-            return `${baseURL}${photo.replace(/"/g, "")}`;
-          }),
+          photoes: setImageSrc(postDetailData.postDetail.photoes),
         },
       };
       setPostDetail(updatedPostDetail);
@@ -411,7 +420,11 @@ export default function PostDetailPage() {
                 </div>
                 {postDetail.postDetail.photoes && (
                   <>
-                    <ImagePreview images={postDetail.postDetail.photoes} />
+                    <ImagePreview
+                      images={postDetail.postDetail.photoes.map(
+                        (photo) => `${baseURL}${photo}`,
+                      )}
+                    />
                   </>
                 )}
                 <div className="w-full text-gray1 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem]">
