@@ -124,6 +124,10 @@ export default function PostCreatePage() {
   const handleImageChange = () => {
     const inputEl = inputRef.current;
     if (!inputEl) return;
+    if (imgSrc?.length === 2) {
+      window.alert("파일은 2장까지만 업로드 가능합니다.");
+      return;
+    }
     const files = inputEl.files;
     if (!files || files.length === 0) return;
     const file = files[0];
