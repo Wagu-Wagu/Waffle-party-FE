@@ -425,6 +425,11 @@ export default function PostDetailPage() {
                         (photo) => `${baseURL}${photo}`,
                       )}
                     />
+                      <EmptyList
+                        icon={<Chat />}
+                        mainText="아직 댓글이 없어요."
+                        subText={<p>가장 먼저 댓글을 남겨보세요.</p>}
+                      />
                   </>
                 )}
                 <div className="w-full text-gray1 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem]">

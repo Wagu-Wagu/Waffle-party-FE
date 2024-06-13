@@ -3,7 +3,7 @@ import React from "react";
 interface EmptyListProps {
   icon: React.ReactNode;
   mainText: string;
-  subText: React.ReactNode;
+  subText?: React.ReactNode;
 }
 
 export default function EmptyList({ icon, mainText, subText }: EmptyListProps) {

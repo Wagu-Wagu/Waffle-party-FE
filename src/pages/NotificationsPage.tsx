@@ -41,6 +41,13 @@ export default function NotificationsPage() {
               icon={<AlertCircleError />}
               mainText="아직 내 소식이 없어요."
               subText={`하단의 글 작성을 통해\n파티원들과 소통을 시작해보세요!`}
+              subText={
+                <>
+                  <p>하단의 글 작성을 통해</p>
+                  <p>파티원들과 소통을 시작해보세요!</p>
+                </>
+              }
+              // subText={`하단의 글 작성을 통해\n파티원들과 소통을 시작해보세요!`}
             />
           </div>
         )}
