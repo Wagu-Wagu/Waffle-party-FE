@@ -6,7 +6,7 @@ export class PostCreateDto {
 }
 
 export class PostEditDto {
-  postId: string | undefined = undefined;
+  postId: number | undefined = undefined;
   ottTag: string | undefined = undefined;
   title: string | undefined = undefined;
   content: string | undefined = undefined;

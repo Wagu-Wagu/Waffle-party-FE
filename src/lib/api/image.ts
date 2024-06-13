@@ -1,6 +1,11 @@
 import { getAccessToken } from "../token";
 import { client } from "../axios";
 
+/**
+ * s3 url 받아오기 api
+ * @param file
+ * @returns
+ */
 export const postUrl = async (file: File[]) => {
   const formData = new FormData();
   try {
@@ -19,7 +24,7 @@ export const postUrl = async (file: File[]) => {
     // POST 요청 보내기
     const { data } = await client.post("/api/v1/post/images", formData, config);
 
-    return data;
+    return data.data;
   } catch (e) {
     console.error(e);
   }

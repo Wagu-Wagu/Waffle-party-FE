@@ -33,9 +33,27 @@ export default function PostCreatePage() {
   const [postDetail, setPostDetail] = useRecoilState(postDetailState);
 
   const { postId } = useParams();
-  // const baseURL = import.meta.env.VITE_POST_BASE_URL;
+  const baseURL = import.meta.env.VITE_POST_BASE_URL;
 
   const param = new PostEditDto();
+
+  /**
+   * 이미지 baseURL을 제거한 string 얻기
+   * @param photoArray
+   * @returns
+   */
+  const deleteBaseUrl = (photoArray: string[]) => {
+    return photoArray.map((photo: string) => photo.replace(baseURL, ""));
+  };
+
+  /**
+   * 이미지 baseURL을 붙인 string 받기
+   * @param photoArray
+   * @returns
+   */
+  const setBaseUrl = (photoArray: string[]) => {
+    return photoArray.map((photo: string) => `${baseURL}${photo}`);
+  };
 
   /**
    * 게시글 상세 recoil 에서 가져오기
@@ -47,7 +65,8 @@ export default function PostCreatePage() {
       setSelectedOption({ key, value });
       setTitle(postDetail.postDetail.title);
       setText(postDetail.postDetail.content);
-      setImgSrc(postDetail.postDetail.photoes);
+      // baseURL을 붙인 이미지url
+      setImgSrc(setBaseUrl(postDetail.postDetail.photoes));
       setS3Url(postDetail.postDetail.photoes);
       const index = Object.keys(ottTags).indexOf(key);
       setOptionIndex(index);
@@ -136,23 +155,33 @@ export default function PostCreatePage() {
   const handleRegister = async () => {
     if (!selectedOption || !title || !text) return;
     if (postId) {
-      param.postId = postId;
+      param.postId = +postId;
     }
 
     try {
-      if (newFile) {
-        // s3 url 받아오기
-        const res = await postUrl(newFile);
-        if (s3Url) {
-          setS3Url([...s3Url, res]);
-        } else {
-          setS3Url([...res]);
-        }
-      }
       param.ottTag = selectedOption.key;
       param.title = title;
       param.content = text;
-      param.postImages = s3Url;
+      // 새로 등록한 파일이 있을때만 이미지 URL api연동
+      if (newFile && newFile.length > 0) {
+        // s3 url 받아오기
+        const res = await postUrl(newFile);
+        const newPhotoesWithBaseUrl = deleteBaseUrl(res.photoes).map(
+          (photo) => {
+            return photo.replace(/"/g, "");
+          },
+        );
+
+        // 기존에 있던 사진을 삭제하지 않고 파일 하나를 추가했을 경우와 그 외의 경우
+        const newS3Urls = s3Url
+          ? [...s3Url, ...newPhotoesWithBaseUrl]
+          : [...newPhotoesWithBaseUrl];
+        // 상태 업데이트
+        setS3Url(newS3Urls);
+        param.postImages = newS3Urls;
+      } else {
+        param.postImages = s3Url;
+      }
 
       // 수정예정
       await patchEdit(param);
@@ -215,7 +244,7 @@ export default function PostCreatePage() {
 
                 if (s3Url) {
                   const updatedS3Url = s3Url.filter((_, i) => i !== index);
-                  setImgSrc(updatedS3Url);
+                  setS3Url(updatedS3Url);
                 }
 
                 if (newFile) {
