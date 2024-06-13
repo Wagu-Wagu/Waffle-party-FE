@@ -14,42 +14,48 @@ import MyPostsPage from "./pages/MyPostsPage";
 import NicknamePage from "./pages/NicknamePage";
 import { KakaoCallback } from "./pages/KakaoCallback";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import PublicRoute from "./pages/PublicRoute";
+import PrivateRoute from "./pages/PrivateRoute";
 
 export default function Router() {
   return (
     <BrowserRouter>
       <RecoilRoot>
         <Routes>
-          {/* 로그인/회원가입 */}
-          <Route path="/login" element={<LoginPage />} />
-          {/* 서비스 이용 약관 페이지 */}
-          <Route path="/terms" element={<TermsPage />} />
-          {/* 개인 정보 처리 방침 페이지 */}
-          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-          {/* 닉네임 설정 페이지 */}
-          <Route path="/nickname" element={<NicknamePage />} />
-          {/* 카카오 로그인 콜백 */}
-          <Route path="/login/kakao/callback" element={<KakaoCallback />} />
-
-          {/* 홈 */}
           <Route path="/" element={<HomePage />} />
-          {/* 게시글 작성 */}
-          <Route path="/post-create" element={<PostCreatePage />} />
-          {/* 게시글 상세 */}
-          <Route path="/post-detail/:postId" element={<PostDetailPage />} />
-          {/* 게시글 수정 */}
-          <Route path="/post-edit/:postId" element={<PostEditPage />} />
-          {/* 내 소식 */}
-          <Route path="/notifications" element={<NotificationsPage />} />
-          {/* 마이페이지 */}
-          <Route path="/mypage" element={<MyPage />} />
-          {/* 프로필 수정 */}
-          <Route path="/profile/edit" element={<ProfileEditPage />} />
-          {/* 내가 작성한 글 페이지 */}
-          <Route path="/mypage/post/:userId" element={<MyPostsPage />} />
-          {/* 내가 작성한 댓글 페이지 */}
-          <Route path="/mypage/comment/:userId" element={<MyCommentsPage />} />
-
+          <Route element={<PublicRoute />}>
+            {/* 로그인/회원가입 */}
+            <Route path="/login" element={<LoginPage />} />
+            {/* 카카오 로그인 콜백 */}
+            <Route path="/login/kakao/callback" element={<KakaoCallback />} />
+            {/* 닉네임 설정 페이지 */}
+            <Route path="/nickname" element={<NicknamePage />} />
+          </Route>
+          <Route element={<PrivateRoute />}>
+            {/* 서비스 이용 약관 페이지 */}
+            <Route path="/terms" element={<TermsPage />} />
+            {/* 개인 정보 처리 방침 페이지 */}
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+            {/* 게시글 작성 */}
+            <Route path="/post-create" element={<PostCreatePage />} />
+            {/* 게시글 상세 */}
+            <Route path="/post-detail/:postId" element={<PostDetailPage />} />
+            {/* 게시글 수정 */}
+            <Route path="/post-edit/:postId" element={<PostEditPage />} />
+            {/* 내 소식 */}
+            <Route path="/notifications" element={<NotificationsPage />} />
+            {/* 마이페이지 */}
+            <Route path="/mypage" element={<MyPage />} />
+            {/* 프로필 수정 */}
+            <Route path="/profile/edit" element={<ProfileEditPage />} />
+            {/* 내가 작성한 글 페이지 */}
+            <Route path="/mypage/post/:userId" element={<MyPostsPage />} />
+            {/* 내가 작성한 댓글 페이지 */}
+            <Route
+              path="/mypage/comment/:userId"
+              element={<MyCommentsPage />}
+            />
+          </Route>
           {/* 그 외 경로는 홈으로 리디렉트 */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
