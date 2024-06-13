@@ -28,6 +28,7 @@ import { userProfileState } from "../recoil/userProfile";
 import { editComment, postChildComment, postComment } from "../lib/api/comment";
 import { ottTags } from "../types/ottTags";
 import useGetMyProfile from "../hooks/useGetMyProfile";
+import DeletePostMessage from "../components/DeletePostMessage";
 
 export default function PostDetailPage() {
   const [isFocused, setIsFocused] = useState(false);
@@ -391,161 +392,164 @@ export default function PostDetailPage() {
         }
         noBorder={true}
       />
-      <main className="w-full main-header pb-[8.4rem] bg-neutral-80">
-        <section className="w-full">
-          <section className="px-[2rem] flex-col items-center justify-start w-full gap-[2.4rem] border-b-8 border-neutral-900">
-            <div className="py-[1.6rem]">
-              <Chip
-                ott={ottTags[postDetail.postDetail.ottTag]}
-                isButton={false}
-                isCheck={false}
-              />
-            </div>
-            <div className="w-full flex flex-col items-start justify-start gap-[1.6rem] mb-[2.4rem]">
-              <div className="w-full justify-start items-end gap-2.5 inline-flex">
-                <UserCard
-                  data={postDetail.postDetail}
-                  onClick={() => {
-                    setOption({
-                      type: "post",
-                      isOwner: postDetail.postDetail.isMyPost,
-                    });
-                    setModalActive((prev) => !prev);
-                  }}
-                />
-              </div>
-              <div className="w-full flex-col justify-start items-start gap-[1rem] flex">
-                <div className="w-full h-[2.8rem] text-white text-[2rem] font-bold font-['Pretendard'] leading-[2.8rem]">
-                  {postDetail.postDetail.title}
+      {postDetail ? (
+        <>
+          <main className="w-full main-header pb-[8.4rem] bg-neutral-80">
+            <section className="w-full">
+              <section className="px-[2rem] flex-col items-center justify-start w-full gap-[2.4rem] border-b-8 border-neutral-900">
+                <div className="py-[1.6rem]">
+                  <Chip
+                    ott={ottTags[postDetail.postDetail.ottTag]}
+                    isButton={false}
+                    isCheck={false}
+                  />
                 </div>
-                {postDetail.postDetail.photoes && (
-                  <>
-                    <ImagePreview
-                      images={postDetail.postDetail.photoes.map(
-                        (photo) => `${baseURL}${photo}`,
-                      )}
+                <div className="w-full flex flex-col items-start justify-start gap-[1.6rem] mb-[2.4rem]">
+                  <div className="w-full justify-start items-end gap-2.5 inline-flex">
+                    <UserCard
+                      data={postDetail.postDetail}
+                      onClick={() => {
+                        setOption({
+                          type: "post",
+                          isOwner: postDetail.postDetail.isMyPost,
+                        });
+                        setModalActive((prev) => !prev);
+                      }}
                     />
+                  </div>
+                  <div className="w-full flex-col justify-start items-start gap-[1rem] flex">
+                    <div className="w-full h-[2.8rem] text-white text-[2rem] font-bold font-['Pretendard'] leading-[2.8rem]">
+                      {postDetail.postDetail.title}
+                    </div>
+                    {postDetail.postDetail.photoes && (
+                      <>
+                        <ImagePreview
+                          images={postDetail.postDetail.photoes.map(
+                            (photo) => `${baseURL}${photo}`,
+                          )}
+                        />
+                      </>
+                    )}
+                    <div className="w-full text-gray1 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem]">
+                      {postDetail.postDetail.content}
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full h-0.5 relative" />
+              </section>
+              <section className="inline-flex flex-col items-center justify-start w-full px-[2rem] pt-[2.4rem]">
+                {postDetail.comments.length > 0 ? (
+                  <>
+                    <div className="pb-[2rem] inline-flex items-start justify-start w-full gap-5 lex-col">
+                      <div className="text-white text-[1.2rem] font-medium font-['Pretendard'] leading-[1.6rem]">
+                        댓글 {postDetail.comments.length}
+                      </div>
+                    </div>
+                    <div className="flex flex-col w-full gap-[1.2rem] pb-[0.5rem]">
+                      {comments.map((comment, index) => (
+                        <React.Fragment key={index}>
+                          {comment.isParentComment ? (
+                            // 댓글
+                            <>
+                              <UserCard
+                                data={comment}
+                                onClick={() => {
+                                  setCommentData(comment);
+                                  setIsParent(false);
+                                  setOption({
+                                    type: "comment",
+                                    isOwner: comment.isMyComment,
+                                  });
+                                  setModalActive((prev) => !prev);
+                                }}
+                              />
+                            </>
+                          ) : (
+                            // 답댓글
+                            <div className="pl-[4.8rem]">
+                              <UserCard
+                                data={comment}
+                                onClick={() => {
+                                  setCommentData(comment);
+                                  setIsParent(false);
+                                  setOption({
+                                    type: "reply",
+                                    isOwner: comment.isMyComment,
+                                  });
+                                  setModalActive((prev) => !prev);
+                                }}
+                              />
+                            </div>
+                          )}
+                          <div className="h-[0.1rem] bg-gray13"></div>
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="pb-[4.25rem] h-full inline-flex items-start justify-start w-full gap-5 flex-col">
+                      <div className="text-white text-[1.2rem] font-medium font-['Pretendard'] leading-[1.6rem]">
+                        댓글 0
+                      </div>
+                    </div>
+                    <div className="flex flex-col w-full">
                       <EmptyList
                         icon={<Chat />}
                         mainText="아직 댓글이 없어요."
                         subText={<p>가장 먼저 댓글을 남겨보세요.</p>}
                       />
+                    </div>
                   </>
                 )}
-                <div className="w-full text-gray1 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem]">
-                  {postDetail.postDetail.content}
-                </div>
+              </section>
+            </section>
+          </main>
+          <section
+            ref={sectionRef}
+            style={{ height: sectionHeight }}
+            className="fixed max-w-[50rem] min-w-[36rem] bottom-0 flex gap-[1.5rem] w-full px-[2rem] py-[1.1rem] border-t-2 bg-gray14 border-gray13 "
+          >
+            <div
+              className={`w-[2.4rem] h-[2.4rem] ${isHeightIncreased ? "flex self-end" : ""}`}
+              onClick={() => setIsLocked((prev) => !prev)}
+            >
+              {isLocked ? <Lock /> : <UnLock />}
+            </div>
+
+            <div
+              className={`w-full text-gray10 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem] flex gap-[1.5rem]`}
+            >
+              <div className="flex w-full ">
+                <textarea
+                  className={` w-full placeholder-pt-[1.2rem] resize-none bg-transparent outline-none ${setPlaceHolderClass()} ${setTextClass()}`}
+                  placeholder={isFocused ? "" : "댓글을 남겨주세요."}
+                  onFocus={() => setIsFocused(true)}
+                  value={inputValue}
+                  onChange={handleChangeContent}
+                  onKeyDown={(e) => handleKeyPress(e, commentData)}
+                  ref={inputRef}
+                />
               </div>
             </div>
-            <div className="w-full h-0.5 relative" />
+            <div className={`${isHeightIncreased ? "flex self-end" : ""}`}>
+              <Button
+                type="button"
+                disabled={uptoSubmit ? false : true}
+                size="xxs"
+                variant="yellow"
+                onClick={() => handleAddComment(commentData)}
+              >
+                등록
+              </Button>
+            </div>
           </section>
-          <section className="inline-flex flex-col items-center justify-start w-full px-[2rem] pt-[2.4rem]">
-            {postDetail.comments.length > 0 ? (
-              <>
-                <div className="pb-[2rem] inline-flex items-start justify-start w-full gap-5 lex-col">
-                  <div className="text-white text-[1.2rem] font-medium font-['Pretendard'] leading-[1.6rem]">
-                    댓글 {postDetail.comments.length}
-                  </div>
-                </div>
-                <div className="flex flex-col w-full gap-[1.2rem] pb-[0.5rem]">
-                  {comments.map((comment, index) => (
-                    <React.Fragment key={index}>
-                      {comment.isParentComment ? (
-                        // 댓글
-                        <>
-                          <UserCard
-                            data={comment}
-                            onClick={() => {
-                              setCommentData(comment);
-                              setIsParent(false);
-                              setOption({
-                                type: "comment",
-                                isOwner: comment.isMyComment,
-                              });
-                              setModalActive((prev) => !prev);
-                            }}
-                          />
-                        </>
-                      ) : (
-                        // 답댓글
-                        <div className="pl-[4.8rem]">
-                          <UserCard
-                            data={comment}
-                            onClick={() => {
-                              setCommentData(comment);
-                              setIsParent(false);
-                              setOption({
-                                type: "reply",
-                                isOwner: comment.isMyComment,
-                              });
-                              setModalActive((prev) => !prev);
-                            }}
-                          />
-                        </div>
-                      )}
-                      <div className="h-[0.1rem] bg-gray13"></div>
-                    </React.Fragment>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="pb-[4.25rem] h-full inline-flex items-start justify-start w-full gap-5 flex-col">
-                  <div className="text-white text-[1.2rem] font-medium font-['Pretendard'] leading-[1.6rem]">
-                    댓글 0
-                  </div>
-                </div>
-                <div className="flex flex-col w-full">
-                  <EmptyList
-                    icon={<Chat />}
-                    mainText="아직 댓글이 없어요."
-                    subText="가장 먼저 댓글을 남겨보세요."
-                  />
-                </div>
-              </>
-            )}
-          </section>
-        </section>
-      </main>
-      <section
-        ref={sectionRef}
-        style={{ height: sectionHeight }}
-        className="fixed max-w-[50rem] min-w-[36rem] bottom-0 flex gap-[1.5rem] w-full px-[2rem] py-[1.1rem] border-t-2 bg-gray14 border-gray13 "
-      >
-        <div
-          className={`w-[2.4rem] h-[2.4rem] ${isHeightIncreased ? "flex self-end" : ""}`}
-          onClick={() => setIsLocked((prev) => !prev)}
-        >
-          {isLocked ? <Lock /> : <UnLock />}
-        </div>
+        </>
+      ) : (
+        // 삭제된 게시글일때
+        <DeletePostMessage onClick={() => nav(-1)} />
+      )}
 
-        <div
-          className={`w-full text-gray10 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem] flex gap-[1.5rem]`}
-        >
-          <div className="flex w-full ">
-            <textarea
-              className={` w-full placeholder-pt-[1.2rem] resize-none bg-transparent outline-none ${setPlaceHolderClass()} ${setTextClass()}`}
-              placeholder={isFocused ? "" : "댓글을 남겨주세요."}
-              onFocus={() => setIsFocused(true)}
-              value={inputValue}
-              onChange={handleChangeContent}
-              onKeyDown={(e) => handleKeyPress(e, commentData)}
-              ref={inputRef}
-            />
-          </div>
-        </div>
-        <div className={`${isHeightIncreased ? "flex self-end" : ""}`}>
-          <Button
-            type="button"
-            disabled={uptoSubmit ? false : true}
-            size="xxs"
-            variant="yellow"
-            onClick={() => handleAddComment(commentData)}
-          >
-            등록
-          </Button>
-        </div>
-      </section>
       {modalActive && (
         <ActionSheet
           option={option}

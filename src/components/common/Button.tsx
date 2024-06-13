@@ -51,7 +51,7 @@ export default function Button(props: ButtonProps) {
   } = props;
 
   const classes = classNames(
-    "box-border p-[1.6rem] rounded-[0.8rem] flex justify-center items-center font-sans text-[1.6rem] font-semibold",
+    "box-border p-[1.6rem] rounded-[0.8rem] flex justify-center items-center font-sans text-[1.6rem] font-semibold leading-[2rem]",
     {
       [buttonVariants[variant].default]: !disabled,
       [buttonVariants[variant].disabled]: disabled,
