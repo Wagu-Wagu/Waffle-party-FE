@@ -21,7 +21,7 @@ export default function UserCard(props: userCardProps) {
   const formattedDate = useFormattedDate(new Date(data.createdAt));
 
   return (
-    <section className="flex w-full flex-col gap-[1rem]">
+    <section className="flex w-full flex-col gap-[0.4rem]">
       {!data.isVisible && !data.postId ? (
         <>
           <p className="text-[1.2rem] font-normal leading-[1.6rem] text-gray9">
@@ -62,7 +62,7 @@ export default function UserCard(props: userCardProps) {
       {data.commentId && (
         <div className="flex gap-[1rem] text-gray3">
           <section
-            className={`w-full gap-[0.5rem] flex ${data.isParentComment && "pl-[4.8rem]"} font-normal leading-[2.2rem] text-[1.4rem] break-words`}
+            className={`w-full gap-[0.5rem] flex ${data.isParentComment && data.isVisible && "pl-[4.8rem]"} font-normal leading-[2.2rem] text-[1.4rem] break-words`}
           >
             {data.isSecret ? (
               data.isVisible ? (
