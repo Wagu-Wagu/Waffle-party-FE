@@ -47,6 +47,10 @@ export default function PostDetailPage() {
   const [isParent, setIsParent] = useState(true);
   const [commentData, setCommentData] = useState<any>(); //더보기에서 선택한 댓글 or 답댓글 정보 저장
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const sectionRef = useRef<HTMLTextAreaElement>(null);
+  const [sectionHeight, setSectionHeight] = useState<string>("auto"); //댓글창 높이
+  const [previousSection, setPreviousSection] = useState<number>(0); //초기 하단 댓글영역 높이
+  const [isHeightIncreased, setIsHeightIncreased] = useState<boolean>(false); //댓글이 작성되었을때 초기 댓글창 높이를 넘어가는지 검사
 
   const { postId } = useParams();
 
@@ -54,6 +58,16 @@ export default function PostDetailPage() {
 
   const nav = useNavigate();
   let params;
+
+  /**
+   * 초기 댓글창 높이 계산
+   */
+  useEffect(() => {
+    if (sectionRef.current) {
+      const initialSection = sectionRef.current.offsetHeight;
+      setPreviousSection(initialSection);
+    }
+  }, []);
 
   /**
    * 게시글 상세 조회 api
@@ -106,6 +120,26 @@ export default function PostDetailPage() {
   }, [isFocused]);
 
   /**
+   * 댓글이 입력될때마다 댓글창 높이 계산
+   */
+  const adjustTextareaHeight = () => {
+    if (inputRef.current) {
+      inputRef.current.style.height = "auto";
+      const newHeight = inputRef.current.scrollHeight;
+
+      // 댓글이 댓글창을 넘어가면
+      if (newHeight >= previousSection) {
+        setIsHeightIncreased(true);
+        inputRef.current.style.height = `${newHeight}px`;
+        setSectionHeight(`${newHeight + 22}px`); // 22px 패딩값(py-11px)
+      } else {
+        setIsHeightIncreased(false);
+        setSectionHeight(`${previousSection}px`);
+      }
+    }
+  };
+
+  /**
    * 댓글 입력
    * @param event
    */
@@ -116,9 +150,12 @@ export default function PostDetailPage() {
     const value = textarea.value;
     setIsFocused(true);
 
+    // textarea 현재 줄 높이 가져오기
     const lineHeight = parseFloat(window.getComputedStyle(textarea).lineHeight);
+    // 최대 줄 수 설정
     const maxRows = 4;
 
+    // 현재 줄 수 계산(textarea 전체 높이/textarea 현재 줄 높이)
     const rows = Math.floor(textarea.scrollHeight / lineHeight);
     if (rows > maxRows) {
       event.preventDefault();
@@ -127,6 +164,8 @@ export default function PostDetailPage() {
     } else {
       setInputValue(value);
     }
+    // input이 바뀌면 댓글창 높이 재설정
+    adjustTextareaHeight();
   };
 
   /**
@@ -450,9 +489,13 @@ export default function PostDetailPage() {
           </section>
         </section>
       </main>
-      <section className="fixed max-w-[50rem] min-w-[36rem] bottom-0 flex gap-[1.5rem] w-full px-[2rem] py-[1.1rem] border-t-2 bg-gray14 border-gray13 ">
+      <section
+        ref={sectionRef}
+        style={{ height: sectionHeight }}
+        className="fixed max-w-[50rem] min-w-[36rem] bottom-0 flex gap-[1.5rem] w-full px-[2rem] py-[1.1rem] border-t-2 bg-gray14 border-gray13 "
+      >
         <div
-          className="w-[2.4rem] h-[2.4rem]"
+          className={`w-[2.4rem] h-[2.4rem] ${isHeightIncreased ? "flex self-end" : ""}`}
           onClick={() => setIsLocked((prev) => !prev)}
         >
           {isLocked ? <Lock /> : <UnLock />}
@@ -461,7 +504,7 @@ export default function PostDetailPage() {
         <div
           className={`w-full text-gray10 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem] flex gap-[1.5rem]`}
         >
-          <div className="flex items-center w-full ">
+          <div className="flex w-full ">
             <textarea
               className={` w-full placeholder-pt-[1.2rem] resize-none bg-transparent outline-none ${setPlaceHolderClass()} ${setTextClass()}`}
               placeholder={isFocused ? "" : "댓글을 남겨주세요."}
@@ -473,15 +516,17 @@ export default function PostDetailPage() {
             />
           </div>
         </div>
-        <Button
-          type="button"
-          disabled={uptoSubmit ? false : true}
-          size="xxs"
-          variant="yellow"
-          onClick={() => handleAddComment(commentData)}
-        >
-          등록
-        </Button>
+        <div className={`${isHeightIncreased ? "flex self-end" : ""}`}>
+          <Button
+            type="button"
+            disabled={uptoSubmit ? false : true}
+            size="xxs"
+            variant="yellow"
+            onClick={() => handleAddComment(commentData)}
+          >
+            등록
+          </Button>
+        </div>
       </section>
       {modalActive && (
         <ActionSheet
