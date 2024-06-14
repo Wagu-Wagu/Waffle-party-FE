@@ -42,3 +42,17 @@ export const editComment = async (param: CommentEditDto) => {
     console.error(e);
   }
 };
+
+/**
+ * 댓글, 답댓글 삭제
+ * @param commentId
+ * @returns
+ */
+export const deleteComment = async (commentId: number) => {
+  try {
+    const { data } = await client.patch(`/api/v1/comment/${commentId}`);
+    return data;
+  } catch (e) {
+    console.error(e);
+  }
+};

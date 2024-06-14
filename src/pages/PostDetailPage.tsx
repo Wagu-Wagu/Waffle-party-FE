@@ -25,7 +25,12 @@ import {
   CommentEditDto,
 } from "../lib/api/dto/comment.dto";
 import { userProfileState } from "../recoil/userProfile";
-import { editComment, postChildComment, postComment } from "../lib/api/comment";
+import {
+  deleteComment,
+  editComment,
+  postChildComment,
+  postComment,
+} from "../lib/api/comment";
 import { ottTags } from "../types/ottTags";
 import useGetMyProfile from "../hooks/useGetMyProfile";
 import DeletePostMessage from "../components/DeletePostMessage";
@@ -292,7 +297,7 @@ export default function PostDetailPage() {
    * @param isDeleteAction
    * @param modalData
    */
-  const closeConfirm = (isDeleteAction: boolean, commentData: any) => {
+  const closeConfirm = async (isDeleteAction: boolean, commentData: any) => {
     if (isDeleteAction) {
       /**
        * 게시물 삭제
@@ -306,11 +311,28 @@ export default function PostDetailPage() {
         /**
          * 댓글, 답댓글 삭제
          */
-        const updatedComments = comments.filter(
-          (comment) => comment.commentId !== commentData.commentId,
+        await deleteComment(commentData.commentId);
+
+        const parentIndex = comments.findIndex(
+          (commentEl) => commentEl.commentId === commentData.commentId,
         );
 
-        setComments(updatedComments);
+        // 댓글에 답댓글이 있을 경우
+        if (!comments[parentIndex + 1].isParentComment) {
+          const updatedComments = comments.map((comment) =>
+            comment.commentId === commentData.commentId
+              ? { ...comment, isActive: false }
+              : comment,
+          );
+          setComments(updatedComments);
+        } else {
+          // 댓글에 답댓글이 없거나, 답댓글일 경우
+          const updatedComments = comments.filter(
+            (comment) => comment.commentId !== commentData.commentId,
+          );
+
+          setComments(updatedComments);
+        }
       }
     }
     setBasicModalActive(false);
