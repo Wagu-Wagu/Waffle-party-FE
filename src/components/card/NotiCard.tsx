@@ -19,7 +19,7 @@ export default function NotiCard(props: any) {
     return "text-red5 border-red5";
   };
 
-  const formattedDate = useFormattedDate(new Date());
+  const formattedDate = useFormattedDate(new Date(data.modifiedAt));
 
   return (
     <main

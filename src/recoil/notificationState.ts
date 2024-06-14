@@ -17,6 +17,7 @@ export const notificationState = atom<notificationType[]>({
           isRead: false,
           newAlertCount: 0,
           postId: 0,
+          modifiedAt: "",
         },
       ],
     },

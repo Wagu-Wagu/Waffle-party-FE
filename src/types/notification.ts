@@ -9,6 +9,7 @@ export interface notificationType {
       isRead: false; //소식을 읽었는지 여부
       newAlertCount: number; //댓글, 답댓글 개수
       postId: number;
+      modifiedAt: string;
     },
   ];
 }
