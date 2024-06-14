@@ -1,64 +1,54 @@
+import { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { RecoilRoot } from "recoil";
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import PostCreatePage from "./pages/PostCreatePage";
-import PostDetailPage from "./pages/PostDetailPage";
-import PostEditPage from "./pages/PostEditPage";
-import NotificationsPage from "./pages/NotificationsPage";
-import MyPage from "./pages/MyPage";
-import ProfileEditPage from "./pages/ProfileEditPage";
-import TermsPage from "./pages/TermsPage";
-import MyCommentsPage from "./pages/MyCommentsPage";
-import MyPostsPage from "./pages/MyPostsPage";
-import NicknamePage from "./pages/NicknamePage";
-import { KakaoCallback } from "./pages/KakaoCallback";
-import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
-import PublicRoute from "./pages/PublicRoute";
-import PrivateRoute from "./pages/PrivateRoute";
+
+const HomePage = lazy(() => import("./pages/HomePage"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const PostCreatePage = lazy(() => import("./pages/PostCreatePage"));
+const PostDetailPage = lazy(() => import("./pages/PostDetailPage"));
+const PostEditPage = lazy(() => import("./pages/PostEditPage"));
+const NotificationsPage = lazy(() => import("./pages/NotificationsPage"));
+const MyPage = lazy(() => import("./pages/MyPage"));
+const ProfileEditPage = lazy(() => import("./pages/ProfileEditPage"));
+const TermsPage = lazy(() => import("./pages/TermsPage"));
+const MyCommentsPage = lazy(() => import("./pages/MyCommentsPage"));
+const MyPostsPage = lazy(() => import("./pages/MyPostsPage"));
+const NicknamePage = lazy(() => import("./pages/NicknamePage"));
+const KakaoCallback = lazy(() => import("./pages/KakaoCallback"));
+const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
+const PublicRoute = lazy(() => import("./pages/PublicRoute"));
+const PrivateRoute = lazy(() => import("./pages/PrivateRoute"));
 
 export default function Router() {
   return (
     <BrowserRouter>
       <RecoilRoot>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route element={<PublicRoute />}>
-            {/* 로그인/회원가입 */}
-            <Route path="/login" element={<LoginPage />} />
-            {/* 카카오 로그인 콜백 */}
-            <Route path="/login/kakao/callback" element={<KakaoCallback />} />
-            {/* 닉네임 설정 페이지 */}
-            <Route path="/nickname" element={<NicknamePage />} />
-          </Route>
-          <Route element={<PrivateRoute />}>
-            {/* 서비스 이용 약관 페이지 */}
-            <Route path="/terms" element={<TermsPage />} />
-            {/* 개인 정보 처리 방침 페이지 */}
-            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-            {/* 게시글 작성 */}
-            <Route path="/post-create" element={<PostCreatePage />} />
-            {/* 게시글 상세 */}
-            <Route path="/post-detail/:postId" element={<PostDetailPage />} />
-            {/* 게시글 수정 */}
-            <Route path="/post-edit/:postId" element={<PostEditPage />} />
-            {/* 내 소식 */}
-            <Route path="/notifications" element={<NotificationsPage />} />
-            {/* 마이페이지 */}
-            <Route path="/mypage" element={<MyPage />} />
-            {/* 프로필 수정 */}
-            <Route path="/profile/edit" element={<ProfileEditPage />} />
-            {/* 내가 작성한 글 페이지 */}
-            <Route path="/mypage/post/:userId" element={<MyPostsPage />} />
-            {/* 내가 작성한 댓글 페이지 */}
-            <Route
-              path="/mypage/comment/:userId"
-              element={<MyCommentsPage />}
-            />
-          </Route>
-          {/* 그 외 경로는 홈으로 리디렉트 */}
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route element={<PublicRoute />}>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/login/kakao/callback" element={<KakaoCallback />} />
+              <Route path="/nickname" element={<NicknamePage />} />
+            </Route>
+            <Route element={<PrivateRoute />}>
+              <Route path="/terms" element={<TermsPage />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+              <Route path="/post-create" element={<PostCreatePage />} />
+              <Route path="/post-detail/:postId" element={<PostDetailPage />} />
+              <Route path="/post-edit/:postId" element={<PostEditPage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/mypage" element={<MyPage />} />
+              <Route path="/profile/edit" element={<ProfileEditPage />} />
+              <Route path="/mypage/post/:userId" element={<MyPostsPage />} />
+              <Route
+                path="/mypage/comment/:userId"
+                element={<MyCommentsPage />}
+              />
+            </Route>
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Suspense>
       </RecoilRoot>
     </BrowserRouter>
   );

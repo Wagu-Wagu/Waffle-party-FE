@@ -8,7 +8,7 @@ import { useSetRecoilState } from "recoil";
 import { userTokenState } from "../recoil/userState";
 import Loading from "../components/Login/Loading";
 
-export const KakaoCallback = () => {
+export default function KakaoCallback() {
   const nav = useNavigate();
   const hasFetchedToken = useRef(false);
   const setUserToken = useSetRecoilState(userTokenState);
@@ -76,4 +76,4 @@ export const KakaoCallback = () => {
   };
 
   return <Loading />;
-};
+}
