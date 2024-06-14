@@ -7,7 +7,7 @@ import Image from "../assets/icons/Image.svg?react";
 import ImagePreview from "../components/ImagePreview";
 import HeaderButton from "../components/Header/HeaderButton";
 import { useNavigate, useParams } from "react-router-dom";
-import { patchEdit } from "../lib/api/post";
+import { postEdit } from "../lib/api/post";
 import { useRecoilState } from "recoil";
 import { postDetailState } from "../recoil/postDetailState";
 import { ottTags } from "../types/ottTags";
@@ -188,7 +188,7 @@ export default function PostCreatePage() {
       }
 
       // 수정예정
-      await patchEdit(param);
+      await postEdit(param);
       nav(-1);
     } catch (e) {
       console.error(e);

@@ -58,7 +58,7 @@ export const postCreate = async (param: PostCreateDto) => {
  * @param param
  * @returns
  */
-export const patchEdit = async (param: PostEditDto) => {
+export const postEdit = async (param: PostEditDto) => {
   try {
     // POST 요청 보내기
     const { data } = await client.patch("/api/v1/post", param);
