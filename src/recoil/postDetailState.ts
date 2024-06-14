@@ -33,7 +33,7 @@ export const postDetailState = atom<postDetailType>({
         isSecret: false,
         // 댓글 혹은 대댓글이 보이는지 여부
         isVisible: false,
-        isActive: false,
+        isActive: true,
       },
     ],
   },

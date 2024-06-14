@@ -266,6 +266,7 @@ export default function PostDetailPage() {
         isMyComment: true,
         isSecret: isLocked,
         isVisible: true,
+        isActive: true,
       };
       if (isParent) {
         setComments([...comments, newComment]);
