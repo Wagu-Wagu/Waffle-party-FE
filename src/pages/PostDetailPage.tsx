@@ -34,6 +34,7 @@ import {
 import { ottTags } from "../types/ottTags";
 import useGetMyProfile from "../hooks/useGetMyProfile";
 import DeletePostMessage from "../components/DeletePostMessage";
+import { postDelete } from "../lib/api/post";
 
 export default function PostDetailPage() {
   const [isFocused, setIsFocused] = useState(false);
@@ -304,9 +305,10 @@ export default function PostDetailPage() {
        * 게시물 삭제
        */
       if (option.type === "post") {
-        // setIsPost(false);
+        const postId = postDetail.postDetail.postId;
+        await postDelete(postId);
         setBasicModalActive(false);
-        // api 함수 호출
+        nav(-1);
         return;
       } else {
         /**
@@ -415,7 +417,7 @@ export default function PostDetailPage() {
         }
         noBorder={true}
       />
-      {postDetail ? (
+      {postDetailData ? (
         <>
           <main className="w-full main-header pb-[8.4rem] bg-neutral-80">
             <section className="w-full">

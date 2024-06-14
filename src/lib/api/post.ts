@@ -68,3 +68,19 @@ export const postEdit = async (param: PostEditDto) => {
     console.error(e);
   }
 };
+
+/**
+ * 게시글 삭제
+ * @param postId
+ * @returns
+ */
+export const postDelete = async (postId: number) => {
+  try {
+    // POST 요청 보내기
+    const { data } = await client.delete(`/api/v1/post/${+postId}`);
+    console.log(data);
+    return data;
+  } catch (e) {
+    console.error(e);
+  }
+};
