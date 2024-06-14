@@ -438,7 +438,7 @@ export default function PostDetailPage() {
                 <div className="w-full h-0.5 relative" />
               </section>
               <section className="inline-flex flex-col items-center justify-start w-full px-[2rem] pt-[2.4rem]">
-                {postDetail.comments.length > 0 ? (
+                {postDetail.comments.length > 0 || comments.length > 0 ? (
                   <>
                     <div className="pb-[2rem] inline-flex items-start justify-start w-full gap-5 lex-col">
                       <div className="text-white text-[1.2rem] font-medium font-['Pretendard'] leading-[1.6rem]">
