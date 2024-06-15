@@ -480,7 +480,7 @@ export default function PostDetailPage() {
                                 data={comment}
                                 onClick={() => {
                                   setCommentData(comment);
-                                  setIsParent(false);
+                                  setIsParent(true);
                                   setOption({
                                     type: "comment",
                                     isOwner: comment.isMyComment,
