@@ -415,7 +415,12 @@ export default function PostDetailPage() {
                   <>
                     <div className="pb-[2rem] inline-flex items-start justify-start w-full gap-5 lex-col">
                       <div className="text-white text-[1.2rem] font-medium font-['Pretendard'] leading-[1.6rem]">
-                        댓글 {postDetail.comments.length}
+                        댓글{" "}
+                        {
+                          postDetail.comments.filter(
+                            (comment) => comment.isActive,
+                          ).length
+                        }
                       </div>
                     </div>
                     <div className="flex flex-col w-full gap-[1.2rem] pb-[0.5rem]">
