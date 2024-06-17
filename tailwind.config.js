@@ -75,6 +75,9 @@ export default {
         additional3: "#BDBDBD",
         black80: "rgba(0,0,0,0.8)",
       },
+      placeholderColor: (theme) => ({
+        gray8: theme("colors.gray8"),
+      }),
       fontFamily: {
         sans: ["Pretendard", "ui-sans-serif", "system-ui"],
       },
