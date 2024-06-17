@@ -16,5 +16,5 @@ export default function PrivateRoute() {
       window.alert("로그인 후 시도해주세요.");
     }
   }, [token]);
-  return !token ? <Navigate to="/" /> : <Outlet />;
+  return !token ? <Navigate to="/login" /> : <Outlet />;
 }
