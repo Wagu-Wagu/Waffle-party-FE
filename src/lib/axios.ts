@@ -1,5 +1,6 @@
 import axios from "axios";
-import { getAccessToken } from "./token";
+import { clearUserSession, getAccessToken } from "./token";
+import { useNavigate } from "react-router-dom";
 
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_URI,
@@ -22,6 +23,12 @@ client.interceptors.response.use(
     return response;
   },
   (error) => {
+    console.log(error);
+    if (error.response.status === 401) {
+      clearUserSession();
+      const navigate = useNavigate();
+      navigate("/login");
+    }
     return Promise.reject(error);
   },
 );
