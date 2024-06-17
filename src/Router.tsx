@@ -26,6 +26,7 @@ export default function Router() {
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/post-detail/:postId" element={<PostDetailPage />} />
             <Route element={<PublicRoute />}>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/login/kakao/callback" element={<KakaoCallback />} />
@@ -35,7 +36,6 @@ export default function Router() {
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
               <Route path="/post-create" element={<PostCreatePage />} />
-              <Route path="/post-detail/:postId" element={<PostDetailPage />} />
               <Route path="/post-edit/:postId" element={<PostEditPage />} />
               <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="/mypage" element={<MyPage />} />
