@@ -70,7 +70,7 @@ export default function FilterList({
     <div
       ref={filterListRef}
       style={fixedStyle}
-      className="bg-gray15 py-[1.5rem] px-[2rem]"
+      className="bg-gray15 py-[1.5rem] pl-[2rem]"
     >
       <Slider {...settings}>
         {ottList.map((ott) => (
