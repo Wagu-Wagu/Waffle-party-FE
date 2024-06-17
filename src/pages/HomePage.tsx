@@ -14,6 +14,7 @@ import { userState } from "../recoil/userState";
 import HeaderButton from "../components/Header/HeaderButton";
 import useGetPostList from "../hooks/useGetPostList";
 import { postListState } from "../recoil/postListState";
+import Loading from "../components/Login/Loading";
 
 export default function HomePage() {
   const [selectedOtts, setSelectedOtts] = useState<string[]>([]);
@@ -39,7 +40,7 @@ export default function HomePage() {
   };
 
   // 게시글 목록 가져오기
-  const { postListData } = useGetPostList(selectedOtts);
+  const { postListData, isLoading } = useGetPostList(selectedOtts);
 
   // 게시글 목록 recoil 상태 업데이트
   useEffect(() => {
@@ -47,6 +48,8 @@ export default function HomePage() {
       setPostList(postListData);
     }
   }, [postListData]);
+
+  if (isLoading) return <Loading />;
 
   return (
     <>

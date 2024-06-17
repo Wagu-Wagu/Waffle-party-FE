@@ -4,13 +4,14 @@ import { waffleFetcher } from "../lib/axios";
 import { userProfileType } from "../types/userProfile";
 
 const useGetMyProfile = () => {
-  const { data } = useSWR<AxiosResponse<userProfileType>>(
+  const { data, isLoading } = useSWR<AxiosResponse<userProfileType>>(
     "/api/v1/user/my",
     waffleFetcher,
   );
 
   return {
     userProfileData: data?.data,
+    isLoading: isLoading,
   };
 };
 

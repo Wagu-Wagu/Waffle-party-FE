@@ -62,8 +62,8 @@ export default function KakaoCallback() {
           };
           setUserToken(tokenParams);
           const isUserOnBoarded = await getUserOnBoard();
+          console.log(isUserOnBoarded);
           if (isUserOnBoarded) {
-            window.alert("이미 온보딩을 한 유저입니다.");
             nav("/");
           } else {
             nav("/nickname");
@@ -75,5 +75,5 @@ export default function KakaoCallback() {
       });
   };
 
-  return <Loading />;
+  return <Loading text="로그인 중..." />;
 }

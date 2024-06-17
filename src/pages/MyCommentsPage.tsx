@@ -10,15 +10,18 @@ import { useRecoilState } from "recoil";
 import { userCommentState } from "../recoil/userProfile";
 import { useEffect } from "react";
 import { userCommentType } from "../types/userProfile";
+import Loading from "../components/Login/Loading";
 export default function MyCommentsPage() {
   const { userId } = useParams();
   const [userComment, setUserComment] = useRecoilState(userCommentState);
   const nav = useNavigate();
-  const { userCommentData } = useGetMyComment(userId);
+  const { userCommentData, isLoading } = useGetMyComment(userId);
 
   useEffect(() => {
     setUserComment(userCommentData);
   }, [userCommentData]);
+
+  if (isLoading) return <Loading />;
 
   return (
     <>

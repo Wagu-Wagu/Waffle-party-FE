@@ -34,6 +34,8 @@ import { ottTags } from "../types/ottTags";
 import DeletePostMessage from "../components/DeletePostMessage";
 import { postDelete } from "../lib/api/post";
 import { ResponseDto } from "../lib/api/dto/response.dto";
+import { initialPostDetailState } from "../recoil/postDetailState";
+import Loading from "../components/Login/Loading";
 
 export default function PostDetailPage() {
   const [isFocused, setIsFocused] = useState(false);
@@ -78,7 +80,9 @@ export default function PostDetailPage() {
   /**
    * 게시글 상세 조회 api
    */
-  const { postDetailData, refetch } = useGetPostDetail(postId as string);
+  const { postDetailData, refetch, isLoading } = useGetPostDetail(
+    postId as string,
+  );
 
   useEffect(() => {
     if (postDetailData) {
@@ -91,6 +95,9 @@ export default function PostDetailPage() {
       };
       setPostDetail(updatedPostDetail);
       setComments(postDetailData.comments);
+    } else {
+      // postDetailData가 없는 경우 상태를 초기화
+      setPostDetail(initialPostDetailState);
     }
   }, [postDetailData]);
 
@@ -356,6 +363,8 @@ export default function PostDetailPage() {
     return "text-white";
   };
 
+  if (isLoading) return <Loading />;
+
   return (
     <>
       <Header
@@ -366,7 +375,7 @@ export default function PostDetailPage() {
         }
         noBorder={true}
       />
-      {postDetail ? (
+      {postDetailData ? (
         <>
           <main className="w-full main-header pb-[8.4rem] bg-neutral-80">
             <section className="w-full">
@@ -399,7 +408,7 @@ export default function PostDetailPage() {
                       <>
                         <ImagePreview
                           images={postDetail.postDetail.photoes.map(
-                            (photo) => `${baseURL}${photo}`,
+                            (photo: string) => `${baseURL}${photo}`,
                           )}
                         />
                       </>
@@ -419,7 +428,7 @@ export default function PostDetailPage() {
                         댓글{" "}
                         {
                           postDetail.comments.filter(
-                            (comment) => comment.isActive,
+                            (comment: postCommentType) => comment.isActive,
                           ).length
                         }
                       </div>

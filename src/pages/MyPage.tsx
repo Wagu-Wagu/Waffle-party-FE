@@ -15,6 +15,7 @@ import ProfilePreview from "../components/ProfilePreview";
 import { userProfileType } from "../types/userProfile";
 import { patchProfileImage } from "../lib/api/profile";
 import useGetMyProfile from "../hooks/useGetMyProfile";
+import Loading from "../components/Login/Loading";
 
 export default function MyPage() {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ export default function MyPage() {
   /**
    * 마이페이지 정보 조회
    */
-  const { userProfileData } = useGetMyProfile();
+  const { userProfileData, isLoading } = useGetMyProfile();
   const baseURL = import.meta.env.VITE_USER_BASE_URL;
   const userId = userProfileData?.userInfo.userId;
 
@@ -112,6 +113,8 @@ export default function MyPage() {
     navigate("/profile/edit");
   };
 
+  if (isLoading) return <Loading />;
+
   return (
     <>
       <Header title="마이" />
@@ -130,7 +133,7 @@ export default function MyPage() {
           <ProfileImageUploader
             imageSrc={imageSrc}
             // 사진을 골랐을때
-            onSelect={(file, src) => {
+            onSelect={(file: File, src: string) => {
               setShowPreview(true);
               setShowAlbum(false);
               // 사진 고르면 새로운 사진으로 업데이트

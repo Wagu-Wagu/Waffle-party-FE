@@ -10,13 +10,14 @@ import useGetMyPost from "../hooks/useGetMyPost";
 import { userPostState } from "../recoil/userProfile";
 import { useEffect } from "react";
 import { userPostType } from "../types/userProfile";
+import Loading from "../components/Login/Loading";
 
 export default function MyPostsPage() {
   const { userId } = useParams();
   const [userPost, setUserPost] = useRecoilState(userPostState);
 
   // 내가 작성한 글 get
-  const { userPostData } = useGetMyPost(userId);
+  const { userPostData, isLoading } = useGetMyPost(userId);
 
   useEffect(() => {
     setUserPost(userPostData);
@@ -24,6 +25,8 @@ export default function MyPostsPage() {
   }, [userPostData]);
 
   const nav = useNavigate();
+
+  if (isLoading) return <Loading />;
 
   return (
     <>

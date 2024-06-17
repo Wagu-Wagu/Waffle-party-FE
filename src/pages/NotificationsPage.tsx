@@ -9,11 +9,12 @@ import { useRecoilState } from "recoil";
 import { notificationState } from "../recoil/notificationState";
 import { useEffect } from "react";
 import { getNotification } from "../lib/api/notification";
+import Loading from "../components/Login/Loading";
 export default function NotificationsPage() {
   const [notification, setNotification] = useRecoilState(notificationState);
   const nav = useNavigate();
 
-  const { notificationData } = useGetNotification();
+  const { notificationData, isLoading } = useGetNotification();
 
   useEffect(() => {
     if (notificationData) {
@@ -32,6 +33,9 @@ export default function NotificationsPage() {
       nav(`/post-detail/${notiEl.postId}`);
     }
   };
+
+  if (isLoading) return <Loading />;
+
   return (
     <>
       <Header title="내소식" />

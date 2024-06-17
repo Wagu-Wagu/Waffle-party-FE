@@ -4,13 +4,14 @@ import { waffleFetcher } from "../lib/axios";
 import { postListType } from "../types/postList";
 
 const useGetPostList = (selectedOtts: string[]) => {
-  const { data } = useSWR<AxiosResponse<postListType[]>>(
+  const { data, isLoading } = useSWR<AxiosResponse<postListType[]>>(
     `api/v1/post?ottTags=${selectedOtts.join(",")}`,
     waffleFetcher,
   );
 
   return {
     postListData: data?.data,
+    isLoading: isLoading,
   };
 };
 
