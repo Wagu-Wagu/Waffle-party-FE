@@ -27,7 +27,7 @@ export default function ImageUploader(props: ImageUploaderProps) {
           onClick={() => handleImageClick(src)}
         >
           <img
-            className="h-full rounded-[0.8rem] w-full object-cover"
+            className="rounded-[0.8rem] object-cover h-[12rem] w-[12rem]"
             src={src}
             alt={`업로드 사진 ${index + 1}`}
             style={{
