@@ -232,7 +232,7 @@ export default function PostCreatePage() {
         <section className=" mt-[1.4rem] flex flex-col gap-[1.6rem]">
           {/* 제목 */}
           <input
-            className="bg-gray14 outline-none font-semibold text-[2rem] font-pretendard leading-[2.8rem] text-gray8"
+            className={`bg-gray14 outline-none font-semibold text-[2rem] font-pretendard leading-[2.8rem] ${title ? "text-white" : "text-gray8"}`}
             placeholder="제목을 입력해주세요."
             onChange={(e) => setTitle(e.target.value)}
             value={title}
@@ -260,7 +260,7 @@ export default function PostCreatePage() {
           )}
           {/* 본문 */}
           <textarea
-            className="bg-gray14 outline-none font-pretendard text-[1.4rem] font-medium leading-[2.2rem] text-gray8 resize-none overflow-hidden"
+            className={`bg-gray14 outline-none font-pretendard text-[1.4rem] font-medium leading-[2.2rem] resize-none overflow-hidden ${text ? "text-white" : "text-gray8 "}`}
             placeholder="본문을 입력해주세요."
             value={text}
             onChange={(e) => setText(e.target.value)}
