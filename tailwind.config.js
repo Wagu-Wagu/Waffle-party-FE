@@ -46,6 +46,7 @@ export default {
         yellow11: "#D09C16",
         yellow12: "#AA8525",
         yellowTrans1: "rgba(255, 235, 96, 0.2)",
+        yellowTrans2: "rgba(255, 235, 96, 0.4)",
         red1: "#FFC2AF",
         red2: "#FF9D7E",
         red3: "#FF784D",
@@ -75,9 +76,6 @@ export default {
         additional3: "#BDBDBD",
         black80: "rgba(0,0,0,0.8)",
       },
-      placeholderColor: (theme) => ({
-        gray8: theme("colors.gray8"),
-      }),
       fontFamily: {
         sans: ["Pretendard", "ui-sans-serif", "system-ui"],
       },

@@ -338,8 +338,9 @@ export default function PostDetailPage() {
    * @returns placeholder 글자색
    */
   const setPlaceHolderClass = () => {
-    if (isLocked && !isFocused) {
-      return "placeholder-yellow5 opacity-40";
+    console.log(isLocked);
+    if (isLocked) {
+      return "placeholder-yellowTrans2";
     }
     return "placeholder-gray10";
   };
@@ -499,7 +500,13 @@ export default function PostDetailPage() {
               <div className="flex w-full ">
                 <textarea
                   className={` w-full placeholder-pt-[1.2rem] resize-none bg-transparent outline-none ${setPlaceHolderClass()} ${setTextClass()}`}
-                  placeholder={isFocused ? "" : "댓글을 남겨주세요."}
+                  placeholder={
+                    isFocused
+                      ? ""
+                      : isLocked
+                        ? "비밀 댓글을 남겨주세요."
+                        : "댓글을 남겨주세요."
+                  }
                   onFocus={() => setIsFocused(true)}
                   value={inputValue}
                   onChange={handleChangeContent}
