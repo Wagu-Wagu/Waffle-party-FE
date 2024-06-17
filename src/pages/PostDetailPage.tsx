@@ -2,7 +2,7 @@ import Header from "../components/Header/Header";
 import LeftArrow from "../assets/icons/LeftArrowIcon.svg?react";
 import UserCard from "../components/card/UserCard";
 import Button from "../components/common/Button";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import UnLock from "../assets/icons/UnLock.svg?react";
 import Lock from "../assets/icons/LockActive.svg?react";
 import React from "react";
@@ -54,7 +54,7 @@ export default function PostDetailPage() {
   const [isParent, setIsParent] = useState(true);
   const [commentData, setCommentData] = useState<any>(); //더보기에서 선택한 댓글 or 답댓글 정보 저장
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const sectionRef = useRef<HTMLTextAreaElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const [sectionHeight, setSectionHeight] = useState<string>("auto"); //댓글창 높이
   const [previousSection, setPreviousSection] = useState<number>(0); //초기 하단 댓글영역 높이
   const [isHeightIncreased, setIsHeightIncreased] = useState<boolean>(false); //댓글이 작성되었을때 초기 댓글창 높이를 넘어가는지 검사
@@ -80,12 +80,18 @@ export default function PostDetailPage() {
   /**
    * 초기 댓글창 높이 계산
    */
-  useEffect(() => {
+  const initialSectionHeight = useMemo(() => {
     if (sectionRef.current) {
-      const initialSection = sectionRef.current.offsetHeight;
-      setPreviousSection(initialSection);
+      return sectionRef.current.offsetHeight;
     }
-  }, []);
+    return 0;
+  }, [sectionRef.current]);
+
+  useEffect(() => {
+    if (initialSectionHeight !== 0) {
+      setPreviousSection(initialSectionHeight);
+    }
+  }, [initialSectionHeight]);
 
   /**
    * 게시글 상세 조회 api
@@ -480,7 +486,6 @@ export default function PostDetailPage() {
                                 data={comment}
                                 onClick={() => {
                                   setCommentData(comment);
-                                  setIsParent(true);
                                   setOption({
                                     type: "comment",
                                     isOwner: comment.isMyComment,
