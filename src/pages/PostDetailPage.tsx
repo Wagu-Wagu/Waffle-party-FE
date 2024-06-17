@@ -206,6 +206,7 @@ export default function PostDetailPage() {
    * @returns 댓글 등록
    */
   const handleAddComment = async (commentData: any) => {
+    console.log(commentData);
     let res: ResponseDto;
     if (inputValue.trim() === "") return;
 
@@ -224,7 +225,7 @@ export default function PostDetailPage() {
       /**
        * 댓글, 답댓글 등록
        */
-      if (commentData.isParentComment) {
+      if (!commentData) {
         // 댓글 등록 로직
         params = new CommentDto();
         params.postId = postDetail.postDetail.postId;
@@ -338,7 +339,6 @@ export default function PostDetailPage() {
    * @returns placeholder 글자색
    */
   const setPlaceHolderClass = () => {
-    console.log(isLocked);
     if (isLocked) {
       return "placeholder-yellowTrans2";
     }
@@ -366,7 +366,7 @@ export default function PostDetailPage() {
         }
         noBorder={true}
       />
-      {postDetailData ? (
+      {postDetail ? (
         <>
           <main className="w-full main-header pb-[8.4rem] bg-neutral-80">
             <section className="w-full">
