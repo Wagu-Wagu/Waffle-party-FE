@@ -18,12 +18,13 @@ const KakaoCallback = lazy(() => import("./pages/KakaoCallback"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
 const PublicRoute = lazy(() => import("./pages/PublicRoute"));
 const PrivateRoute = lazy(() => import("./pages/PrivateRoute"));
+const Loading = lazy(() => import("./components/Login/Loading"));
 
 export default function Router() {
   return (
     <BrowserRouter>
       <RecoilRoot>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loading />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/post-detail/:postId" element={<PostDetailPage />} />
