@@ -9,8 +9,6 @@ const useGetPostDetail = (postId: string) => {
     waffleFetcher,
   );
 
-  console.log(isLoading);
-
   return {
     postDetailData: data?.data,
     isLoading: isLoading,

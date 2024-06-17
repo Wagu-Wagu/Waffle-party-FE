@@ -213,7 +213,6 @@ export default function PostDetailPage() {
    * @returns 댓글 등록
    */
   const handleAddComment = async (commentData: any) => {
-    console.log(commentData);
     let res: ResponseDto;
     if (inputValue.trim() === "") return;
 

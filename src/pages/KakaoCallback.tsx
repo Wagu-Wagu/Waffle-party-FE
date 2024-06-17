@@ -62,7 +62,6 @@ export default function KakaoCallback() {
           };
           setUserToken(tokenParams);
           const isUserOnBoarded = await getUserOnBoard();
-          console.log(isUserOnBoarded);
           if (isUserOnBoarded) {
             nav("/");
           } else {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import CheckChip from "./../../assets/icons/CheckChip.svg?react";
 
 interface ChipProps {

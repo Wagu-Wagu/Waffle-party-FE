@@ -62,7 +62,6 @@ export const postEdit = async (param: PostEditDto) => {
   try {
     // POST 요청 보내기
     const { data } = await client.patch("/api/v1/post", param);
-    console.log(data);
     return data;
   } catch (e) {
     console.error(e);
@@ -78,7 +77,6 @@ export const postDelete = async (postId: number) => {
   try {
     // POST 요청 보내기
     const { data } = await client.delete(`/api/v1/post/${+postId}`);
-    console.log(data);
     return data;
   } catch (e) {
     console.error(e);
