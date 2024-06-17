@@ -2,7 +2,7 @@ import Header from "../components/Header/Header";
 import LeftArrow from "../assets/icons/LeftArrowIcon.svg?react";
 import UserCard from "../components/card/UserCard";
 import Button from "../components/common/Button";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import UnLock from "../assets/icons/UnLock.svg?react";
 import Lock from "../assets/icons/LockActive.svg?react";
 import React from "react";
@@ -24,7 +24,6 @@ import {
   CommentDto,
   CommentEditDto,
 } from "../lib/api/dto/comment.dto";
-import { userProfileState } from "../recoil/userProfile";
 import {
   deleteComment,
   editComment,
@@ -32,9 +31,9 @@ import {
   postComment,
 } from "../lib/api/comment";
 import { ottTags } from "../types/ottTags";
-import useGetMyProfile from "../hooks/useGetMyProfile";
 import DeletePostMessage from "../components/DeletePostMessage";
 import { postDelete } from "../lib/api/post";
+import { ResponseDto } from "../lib/api/dto/response.dto";
 
 export default function PostDetailPage() {
   const [isFocused, setIsFocused] = useState(false);
@@ -50,14 +49,13 @@ export default function PostDetailPage() {
     isOwner: false,
   });
   const [postDetail, setPostDetail] = useRecoilState(postDetailState);
-  const [userProfile, setUserProfile] = useRecoilState(userProfileState);
-  const [isParent, setIsParent] = useState(true);
   const [commentData, setCommentData] = useState<any>(); //더보기에서 선택한 댓글 or 답댓글 정보 저장
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const [sectionHeight, setSectionHeight] = useState<string>("auto"); //댓글창 높이
   const [previousSection, setPreviousSection] = useState<number>(0); //초기 하단 댓글영역 높이
   const [isHeightIncreased, setIsHeightIncreased] = useState<boolean>(false); //댓글이 작성되었을때 초기 댓글창 높이를 넘어가는지 검사
+  const [refresh, setRefresh] = useState<boolean>(false); // 데이터 갱신을 위한 상태 변수
 
   const { postId } = useParams();
 
@@ -78,25 +76,9 @@ export default function PostDetailPage() {
   };
 
   /**
-   * 초기 댓글창 높이 계산
-   */
-  const initialSectionHeight = useMemo(() => {
-    if (sectionRef.current) {
-      return sectionRef.current.offsetHeight;
-    }
-    return 0;
-  }, [sectionRef.current]);
-
-  useEffect(() => {
-    if (initialSectionHeight !== 0) {
-      setPreviousSection(initialSectionHeight);
-    }
-  }, [initialSectionHeight]);
-
-  /**
    * 게시글 상세 조회 api
    */
-  const { postDetailData } = useGetPostDetail(postId as string);
+  const { postDetailData, refetch } = useGetPostDetail(postId as string);
 
   useEffect(() => {
     if (postDetailData) {
@@ -113,21 +95,20 @@ export default function PostDetailPage() {
   }, [postDetailData]);
 
   /**
-   * 현재 유저 정보 api
+   * 댓글, 답댓글 등록&수정&삭제 후 데이터 갱신
    */
-  const { userProfileData } = useGetMyProfile();
   useEffect(() => {
-    if (userProfileData) {
-      setUserProfile(userProfileData);
+    if (refresh) {
+      refetch(); // 데이터 갱신을 위한 함수 호출
+      setRefresh(false); // 갱신 후 상태 초기화
     }
-  }, [userProfileData]);
+  }, [refresh, refetch]);
 
   /**
    * 댓글 등록할때마다 변경
    */
   useEffect(() => {
     if (inputValue.length === 0) {
-      setIsFocused(false);
       setUptoSubmit(false);
     } else {
       setUptoSubmit(true);
@@ -135,11 +116,27 @@ export default function PostDetailPage() {
   }, [inputValue, setInputValue]);
 
   // 모달 옵션 클릭 후 포커스 상태(답댓글, 수정)
-  useLayoutEffect(() => {
-    if (isFocused && inputRef.current) {
-      inputRef.current.focus();
+  useEffect(() => {
+    if (isFocused) {
+      inputRef.current?.focus();
     }
-  }, [isFocused]);
+  }, [isFocused, setIsFocused]);
+
+  /**
+   * 초기 댓글창 높이 계산
+   */
+  const initialSectionHeight = useMemo(() => {
+    if (sectionRef.current) {
+      return sectionRef.current.offsetHeight;
+    }
+    return 0;
+  }, [sectionRef.current]);
+
+  useEffect(() => {
+    if (initialSectionHeight !== 0) {
+      setPreviousSection(initialSectionHeight);
+    }
+  }, [initialSectionHeight]);
 
   /**
    * 댓글이 입력될때마다 댓글창 높이 계산
@@ -209,9 +206,8 @@ export default function PostDetailPage() {
    * @returns 댓글 등록
    */
   const handleAddComment = async (commentData: any) => {
+    let res: ResponseDto;
     if (inputValue.trim() === "") return;
-
-    const currentDate: Date = new Date();
 
     if (isEdit) {
       /**
@@ -223,36 +219,18 @@ export default function PostDetailPage() {
       params.content = inputValue;
       params.commentUserId = commentData.commentUserId;
       params.commentId = commentData.commentId;
-      await editComment(params);
-      // comments 배열 복사
-      const updatedComments = [...comments];
-
-      // commentData의 commentId와 일치하는 댓글 찾기
-      const index = updatedComments.findIndex(
-        (comment) => comment.commentId === commentData.commentId,
-      );
-
-      // 해당 댓글이 존재하는 경우 정보 업데이트
-      if (index !== -1) {
-        updatedComments[index] = {
-          ...updatedComments[index],
-          isSecret: isLocked,
-          content: inputValue,
-        };
-      }
-      // 변경된 comments 배열로 업데이트
-      setComments(updatedComments);
+      res = await editComment(params);
     } else {
       /**
        * 댓글, 답댓글 등록
        */
-      if (isParent) {
+      if (commentData.isParentComment) {
         // 댓글 등록 로직
         params = new CommentDto();
         params.postId = postDetail.postDetail.postId;
         params.isSecret = isLocked;
         params.content = inputValue;
-        await postComment(params);
+        res = await postComment(params);
       } else {
         // 답댓글 등록 로직
         params = new ChildCommentDto();
@@ -260,46 +238,17 @@ export default function PostDetailPage() {
         params.postId = postDetail.postDetail.postId;
         params.isSecret = isLocked;
         params.content = inputValue;
-        await postChildComment(params);
-      }
-
-      const newComment: any = {
-        ...(commentData ? { ...commentData } : { commentId: 1 }),
-        commenterNickName: userProfile.userInfo.nickName,
-        userImage: userProfile.userInfo.userImage,
-        createdAt: currentDate,
-        content: inputValue,
-        isParentComment: isParent,
-        isMyComment: true,
-        isSecret: isLocked,
-        isVisible: true,
-        isActive: true,
-      };
-
-      if (isParent) {
-        setComments([...comments, newComment]);
-      } else {
-        // 부모 댓글 바로 아래에 새로운 답댓글 추가
-        const updatedComments = [...comments];
-        const parentIndex = updatedComments.findIndex(
-          (commentEl) => commentEl.commentId === commentData.commentId,
-        );
-
-        let insertIndex = parentIndex + 1;
-        while (
-          insertIndex < updatedComments.length &&
-          !updatedComments[insertIndex].isParentComment
-        ) {
-          insertIndex++;
-        }
-        updatedComments.splice(insertIndex, 0, newComment);
-        setComments(updatedComments);
+        res = await postChildComment(params);
       }
     }
+    if (res.success) {
+      // 댓글 등록이 성공했을 때 데이터 갱신
+      setRefresh(true);
+    }
+
     setInputValue("");
     setIsLocked(false);
     setIsEdit(false);
-    setIsParent(true);
   };
 
   /**
@@ -322,27 +271,10 @@ export default function PostDetailPage() {
         /**
          * 댓글, 답댓글 삭제
          */
-        await deleteComment(commentData.commentId);
-
-        const parentIndex = comments.findIndex(
-          (commentEl) => commentEl.commentId === commentData.commentId,
-        );
-
-        // 댓글에 답댓글이 있을 경우
-        if (!comments[parentIndex + 1].isParentComment) {
-          const updatedComments = comments.map((comment) =>
-            comment.commentId === commentData.commentId
-              ? { ...comment, isActive: false }
-              : comment,
-          );
-          setComments(updatedComments);
-        } else {
-          // 댓글에 답댓글이 없거나, 답댓글일 경우
-          const updatedComments = comments.filter(
-            (comment) => comment.commentId !== commentData.commentId,
-          );
-
-          setComments(updatedComments);
+        const res: ResponseDto = await deleteComment(commentData.commentId);
+        if (res.success) {
+          // 댓글 등록이 성공했을 때 데이터 갱신
+          setRefresh(true);
         }
       }
     }
@@ -364,16 +296,20 @@ export default function PostDetailPage() {
   };
   // 답댓글 달기
   const onCommentReply = () => {
-    setIsFocused(true);
+    setIsFocused(false);
     setInputValue("");
     setIsLocked(false);
     setModalActive(false);
     setIsEdit(false);
+    // 짧은 지연 후 isFocuse를 true로 설정
+    setTimeout(() => {
+      setIsFocused(true);
+    }, 0);
   };
   // 댓글 수정
   const onCommentEdit = () => {
     setModalActive(false);
-    setIsFocused(true);
+    setIsFocused(false);
     if (commentData.isSecret) {
       setIsLocked(true);
     } else {
@@ -381,6 +317,10 @@ export default function PostDetailPage() {
     }
     setIsEdit(true);
     setInputValue(commentData.content);
+    // 짧은 지연 후 isFocuse를 true로 설정
+    setTimeout(() => {
+      setIsFocused(true);
+    }, 0);
   };
   // 댓글 삭제
   const onCommentDelete = () => {
@@ -488,7 +428,6 @@ export default function PostDetailPage() {
                                 data={comment}
                                 onClick={() => {
                                   setCommentData(comment);
-                                  setIsParent(false);
                                   setOption({
                                     type: "comment",
                                     isOwner: comment.isMyComment,
@@ -504,7 +443,6 @@ export default function PostDetailPage() {
                                 data={comment}
                                 onClick={() => {
                                   setCommentData(comment);
-                                  setIsParent(false);
                                   setOption({
                                     type: "reply",
                                     isOwner: comment.isMyComment,

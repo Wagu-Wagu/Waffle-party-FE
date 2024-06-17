@@ -22,7 +22,7 @@ export default function UserCard(props: userCardProps) {
 
   return (
     // 삭제된 댓글일 경우
-    !data.isActive && !data.postId ? (
+    !data.isActive && !data.postId && data.isParentComment ? (
       <p
         className={`text-gray10 text-[1.4rem] font-normal leading-[2.2rem] ${!data.isParentComment && "pl-[4.8rem]"}`}
       >
