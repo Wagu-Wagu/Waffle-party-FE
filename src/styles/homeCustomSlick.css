@@ -14,3 +14,7 @@
 .custom-slick .slick-dots li.slick-active button:before {
   color: #000;
 }
+
+.custom-slick .slick-slide:focus {
+  outline: none;
+}
