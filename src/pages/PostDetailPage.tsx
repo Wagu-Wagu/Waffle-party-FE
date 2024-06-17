@@ -275,6 +275,7 @@ export default function PostDetailPage() {
         isVisible: true,
         isActive: true,
       };
+
       if (isParent) {
         setComments([...comments, newComment]);
       } else {
@@ -298,6 +299,7 @@ export default function PostDetailPage() {
     setInputValue("");
     setIsLocked(false);
     setIsEdit(false);
+    setIsParent(true);
   };
 
   /**
@@ -486,6 +488,7 @@ export default function PostDetailPage() {
                                 data={comment}
                                 onClick={() => {
                                   setCommentData(comment);
+                                  setIsParent(false);
                                   setOption({
                                     type: "comment",
                                     isOwner: comment.isMyComment,
