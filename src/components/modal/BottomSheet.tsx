@@ -43,7 +43,7 @@ export default function BottomSheet(props: modalProps) {
           className={`fixed top-0 left-0 z-50 w-full h-full bg-black bg-opacity-70 flex justify-center items-end`}
           onClick={handleCloseModal}
         >
-          <div className="max-w-[50rem] w-full">
+          <div className="max-w-[50rem] bg-black w-full">
             <div className={`w-full ${modalClassName}`}>
               {/* 모달 내용 */}
               {isShow && children}
