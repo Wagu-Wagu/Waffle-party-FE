@@ -30,7 +30,8 @@ export default function UserCard(props: userCardProps) {
       </p>
     ) : (
       <section className="flex w-full flex-col gap-[0.4rem]">
-        {!data.isVisible && !data.postId ? (
+        {/* 비밀댓글이고, 안 보이는 댓글일 경우 */}
+        {data.isSecret && !data.isVisible && !data.postId ? (
           <>
             <p className="text-[1.2rem] font-normal leading-[1.6rem] text-gray9">
               {formattedDate}
@@ -70,9 +71,10 @@ export default function UserCard(props: userCardProps) {
         {data.commentId && (
           <div className="flex gap-[1rem] text-gray3">
             <section
-              className={`w-full gap-[0.5rem] flex ${data.isParentComment && data.isVisible && "pl-[4.8rem]"} font-normal leading-[2.2rem] text-[1.4rem] break-words`}
+              className={`w-full gap-[0.5rem] flex ${data.isParentComment && (!data.isSecret || data.isVisible) && "pl-[4.8rem]"} font-normal leading-[2.2rem] text-[1.4rem] break-words`}
             >
               {data.isSecret ? (
+                // 비밀댓글이면서 보이는 댓글
                 data.isVisible ? (
                   <>
                     <div className="w-[2rem] h-[2rem]">
@@ -81,6 +83,7 @@ export default function UserCard(props: userCardProps) {
                     <p className="text-gray3">{data.content}</p>
                   </>
                 ) : (
+                  // 비밀댓글이면서 안보이는 댓글
                   <>
                     <div className="w-[2rem] h-[2rem]">
                       <Lock />
@@ -91,6 +94,7 @@ export default function UserCard(props: userCardProps) {
                   </>
                 )
               ) : (
+                // 비밀댓글이 아닌 댓글들
                 <p className="text-gray3">{data.content}</p>
               )}
             </section>

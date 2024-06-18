@@ -25,7 +25,7 @@ export interface postCommentType {
   isParentComment: boolean;
   isMyComment: boolean;
   isSecret: boolean;
-  // 댓글 혹은 대댓글이 보이는지 여부
+  // 비밀댓글일 때, 댓글 혹은 대댓글이 보이는지 여부
   isVisible: boolean;
   // 삭제된 댓글인지 여부
   isActive: boolean;
