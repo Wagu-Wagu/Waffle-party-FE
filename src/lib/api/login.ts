@@ -17,8 +17,8 @@ export const postLogin = async (param: LoginDto) => {
 export const getUserOnBoard = async () => {
   try {
     const { data } = await client.get("/api/v1/user/isOnboard");
-    if (data.data) {
-      return data;
+    if (data) {
+      return data.data;
     }
     return data;
   } catch (e) {
