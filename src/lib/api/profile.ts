@@ -77,7 +77,7 @@ export const patchOnBoard = async (
  */
 export const patchNickName = async (param: NickNameDto) => {
   try {
-    const { data } = await client.patch("/api/v1/user/nickName", param);
+    const { data } = await client.patch("/api/v1/user/nickname", param);
     return data;
   } catch (e: any) {
     const error = e as AxiosError<any>;
