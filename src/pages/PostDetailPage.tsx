@@ -210,7 +210,7 @@ export default function PostDetailPage() {
 
   /**
    *
-   * @returns 댓글 등록
+   * @returns 댓글 등록&수정
    */
   const handleAddComment = async (commentData: any) => {
     let res: ResponseDto;
@@ -256,6 +256,7 @@ export default function PostDetailPage() {
     setInputValue("");
     setIsLocked(false);
     setIsEdit(false);
+    setCommentData("");
   };
 
   /**
@@ -286,6 +287,7 @@ export default function PostDetailPage() {
       }
     }
     setBasicModalActive(false);
+    setCommentData("");
   };
 
   // 게시물 수정
