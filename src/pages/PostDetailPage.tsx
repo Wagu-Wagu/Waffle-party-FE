@@ -38,20 +38,14 @@ import { initialPostDetailState } from "../recoil/postDetailState";
 import Loading from "../components/Login/Loading";
 
 export default function PostDetailPage() {
-  const [isFocused, setIsFocused] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const [isLocked, setIsLocked] = useState(false);
-  const [uptoSubmit, setUptoSubmit] = useState(false);
-  const [modalActive, setModalActive] = useState(false);
-  const [basicModalActive, setBasicModalActive] = useState(false);
   const [comments, setComments] = useState<postCommentType[]>([]); // 받아온 데이터중 댓글데이터 넣기
-  const [isEdit, setIsEdit] = useState(false);
   const [option, setOption] = useState<optionState>({
     type: "",
     isOwner: false,
   });
   const [postDetail, setPostDetail] = useRecoilState(postDetailState);
-  const [commentData, setCommentData] = useState<any>(); //더보기에서 선택한 댓글 or 답댓글 정보 저장
+  const [commentData, setCommentData] = useState<postCommentType | undefined>();
+  //더보기에서 선택한 댓글 or 답댓글 정보 저장
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const [sectionHeight, setSectionHeight] = useState<string>("auto"); //댓글창 높이
@@ -200,7 +194,7 @@ export default function PostDetailPage() {
    */
   const handleKeyPress = (
     event: React.KeyboardEvent<HTMLTextAreaElement>,
-    commentData: any,
+    commentData: postCommentType | undefined,
   ) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -212,7 +206,7 @@ export default function PostDetailPage() {
    *
    * @returns 댓글 등록&수정
    */
-  const handleAddComment = async (commentData: any) => {
+  const handleAddComment = async (commentData: postCommentType | undefined) => {
     let res: ResponseDto;
     if (inputValue.trim() === "") return;
 
@@ -224,8 +218,8 @@ export default function PostDetailPage() {
       params.postId = postDetail.postDetail.postId;
       params.isSecret = isLocked;
       params.content = inputValue;
-      params.commentUserId = commentData.commentUserId;
-      params.commentId = commentData.commentId;
+      params.commentUserId = commentData?.commentUserId;
+      params.commentId = commentData?.commentId;
       res = await editComment(params);
     } else {
       /**
@@ -256,7 +250,7 @@ export default function PostDetailPage() {
     setInputValue("");
     setIsLocked(false);
     setIsEdit(false);
-    setCommentData("");
+    setCommentData(undefined);
   };
 
   /**
@@ -264,7 +258,10 @@ export default function PostDetailPage() {
    * @param isDeleteAction
    * @param modalData
    */
-  const closeConfirm = async (isDeleteAction: boolean, commentData: any) => {
+  const closeConfirm = async (
+    isDeleteAction: boolean,
+    commentData: postCommentType,
+  ) => {
     if (isDeleteAction) {
       /**
        * 게시물 삭제
@@ -279,7 +276,9 @@ export default function PostDetailPage() {
         /**
          * 댓글, 답댓글 삭제
          */
-        const res: ResponseDto = await deleteComment(commentData.commentId);
+        const res: ResponseDto = await deleteComment(
+          commentData.commentId as number,
+        );
         if (res.success) {
           // 댓글 등록이 성공했을 때 데이터 갱신
           setRefresh(true);
@@ -287,7 +286,7 @@ export default function PostDetailPage() {
       }
     }
     setBasicModalActive(false);
-    setCommentData("");
+    setCommentData(undefined);
   };
 
   // 게시물 수정
@@ -319,13 +318,15 @@ export default function PostDetailPage() {
   const onCommentEdit = () => {
     setModalActive(false);
     setIsFocused(false);
-    if (commentData.isSecret) {
+    if (commentData?.isSecret) {
       setIsLocked(true);
     } else {
       setIsLocked(false);
     }
     setIsEdit(true);
-    setInputValue(commentData.content);
+    if (commentData) {
+      setInputValue(commentData?.content);
+    }
     // 짧은 지연 후 isFocuse를 true로 설정
     setTimeout(() => {
       setIsFocused(true);
@@ -562,7 +563,9 @@ export default function PostDetailPage() {
         <BasicModal
           isShow={basicModalActive}
           option={option.type}
-          onConfirm={(isConfirm) => closeConfirm(isConfirm, commentData)}
+          onConfirm={(isConfirm) => {
+            commentData && closeConfirm(isConfirm, commentData);
+          }}
           setModalActive={setBasicModalActive}
         />
       )}
