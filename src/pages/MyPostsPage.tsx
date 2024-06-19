@@ -20,8 +20,9 @@ export default function MyPostsPage() {
   const { userPostData, isLoading } = useGetMyPost(userId);
 
   useEffect(() => {
-    setUserPost(userPostData);
-    console.log(userPost);
+    if (userPostData) {
+      setUserPost(userPostData);
+    }
   }, [userPostData]);
 
   const nav = useNavigate();

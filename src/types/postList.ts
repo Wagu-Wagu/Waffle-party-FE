@@ -7,7 +7,7 @@ export interface postType {
   ottTag: string;
   title: string;
   content: string;
-  photoes: any[];
+  photoes: string[];
   nickName: string;
   createdAt: string;
   commentCount: number;

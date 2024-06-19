@@ -3,7 +3,9 @@ import "../../index.css";
 import { Link } from "react-router-dom";
 import { useFormattedDate } from "../../hooks/useFormattedDate";
 import { ottTags } from "../../types/ottTags";
-export default function MyCommentsCard(props: { comment: any }) {
+import { userCommentType } from "../../types/userProfile";
+
+export default function MyCommentsCard(props: { comment: userCommentType }) {
   const { comment } = props;
   const formattedDate = useFormattedDate(new Date(comment.createdAt));
   // ottTag를 한글로 변환

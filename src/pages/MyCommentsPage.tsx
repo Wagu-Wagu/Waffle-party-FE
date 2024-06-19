@@ -18,7 +18,9 @@ export default function MyCommentsPage() {
   const { userCommentData, isLoading } = useGetMyComment(userId);
 
   useEffect(() => {
-    setUserComment(userCommentData);
+    if (userCommentData) {
+      setUserComment(userCommentData);
+    }
   }, [userCommentData]);
 
   if (isLoading) return <Loading />;

@@ -10,6 +10,7 @@ import { notificationState } from "../recoil/notificationState";
 import { useEffect } from "react";
 import { getNotification } from "../lib/api/notification";
 import Loading from "../components/Login/Loading";
+import { notiElementType } from "../types/notification";
 export default function NotificationsPage() {
   const [notification, setNotification] = useRecoilState(notificationState);
   const nav = useNavigate();
@@ -25,7 +26,8 @@ export default function NotificationsPage() {
   /**
    * @param notiEl
    */
-  const handleClickNoti = async (notiEl: any) => {
+  const handleClickNoti = async (notiEl: notiElementType) => {
+    console.log(notiEl);
     // 소식을 확인하면 api 요청해서 소식 읽음으로 변경
     const res = await getNotification(notiEl.alertId);
     if (res.success) {
@@ -47,7 +49,7 @@ export default function NotificationsPage() {
                 <NotiCard
                   data={notiEl}
                   key={index}
-                  onClick={(el: any) => handleClickNoti(el)}
+                  onClick={(el: notiElementType) => handleClickNoti(el)}
                 />
               )),
             )}

@@ -1,17 +1,19 @@
 export interface postDetailType {
-  postDetail: {
-    postId: number;
-    writerNickName: string;
-    userImage: string | null;
-    ottTag: string;
-    isMyPost: boolean;
-    photoes: string[];
-    createdAt: string;
-    title: string;
-    content: string;
-    commentCount: number;
-  };
+  postDetail: postDetailElementType;
   comments: postCommentType[];
+}
+
+export interface postDetailElementType {
+  postId: number;
+  writerNickName: string;
+  userImage: string | null;
+  ottTag: string;
+  isMyPost: boolean;
+  photoes: string[];
+  createdAt: string;
+  title: string;
+  content: string;
+  commentCount: number;
 }
 
 export interface postCommentType {
