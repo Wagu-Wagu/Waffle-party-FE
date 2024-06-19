@@ -9,8 +9,8 @@ interface ChipProps {
 }
 
 export default function Chip({ ott, isCheck, onClick, isButton }: ChipProps) {
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [startX, setStartX] = useState<number>(0);
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     setStartX(e.clientX);

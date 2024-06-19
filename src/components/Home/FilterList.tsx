@@ -1,6 +1,6 @@
 import Slider from "react-slick";
 import Chip from "../common/Chip";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ottTags, OttTagKorean, ottTagsReverse } from "../../types/ottTags";
 
 // ottList의 value를 배열로 변환
@@ -16,7 +16,7 @@ export default function FilterList({
   selectedOtts,
 }: FilterListProps) {
   const filterListRef = useRef<HTMLDivElement>(null);
-  const [fixedStyle, setFixedStyle] = useState({});
+  const [fixedStyle, setFixedStyle] = useState<React.CSSProperties>({});
 
   const settings = {
     infinite: false,

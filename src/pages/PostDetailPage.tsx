@@ -38,7 +38,14 @@ import { initialPostDetailState } from "../recoil/postDetailState";
 import Loading from "../components/Login/Loading";
 
 export default function PostDetailPage() {
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [isLocked, setIsLocked] = useState<boolean>(false);
+  const [uptoSubmit, setUptoSubmit] = useState<boolean>(false);
+  const [modalActive, setModalActive] = useState<boolean>(false);
+  const [basicModalActive, setBasicModalActive] = useState<boolean>(false);
   const [comments, setComments] = useState<postCommentType[]>([]); // 받아온 데이터중 댓글데이터 넣기
+  const [isEdit, setIsEdit] = useState<boolean>(false);
   const [option, setOption] = useState<optionState>({
     type: "",
     isOwner: false,

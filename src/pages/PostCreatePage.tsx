@@ -15,7 +15,7 @@ export default function PostCreatePage() {
   const [title, setTitle] = useState<string>("");
   const [text, setText] = useState<string>("");
   const [imgSrc, setImgSrc] = useState<string[] | null>(null);
-  const [scrollDown, setScrollDown] = useState(false);
+  const [scrollDown, setScrollDown] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<{
     key: string;
     value: string;
@@ -23,7 +23,7 @@ export default function PostCreatePage() {
   const [optionIndex, setOptionIndex] = useState<number | undefined>(undefined);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState<boolean>(false);
   const [newFile, setNewFile] = useState<File[] | null>([]);
 
   // const setPostDetail = useSetRecoilState(postDetailState);

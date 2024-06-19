@@ -13,7 +13,7 @@ const ProfileImageUploader = forwardRef<HTMLInputElement, ProfileImageProps>(
   (props, ref) => {
     const { imageSrc, onClick, onSelect } = props;
     // 빈 스트링이면 기본이미지
-    const [proImg, setProImg] = useState(() => {
+    const [proImg, setProImg] = useState<string>(() => {
       return imageSrc !== "" ? imageSrc : profile;
     });
 

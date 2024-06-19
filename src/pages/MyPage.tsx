@@ -19,11 +19,11 @@ import Loading from "../components/Login/Loading";
 
 export default function MyPage() {
   const navigate = useNavigate();
-  const [isShow, setIsShow] = useState(false); //basic 모달창
-  const [showAlbum, setShowAlbum] = useState(false); //action sheet 모달창
-  const [showPreview, setShowPreview] = useState(false); //미리보기
+  const [isShow, setIsShow] = useState<boolean>(false); //basic 모달창
+  const [showAlbum, setShowAlbum] = useState<boolean>(false); //action sheet 모달창
+  const [showPreview, setShowPreview] = useState<boolean>(false); //미리보기
   const [userProfile, setUserProfile] = useRecoilState(userProfileState);
-  const [imageSrc, setImageSrc] = useState(""); //받아온 이미지
+  const [imageSrc, setImageSrc] = useState<string>(""); //받아온 이미지
   const [newImage, setNewImage] = useState<string>(""); //새로 바꾼 이미지
   const [newFile, setNewFile] = useState<File | null>(null); //새로 바꾼 파일
   // action sheet state

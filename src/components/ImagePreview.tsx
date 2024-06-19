@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import FullImage from "./FullImage";
 import Close from "../assets/icons/ImageDeleteButton.svg?react";
 
