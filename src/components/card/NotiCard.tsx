@@ -5,7 +5,8 @@ export default function NotiCard(props: any) {
   const { data, onClick } = props;
   const title = data.content;
   const contentType = data.alertType === COMMENT_TYPE.CO ? "글" : "댓글";
-  const formatTitle = title.length > 20 ? `${title.slice(0, 20)}...` : title;
+  const formatTitle =
+    data.content && title.length > 20 ? `${title.slice(0, 20)}...` : title;
 
   // COMMENT, REPLY 한글 변환
   const commentTypeKorean = COMMENT_TYPE_KOREAN[data.alertType as COMMENT_TYPE];

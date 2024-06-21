@@ -18,6 +18,7 @@ export default function NotificationsPage() {
   const { notificationData, isLoading } = useGetNotification();
 
   useEffect(() => {
+    console.log(notificationData);
     if (notificationData) {
       setNotification(notificationData);
     }
@@ -42,7 +43,7 @@ export default function NotificationsPage() {
     <>
       <Header title="내소식" />
       <main className="h-screen-minus-12.8 relative">
-        {notification.length > 0 ? (
+        {notification && notification.length > 0 ? (
           <div className="flex flex-col mt-[4.6rem]">
             {notification.map(({ getMyNewsResponseVOs }) =>
               getMyNewsResponseVOs.map((notiEl, index) => (
