@@ -2,8 +2,9 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import "./../../styles/homeCustomSlick.css";
-import HeroImage01 from "./../../assets/icons/HeroImage01.svg";
-import HeroImage02 from "./../../assets/icons/HeroImage02.svg";
+import HeroImage01 from "../../assets/image/HeroImage01.png";
+import HeroImage02 from "../../assets/image/HeroImage02.png";
+import LazyLoad from "react-lazyload";
 
 const bannerImages = [
   {
@@ -38,11 +39,13 @@ export default function Banner() {
             key={index}
             className="h-[15rem] overflow-hidden"
           >
-            <img
-              src={image.src}
-              alt={`banner-${index}`}
-              className="object-cover object-center w-full h-[15rem]"
-            />
+            <LazyLoad>
+              <img
+                src={image.src}
+                alt={`banner-${index}`}
+                className="object-cover object-center w-full h-[15rem]"
+              />
+            </LazyLoad>
           </a>
         ))}
       </Slider>

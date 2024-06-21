@@ -6,7 +6,7 @@
   "scripts": {
     "start:dev": "vite --host",
     "start:prod": "vite --mode production",
-    "build:dev": "vite build --mode development",
+    "build:dev": "vite build --mode --host",
     "build:prod": "vite build --mode production",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -21,6 +21,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.4",
+    "react-lazyload": "^3.2.1",
     "react-router-dom": "^6.23.1",
     "react-slick": "^0.30.2",
     "react-spinners": "^0.13.8",
@@ -29,12 +30,14 @@
     "slick-carousel": "^1.8.1",
     "swr": "^2.2.5",
     "tailwind-merge": "^2.3.0",
+    "vite-plugin-compression2": "^1.1.1",
     "vite-plugin-svgr": "^4.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
+    "@types/react-lazyload": "^3.2.3",
     "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^7.9.0",
     "@typescript-eslint/parser": "^7.9.0",
