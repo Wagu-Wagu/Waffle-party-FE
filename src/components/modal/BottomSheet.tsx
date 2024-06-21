@@ -8,7 +8,7 @@ interface modalProps {
 
 export default function BottomSheet(props: modalProps) {
   const { isShow, children, setModalActive } = props;
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
     let modalTimer: NodeJS.Timeout;

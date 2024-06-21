@@ -99,7 +99,7 @@ export default function ActionSheet(props: modalProps) {
   return (
     <BottomSheet isShow={isShow} setModalActive={setModalActive}>
       <BottomSheetHeader />
-      <div className="flex flex-col gap-[0.8rem]">
+      <div className="flex flex-col gap-[0.8rem] border-t border-gray14">
         <ul className="bg-gray14">
           {options?.map((optionEl, index) => (
             <li
