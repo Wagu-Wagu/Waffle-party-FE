@@ -131,6 +131,11 @@ export default function PostCreatePage() {
     const files = inputEl.files;
     if (!files || files.length === 0) return;
     const file = files[0];
+    // 파일 크기 체크 (2MB 이상인 경우 처리)
+    if (file.size > 2 * 1024 * 1024) {
+      window.alert("이미지 크기는 2MB 이하여야 합니다.");
+      return;
+    }
     setNewFile((prevFiles) => (prevFiles ? [...prevFiles, file] : [file]));
 
     const reader = new FileReader();
