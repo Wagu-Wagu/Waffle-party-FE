@@ -164,7 +164,7 @@ export default function MyPage() {
             </span>
           </div>
         </section>
-        <div className="px-[2rem] w-full h-full">
+        <div className="px-[2rem] pb-[2.4rem] w-full h-full">
           <div className="mt-[1rem] h-[0.2rem] w-full border-b border-gray13"></div>
           <section className="flex flex-col gap-[4rem] w-full mt-[2rem]">
             <div>
@@ -218,7 +218,7 @@ export default function MyPage() {
             </MyPageSection>
           </section>
           <section className="mt-[4.3rem] w-full justify-center flex gap-[3rem] text-gray8 text-[1.2rem] text-center font-Pretendard font-normal leading-4 underline">
-            <button
+            {/* <button
               className="underline text-gray8"
               onClick={() => {
                 setIsShow(true);
@@ -226,7 +226,7 @@ export default function MyPage() {
               }}
             >
               회원탈퇴
-            </button>
+            </button> */}
             <button
               className="underline text-gray8"
               onClick={() => {
