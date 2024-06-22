@@ -22,7 +22,8 @@ OTT를 같이 보면서 채팅할 수 있는 그룹시청 서비스가 꾸준히
 <br/><br/>
 <img src="https://github.com/Wagu-Wagu/Waffle-party-BE/assets/77230391/805c5883-8785-46fe-a1d7-802499519a05"/>
 
-<br/>
+<br/><br/>
+
 <h2>🏠 FE 팀원</h2>
 <table>
   <tr>
