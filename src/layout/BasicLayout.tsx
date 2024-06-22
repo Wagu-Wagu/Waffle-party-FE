@@ -1,4 +1,4 @@
-export default function BasicLayout(props: { children: any }) {
+export default function BasicLayout(props: { children: React.ReactNode }) {
   const { children } = props;
   return (
     <div className="layout-wrapper">
