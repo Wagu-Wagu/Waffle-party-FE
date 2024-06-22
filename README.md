@@ -1,6 +1,6 @@
 <div>
 <div align="center">
-    <img src="https://github.com/Wagu-Wagu/Waffle-party-FE/assets/111286497/e3c15c59-fcee-466c-85da-d425bf9bef77"/><h1><b style="color: #FFD334;">Waffle Party</b></h1>
+    <img src="https://github.com/Wagu-Wagu/Waffle-party-FE/assets/111286497/e3c15c59-fcee-466c-85da-d425bf9bef77"/><h1><b>Waffle Party</b></h1>
 </div>
 
 > OTT 같이 볼 사람이 필요할 때, Waffle Party
@@ -109,26 +109,19 @@ setRefresh(false); // 갱신 후 상태 초기화
 > 이러한 문제를 해결하기 위해 삼성 브라우저에서 접속할 경우, <b>`딥링크`를 사용하여 크롬 브라우저로 열리도록</b> 수정하였습니다.
 
 <pre>const userAgent = navigator.userAgent;
-      const isSamsung = userAgent.includes("SamsungBrowser");
+const isSamsung = userAgent.includes("SamsungBrowser");
 
-      const url = window.location.href;
+const url = window.location.href;
 
-      // 삼성 브라우저일 경우 root 요소에 samsung 클래스 추가
-      if (isSamsung) {
-        window.alert(
-          "와플파티는 크롬에 최적화되어있습니다.\n크롬으로 이동할까요?",
-        );
-        // window.location.href를 변경하여 리디렉션
-        const url = window.location.href;
-        // http 혹은 https
-        const protocol = window.location.protocol.replace(":", "");
-        // 크롬 앱이 없다면, playstore 크롬 앱 다운로드 링크로 이동
-        // TODO 크롬 앱이 없다면, playstore 와플파티 앱 다운로드 링크로 이동
-        window.location.href = `intent://${url.replace(
-          /^https?:\/\//,
-          "",
-        )}#Intent;scheme=${protocol};package=com.android.chrome;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.android.chrome;end`;
-      }</pre>
+// 삼성 브라우저일 경우 root 요소에 samsung 클래스 추가
+if (isSamsung) {
+  window.alert("와플파티는 크롬에 최적화되어있습니다.\n크롬으로 이동할까요?",);
+  // window.location.href를 변경하여 리디렉션
+  const url = window.location.href;
+  // http 혹은 https
+  const protocol = window.location.protocol.replace(":", "");
+  // 크롬 앱이 없다면, playstore 크롬 앱 다운로드 링크로 이동
+  window.location.href = `intent://${url.replace(/^https?:\/\//,"",)}#Intent;scheme=${protocol};package=com.android.chrome;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.android.chrome;end`;}</pre>
 </details>
 
 <br/>
