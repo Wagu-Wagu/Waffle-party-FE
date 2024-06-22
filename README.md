@@ -52,8 +52,8 @@ OTT를 같이 보면서 채팅할 수 있는 그룹시청 서비스가 꾸준히
 ![Recoil](https://badgen.net/badge/Recoil/v0.7.7/3578E5)
 ![Eslint](https://badgen.net/badge/Eslint/v8.57.0/4B32C3?)
 ![Prettier](https://badgen.net/badge/Prettier/v3.2.5/F7B93E?)
-<br/>
 
+<br/>
 <h2>😊 서비스 주 기능</h2>
 <h4>필터칩</h4>
 <img src="https://github.com/Wagu-Wagu/Waffle-party-FE/assets/111286497/d6856de1-ff12-4404-80c5-a3c35f7a1f0e"/>
@@ -62,7 +62,8 @@ OTT를 같이 보면서 채팅할 수 있는 그룹시청 서비스가 꾸준히
 <h4>내소식</h4>
 <img src="https://github.com/Wagu-Wagu/Waffle-party-FE/assets/111286497/26c631b6-0796-4038-8ba3-e173e9c65519"/>
 
-<br/>
+<br/><br/>
+
 <h2>💻 트러블슈팅</h2>
 <details>
 	<summary><b>댓글, 답댓글 등록&수정&삭제</b></summary>
