@@ -113,7 +113,7 @@ const isSamsung = userAgent.includes("SamsungBrowser");
 
 const url = window.location.href;
 
-// 삼성 브라우저일 경우 root 요소에 samsung 클래스 추가
+// 삼성 브라우저일 경우
 if (isSamsung) {
   window.alert("와플파티는 크롬에 최적화되어있습니다.\n크롬으로 이동할까요?",);
   // window.location.href를 변경하여 리디렉션
