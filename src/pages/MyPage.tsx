@@ -16,6 +16,7 @@ import { userProfileType } from "../types/userProfile";
 import { patchProfileImage } from "../lib/api/profile";
 import useGetMyProfile from "../hooks/useGetMyProfile";
 import Loading from "../components/Login/Loading";
+import { clearUserSession } from "../lib/token";
 
 export default function MyPage() {
   const navigate = useNavigate();
@@ -107,6 +108,8 @@ export default function MyPage() {
 
   const handleClickLogout = () => {
     setIsShow((prev) => !prev);
+    clearUserSession();
+    navigate("/login");
   };
 
   const handleClickEdit = () => {
