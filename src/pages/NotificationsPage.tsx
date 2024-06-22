@@ -18,7 +18,6 @@ export default function NotificationsPage() {
   const { notificationData, isLoading } = useGetNotification();
 
   useEffect(() => {
-    console.log(notificationData);
     if (notificationData) {
       setNotification(notificationData);
     }
@@ -28,7 +27,6 @@ export default function NotificationsPage() {
    * @param notiEl
    */
   const handleClickNoti = async (notiEl: notiElementType) => {
-    console.log(notiEl);
     // 소식을 확인하면 api 요청해서 소식 읽음으로 변경
     const res = await getNotification(notiEl.alertId);
     if (res.success) {

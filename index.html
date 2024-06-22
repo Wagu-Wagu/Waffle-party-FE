@@ -27,18 +27,16 @@
       // navigator.userAgent를 사용하여 삼성 브라우저인지 확인
       const userAgent = navigator.userAgent;
       const isSamsung = userAgent.includes("SamsungBrowser");
-      console.log(isSamsung, userAgent);
 
       const url = window.location.href;
-      console.log(url);
 
       // 삼성 브라우저일 경우 root 요소에 samsung 클래스 추가
       if (isSamsung) {
         window.alert(
-          "와플파티는 크롬에 최적화되어있습니다. 크롬으로 이동할까요?",
         );
         // window.location.href를 변경하여 리디렉션
         const url = window.location.href;
+        // http 혹은 https
         const protocol = window.location.protocol.replace(":", "");
         window.location.href = `intent://${url.replace(
           /^https?:\/\//,
