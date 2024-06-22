@@ -121,7 +121,8 @@ if (isSamsung) {
   // http 혹은 https
   const protocol = window.location.protocol.replace(":", "");
   // 크롬 앱이 없다면, playstore 크롬 앱 다운로드 링크로 이동
-  window.location.href = `intent://${url.replace(/^https?:\/\//,"",)}#Intent;scheme=${protocol};package=com.android.chrome;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.android.chrome;end`;}</pre>
+  window.location.href = `intent://${url.replace(/^https?:\/\//,"",)}#Intent;scheme=${protocol};package=com.android.chrome;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.android.chrome;end`;
+  }</pre>
 </details>
 
 <br/>
