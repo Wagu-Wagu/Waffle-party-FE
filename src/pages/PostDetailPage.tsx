@@ -306,9 +306,10 @@ export default function PostDetailPage() {
     setModalActive(false);
     setBasicModalActive(true);
   };
-  const onPostReport = () => {
-    setModalActive(false);
-  };
+  // 게시물 신고
+  // const onPostReport = () => {
+  //   setModalActive(false);
+  // };
   // 답댓글 달기
   const onCommentReply = () => {
     setIsFocused(false);
@@ -346,9 +347,9 @@ export default function PostDetailPage() {
   };
 
   // 상대 댓글 신고하기
-  const onReport = () => {
-    setModalActive(false);
-  };
+  // const onReport = () => {
+  //   setModalActive(false);
+  // };
 
   /**
    *
@@ -557,11 +558,11 @@ export default function PostDetailPage() {
           isShow={modalActive}
           onPostEdit={onPostEdit}
           onPostDelete={onPostDelete}
-          onPostReport={onPostReport}
+          // onPostReport={onPostReport}
           onCommentReply={onCommentReply}
           onCommentEdit={onCommentEdit}
           onCommentDelete={onCommentDelete}
-          onReport={onReport}
+          // onReport={onReport}
           setModalActive={setModalActive}
           onClose={() => setModalActive((prev) => !prev)}
         />

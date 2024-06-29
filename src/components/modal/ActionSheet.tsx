@@ -7,11 +7,11 @@ interface modalProps {
   isShow: boolean;
   onPostEdit?: () => void;
   onPostDelete?: () => void;
-  onPostReport?: () => void;
+  // onPostReport?: () => void;
   onCommentReply?: () => void;
   onCommentEdit?: () => void;
   onCommentDelete?: () => void;
-  onReport?: () => void;
+  // onReport?: () => void;
   onClose?: () => void;
   onSelectImage?: () => void;
   onRemoveImage?: () => void;
@@ -25,11 +25,11 @@ export default function ActionSheet(props: modalProps) {
     isShow,
     onPostEdit,
     onPostDelete,
-    onPostReport,
+    // onPostReport,
     onCommentReply,
     onCommentEdit,
     onCommentDelete,
-    onReport,
+    // onReport,
     onClose,
     onSelectImage,
     onRemoveImage,
@@ -42,7 +42,8 @@ export default function ActionSheet(props: modalProps) {
     { label: "삭제", action: onPostDelete },
   ];
 
-  const otherPostOptions = [{ label: "신고", action: onPostReport }];
+  // 다른사람 게시물일때
+  // const otherPostOptions = [{ label: "신고", action: onPostReport }];
 
   // 내가 쓴 댓글일때
   const myCommentOptions = [
@@ -54,7 +55,7 @@ export default function ActionSheet(props: modalProps) {
   // 다른사람이 쓴 댓글일때
   const otherCommentOptions = [
     { label: "답댓글", action: onCommentReply },
-    { label: "신고", action: onReport },
+    // { label: "신고", action: onReport },
   ];
 
   // 내가 쓴 답댓글일때
@@ -64,7 +65,7 @@ export default function ActionSheet(props: modalProps) {
   ];
 
   // 다른사람이 쓴 답댓글일때
-  const otherMoreCommentOptions = [{ label: "신고", action: onReport }];
+  // const otherMoreCommentOptions = [{ label: "신고", action: onReport }];
 
   // 프로필 사진 수정 - 현재 사진이 있을때
   const editImageOptions = [
@@ -82,11 +83,13 @@ export default function ActionSheet(props: modalProps) {
 
     switch (type) {
       case "post":
-        return isOwner ? postOptions : otherPostOptions;
+        // return isOwner ? postOptions : otherPostOptions;
+        return isOwner && postOptions;
       case "comment":
         return isOwner ? myCommentOptions : otherCommentOptions;
       case "reply":
-        return isOwner ? myMoreCommentOptions : otherMoreCommentOptions;
+        // return isOwner ? myMoreCommentOptions : otherMoreCommentOptions;
+        return isOwner && myMoreCommentOptions;
       case "profile":
         return isUserImage ? editImageOptions : createImageOptions;
       default:
@@ -101,22 +104,23 @@ export default function ActionSheet(props: modalProps) {
       <BottomSheetHeader />
       <div className="flex flex-col gap-[0.8rem] border-t border-gray14">
         <ul className="bg-gray14">
-          {options?.map((optionEl, index) => (
-            <li
-              className={`flex items-center justify-center w-full h-[5.6rem] py-[1.4rem] text-[1.6rem] cursor-pointer text-center font-pretendard font-normal leading-6 ${
-                index !== options.length - 1 ? "border-b border-gray13" : ""
-              } ${
-                index === options.length - 1 &&
-                !(option.type === "profile" && !option.isUserImage)
-                  ? "text-danger"
-                  : "text-white"
-              }`}
-              key={index}
-              onClick={optionEl.action}
-            >
-              {optionEl.label}
-            </li>
-          ))}
+          {options &&
+            options?.map((optionEl, index) => (
+              <li
+                className={`flex items-center justify-center w-full h-[5.6rem] py-[1.4rem] text-[1.6rem] cursor-pointer text-center font-pretendard font-normal leading-6 ${
+                  index !== options.length - 1 ? "border-b border-gray13" : ""
+                } ${
+                  index === options.length - 1 &&
+                  !(option.type === "profile" && !option.isUserImage)
+                    ? "text-danger"
+                    : "text-white"
+                }`}
+                key={index}
+                onClick={optionEl.action}
+              >
+                {optionEl.label}
+              </li>
+            ))}
         </ul>
         <ul className="bg-gray14" onClick={onClose}>
           <li className="flex items-center justify-center h-[5.6rem] py-[1.4rem] text-[1.6rem] cursor-pointer text-white text-center font-pretendard font-normal leading-6">
