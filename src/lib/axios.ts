@@ -21,13 +21,13 @@ client.interceptors.response.use(
   function (response) {
     return response;
   },
-  (error) => {
-    console.error(error);
-    if (error.response.status === 401) {
+  (e) => {
+    console.error(e);
+    if (e.response.status === 401) {
       clearUserSession();
       location.reload();
     }
-    return Promise.reject(error);
+    return Promise.reject(e);
   },
 );
 

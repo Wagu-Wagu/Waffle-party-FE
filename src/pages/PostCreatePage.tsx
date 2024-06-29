@@ -121,8 +121,6 @@ export default function PostCreatePage() {
   const handleRegister = async () => {
     if (!selectedOption || !title || !text) return;
 
-    console.log(newFile);
-
     param.ottTag = selectedOption.key;
     param.title = title;
     param.content = text;
