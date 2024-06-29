@@ -26,7 +26,7 @@ export default function Navigation() {
         <li>
           <NavButton path={"/mypage"}>
             <ProfileIcon />
-            마이페이지
+            마이
           </NavButton>
         </li>
       </ul>
