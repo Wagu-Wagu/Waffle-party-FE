@@ -7,7 +7,7 @@
   publish = "dist"
   command = "CI= npm run build:prod"
 
-[context.development]
+[context.develop]
   command = "CI= npm run build:dev"
 
 [context.production]
