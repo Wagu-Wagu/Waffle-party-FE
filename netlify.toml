@@ -4,5 +4,10 @@
   status = 200
 
 [build]
-  command = "CI= npm run build:prod"
   publish = "dist"
+
+[context.develop]
+  command = "npm run build:dev"
+
+[context.production]
+  command = "npm run build:prod"
