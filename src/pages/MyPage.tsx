@@ -193,7 +193,7 @@ export default function MyPage() {
             <MyPageSection title="디바이스 및 앱">
               <a
                 target="_blank"
-                href="https://wisesky915.notion.site/9be32afba5cc4f998c83f5d01dbe1a8c?pvs=4"
+                href="https://kimzoe.notion.site/9be32afba5cc4f998c83f5d01dbe1a8c"
               >
                 <MyPageListCard activeData={undefined} isArrow={true}>
                   업데이트 노트
@@ -208,11 +208,14 @@ export default function MyPage() {
               </MyPageListCard>
             </MyPageSection>
             <MyPageSection title="약관 및 정책">
-              <Link to="/terms">
+              <a
+                target="_blank"
+                href="https://kimzoe.notion.site/bc88f210bf1f409594a31b10c90556bb"
+              >
                 <MyPageListCard activeData={undefined} isArrow={true}>
                   서비스 이용약관
                 </MyPageListCard>
-              </Link>
+              </a>
               <Link to="/privacy-policy">
                 <MyPageListCard activeData={undefined} isArrow={true}>
                   개인 정보 처리 방침
