@@ -9,11 +9,11 @@ import LazyLoad from "react-lazyload";
 const bannerImages = [
   {
     src: HeroImage01,
-    link: "https://www.notion.so/wisesky915/646dbbafa5ef4e8d9dd7dcbfd95e84eb",
+    link: "https://kimzoe.notion.site/646dbbafa5ef4e8d9dd7dcbfd95e84eb",
   },
   {
     src: HeroImage02,
-    link: "https://www.notion.so/wisesky915/ca41968629b048d6b44383543897620c",
+    link: "https://kimzoe.notion.site/ca41968629b048d6b44383543897620c",
   },
 ];
 
