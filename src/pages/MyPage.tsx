@@ -167,9 +167,8 @@ export default function MyPage() {
             </span>
           </div>
         </section>
-        <div className="px-[2rem] pb-[2.4rem] w-full h-full">
-          <div className="mt-[1rem] h-[0.2rem] w-full border-b border-gray13"></div>
-          <section className="flex flex-col gap-[4rem] w-full mt-[2rem]">
+        <div className="px-[2rem] pb-[2.4rem] w-full flex flex-col justify-between h-screen-minus-21">
+          <section className="flex flex-col gap-[4rem] w-full border-t-[0.2rem] border-gray13 pt-[2rem] mt-[1rem]">
             <div>
               <MyPageSection title="내활동">
                 <Link to={`/mypage/post/${userId}`}>
@@ -213,17 +212,12 @@ export default function MyPage() {
                 href="https://kimzoe.notion.site/bc88f210bf1f409594a31b10c90556bb"
               >
                 <MyPageListCard activeData={undefined} isArrow={true}>
-                  서비스 이용약관
+                  이용약관
                 </MyPageListCard>
               </a>
-              <Link to="/privacy-policy">
-                <MyPageListCard activeData={undefined} isArrow={true}>
-                  개인 정보 처리 방침
-                </MyPageListCard>
-              </Link>
             </MyPageSection>
           </section>
-          <section className="mt-[4.3rem] w-full justify-center flex gap-[3rem] text-gray8 text-[1.2rem] text-center font-Pretendard font-normal leading-4 underline">
+          <section className="w-full justify-center flex gap-[3rem] text-gray8 text-[1.2rem] text-center font-Pretendard font-normal leading-4 underline">
             {/* <button
               className="underline text-gray8"
               onClick={() => {
