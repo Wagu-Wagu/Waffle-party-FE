@@ -206,7 +206,7 @@ export default function MyPage() {
                 버전
               </MyPageListCard>
             </MyPageSection>
-            <MyPageSection title="약관 및 정책">
+            <MyPageSection title="약관">
               <a
                 target="_blank"
                 href="https://kimzoe.notion.site/bc88f210bf1f409594a31b10c90556bb"
