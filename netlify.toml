@@ -1,6 +1,6 @@
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/api/*"
+  to = "https://team-wagu-prod.com/:splat"
   status = 200
 
 [build]
