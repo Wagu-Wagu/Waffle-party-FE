@@ -29,9 +29,10 @@ export default function Router() {
           <Route element={<PublicRoute />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/login/kakao/callback" element={<KakaoCallback />} />
-            <Route path="/nickname" element={<NicknamePage />} />
+            {/* <Route path="/nickname" element={<NicknamePage />} /> */}
           </Route>
           <Route element={<PrivateRoute />}>
+            <Route path="/nickname" element={<NicknamePage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/post-create" element={<PostCreatePage />} />
