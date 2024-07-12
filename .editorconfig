@@ -1,0 +1,14 @@
+# EditorConfig는 여러 개발자가 동일한 프로젝트에서 작업할 때
+# 다양한 편집기와 IDE에서 일관된 코딩 스타일을 유지하는 데 도움이 됩니다.
+
+root = true
+
+[*]
+end_of_line = lf  # 줄 바꿈 스타일을 LF로 통일
+insert_final_newline = true  # 파일 끝에 새 줄 추가
+charset = utf-8  # 인코딩을 UTF-8로 설정
+indent_style = space  # 들여쓰기를 스페이스로 설정
+indent_size = 2  # 들여쓰기 크기를 2로 설정
+
+[*.md]
+trim_trailing_whitespace = false  # Markdown 파일에서는 트레일링 공백 제거하지 않음

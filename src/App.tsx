@@ -1,10 +1,13 @@
-function App() {
+import { RecoilRoot } from "recoil";
+import Router from "./Router";
+import BasicLayout from "./layout/BasicLayout";
 
+export default function App() {
   return (
-    <>
-      <h1 className='bg-slate-500'>으아아아아</h1>
-    </>
-  )
+    <RecoilRoot>
+      <BasicLayout>
+        <Router />
+      </BasicLayout>
+    </RecoilRoot>
+  );
 }
-
-export default App

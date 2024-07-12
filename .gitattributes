@@ -1,0 +1,20 @@
+# 기본 동작을 설정합니다. core.autocrlf 설정이 없는 경우를 대비합니다.
+* text=auto
+
+# 명시적으로 텍스트 파일을 선언하여 체크아웃 시 네이티브 라인 엔딩으로 변환되도록 합니다.
+*.js     text
+*.jsx    text
+*.ts     text
+*.tsx    text
+*.json   text
+*.css    text
+*.scss   text
+*.html   text
+*.md     text
+
+# 실제로 바이너리 파일인 경우 수정하지 않도록 선언합니다.
+*.png    binary
+*.jpg    binary
+*.gif    binary
+*.svg    binary
+*.ico    binary
