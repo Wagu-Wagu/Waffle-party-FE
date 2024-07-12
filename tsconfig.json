@@ -28,7 +28,8 @@
     "src/assets/icon",
     "vite.config.js",
     "src/*.d.ts",
-    "src/svg.d.ts"
+    "src/svg.d.ts",
+    "server.js"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
