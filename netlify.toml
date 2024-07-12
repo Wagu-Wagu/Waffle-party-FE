@@ -2,7 +2,6 @@
   from = "/*"
   to = "/index.html"
   status = 200
-  /api/*  https://team-wagu-prod.com/:splat  200
 
 [build]
   publish = "dist"
@@ -13,3 +12,6 @@
 
 [context.production]
   command = "CI= npm run build:prod"
+
+[context.test]
+  command = "CI= npm run build:test"
