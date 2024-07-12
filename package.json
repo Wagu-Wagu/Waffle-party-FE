@@ -6,8 +6,10 @@
   "scripts": {
     "start:dev": "vite --host",
     "start:prod": "vite --mode production",
+    "start:test": "node server.js",
     "build:dev": "vite build --mode development",
     "build:prod": "vite build --mode production",
+    "build:test": "vite build --mode test",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -17,6 +19,9 @@
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
+    "express": "^4.19.2",
+    "express-http-proxy": "^2.0.0",
+    "http-proxy-middleware": "^3.0.0",
     "kakao-js-sdk": "^1.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -31,6 +36,7 @@
     "swr": "^2.2.5",
     "tailwind-merge": "^2.3.0",
     "vite-plugin-compression2": "^1.1.1",
+    "vite-plugin-mock": "^3.0.2",
     "vite-plugin-svgr": "^4.2.0"
   },
   "devDependencies": {
