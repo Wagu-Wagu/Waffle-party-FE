@@ -2,12 +2,51 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/src/assets/icons/Symbol.svg" />
+    <link
+      rel="preload"
+      href="/node_modules/slick-carousel/slick/fonts/slick.woff"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <title>Waffle Party</title>
+    <script
+      src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
+      integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module">
+      Kakao.init(import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY);
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // navigator.userAgent를 사용하여 삼성 브라우저인지 확인
+      const userAgent = navigator.userAgent;
+      const isSamsung = userAgent.includes("SamsungBrowser");
+
+      const url = window.location.href;
+
+      // 삼성 브라우저일 경우 root 요소에 samsung 클래스 추가
+      if (isSamsung) {
+        window.alert(
+          "와플파티는 크롬에 최적화되어있습니다.\n크롬으로 이동할까요?",
+        );
+        // window.location.href를 변경하여 리디렉션
+        const url = window.location.href;
+        // http 혹은 https
+        const protocol = window.location.protocol.replace(":", "");
+        // 크롬 앱이 없다면, playstore 크롬 앱 다운로드 링크로 이동
+        // TODO 크롬 앱이 없다면, playstore 와플파티 앱 다운로드 링크로 이동
+        window.location.href = `intent://${url.replace(
+          /^https?:\/\//,
+          "",
+        )}#Intent;scheme=${protocol};package=com.android.chrome;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.android.chrome;end`;
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

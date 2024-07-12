@@ -1,0 +1,20 @@
+/* 배너 dost 스타일 */
+.custom-slick .slick-dots {
+  bottom: 10px;
+}
+
+.custom-slick .slick-dots li {
+  margin: 0 2px;
+}
+
+.custom-slick .slick-dots li button:before {
+  color: #8b8b8b;
+}
+
+.custom-slick .slick-dots li.slick-active button:before {
+  color: #000;
+}
+
+.custom-slick .slick-slide:focus {
+  outline: none;
+}
