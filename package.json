@@ -6,7 +6,7 @@
   "scripts": {
     "start:dev": "vite --host",
     "start:prod": "vite --mode production",
-    "start:test": "node server.js",
+    "start:test": "vite --mode test",
     "build:dev": "vite build --mode development",
     "build:prod": "vite build --mode production",
     "build:test": "vite build --mode test",

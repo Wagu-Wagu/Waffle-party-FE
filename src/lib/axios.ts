@@ -2,7 +2,8 @@ import axios from "axios";
 import { clearUserSession, getAccessToken } from "./token";
 
 const client = axios.create({
-  baseURL: import.meta.env.VITE_API_URI,
+  // baseURL: import.meta.env.VITE_API_URI,
+  baseURL: "/",
   headers: {
     "Content-type": "application/json",
   },
