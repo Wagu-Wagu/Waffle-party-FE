@@ -38,7 +38,7 @@ export default function MyCommentsPage() {
       />
       <main className="main-header">
         <div className="h-screen-minus-46">
-          {userComment?.length > 0 ? (
+          {userCommentData ? (
             userComment?.map((comment: userCommentType, index) => (
               <div className="cursor-pointer" key={index}>
                 <MyCommentsCard key={comment.postId} comment={comment} />

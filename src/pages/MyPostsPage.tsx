@@ -40,7 +40,7 @@ export default function MyPostsPage() {
         title="작성한 글"
       />
       <main className="main-header">
-        {userPost?.length > 0 ? (
+        {userPostData ? (
           userPost?.map((post: userPostType) => (
             <PostListCard key={post.postId} post={post} />
           ))
