@@ -87,10 +87,15 @@ export default function PostDetailPage() {
 
   useEffect(() => {
     if (postDetailData) {
+      const formattedContent = postDetailData.postDetail.content.replace(
+        /\r\n|\r|\n/g,
+        "<br>",
+      );
       const updatedPostDetail = {
         ...postDetailData,
         postDetail: {
           ...postDetailData.postDetail,
+          content: formattedContent,
           photoes: setImageSrc(postDetailData.postDetail.photoes),
         },
       };
@@ -411,7 +416,7 @@ export default function PostDetailPage() {
                     />
                   </div>
                   <div className="w-full flex-col justify-start items-start gap-[1rem] flex">
-                    <div className="w-full h-[2.8rem] text-white text-[2rem] font-bold font-['Pretendard'] leading-[2.8rem]">
+                    <div className="w-full text-white text-[2rem] font-bold font-['Pretendard'] leading-[2.8rem]">
                       {postDetail.postDetail.title}
                     </div>
                     {postDetail.postDetail.photoes && (
@@ -423,9 +428,12 @@ export default function PostDetailPage() {
                         />
                       </>
                     )}
-                    <div className="w-full text-gray1 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem]">
-                      {postDetail.postDetail.content}
-                    </div>
+                    <div
+                      className="w-full text-gray1 text-[1.6rem] font-normal font-['Pretendard'] leading-[2.4rem]"
+                      dangerouslySetInnerHTML={{
+                        __html: postDetail.postDetail.content,
+                      }}
+                    ></div>
                   </div>
                 </div>
                 <div className="w-full h-0.5 relative" />
